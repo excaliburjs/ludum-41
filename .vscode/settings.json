@@ -1,0 +1,11 @@
+{
+	"editor.tabSize": 3,
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": true,
+	"files.exclude": {
+		"**/.git": true,
+		"game/*.js": { "when": "$(basename).ts" },
+      "game/*.js.map": true,
+		"node_modules/": true
+	}
+}
