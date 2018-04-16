@@ -1,4 +1,10 @@
 /// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
+/// <reference path="analytics.ts" />
+/// <reference path="config.ts" />
+/// <reference path="preferences.ts" />
+/// <reference path="resources.ts" />
+/// <reference path="scnMain.ts" />
+/// <reference path="stats.ts" />
 
 var game = new ex.Engine({
     width: 800,
@@ -7,21 +13,16 @@ var game = new ex.Engine({
 
 // create an asset loader
 var loader = new ex.Loader();
-var resources = {
-
-    /* include resources here */
-    //txPlayer: new ex.Texture("assets/tex/player.png")
-
-};
 
 // queue resources for loading
-for (var r in resources) {
-    loader.addResource(resources[r]);
+for (var r in Resources) {
+    loader.addResource(Resources[r]);
 }
 
+var scnMain = new ScnMain(game);
+game.addScene('main', scnMain);
+
 // uncomment loader after adding resources
-game.start(/* loader */).then(() => {
-
-    // start your game!
-
+game.start(loader).then(() => {
+   game.goToScene('main');
 });
