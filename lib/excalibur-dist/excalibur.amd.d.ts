@@ -1,4 +1,4 @@
-/*! excalibur - vlocal - 2018-04-15
+/*! excalibur - vlocal - 2018-04-17
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -27,400 +27,6 @@ declare module "Actions/RotationType" {
          * regardless of the starting and ending points.
          */
         CounterClockwise = 3,
-    }
-}
-declare module "Algebra" {
-    /**
-     * A 2D vector on a plane.
-     */
-    export class Vector {
-        x: number;
-        y: number;
-        /**
-         * A (0, 0) vector
-         */
-        static Zero: Vector;
-        /**
-         * A (1, 1) vector
-         */
-        static One: Vector;
-        /**
-         * A (0.5, 0.5) vector
-         */
-        static Half: Vector;
-        /**
-         * A unit vector pointing up (0, -1)
-         */
-        static Up: Vector;
-        /**
-         * A unit vector pointing down (0, 1)
-         */
-        static Down: Vector;
-        /**
-         * A unit vector pointing left (-1, 0)
-         */
-        static Left: Vector;
-        /**
-         * A unit vector pointing right (1, 0)
-         */
-        static Right: Vector;
-        /**
-         * Returns a vector of unit length in the direction of the specified angle in Radians.
-         * @param angle The angle to generate the vector
-         */
-        static fromAngle(angle: number): Vector;
-        /**
-         * Checks if vector is not null, undefined, or if any of its components are NaN or Infinity.
-         */
-        static isValid(vec: Vector): boolean;
-        /**
-         * @param x  X component of the Vector
-         * @param y  Y component of the Vector
-         */
-        constructor(x: number, y: number);
-        /**
-         * Sets the x and y components at once
-         */
-        setTo(x: number, y: number): void;
-        /**
-         * Compares this point against another and tests for equality
-         * @param point  The other point to compare to
-         */
-        equals(vector: Vector, tolerance?: number): boolean;
-        /**
-         * The distance to another vector. If no other Vector is specified, this will return the [[magnitude]].
-         * @param v  The other vector. Leave blank to use origin vector.
-         */
-        distance(v?: Vector): number;
-        /**
-         * The magnitude (size) of the Vector
-         */
-        magnitude(): number;
-        /**
-         * Normalizes a vector to have a magnitude of 1.
-         */
-        normalize(): Vector;
-        /**
-         * Returns the average (midpoint) between the current point and the specified
-         */
-        average(vec: Vector): Vector;
-        /**
-         * Scales a vector's by a factor of size
-         * @param size  The factor to scale the magnitude by
-         */
-        scale(size: number): Vector;
-        /**
-         * Adds one vector to another
-         * @param v The vector to add
-         */
-        add(v: Vector): Vector;
-        /**
-         * Subtracts a vector from another, if you subract vector `B.sub(A)` the resulting vector points from A -> B
-         * @param v The vector to subtract
-         */
-        sub(v: Vector): Vector;
-        /**
-         * Adds one vector to this one modifying the original
-         * @param v The vector to add
-         */
-        addEqual(v: Vector): Vector;
-        /**
-         * Subtracts a vector from this one modifying the original
-         * @parallel v The vector to subtract
-         */
-        subEqual(v: Vector): Vector;
-        /**
-         * Scales this vector by a factor of size and modifies the original
-         */
-        scaleEqual(size: number): Vector;
-        /**
-         * Performs a dot product with another vector
-         * @param v  The vector to dot
-         */
-        dot(v: Vector): number;
-        /**
-         * Performs a 2D cross product with scalar. 2D cross products with a scalar return a vector.
-         * @param v  The vector to cross
-         */
-        cross(v: number): Vector;
-        /**
-         * Performs a 2D cross product with another vector. 2D cross products return a scalar value not a vector.
-         * @param v  The vector to cross
-         */
-        cross(v: Vector): number;
-        /**
-         * Returns the perpendicular vector to this one
-         */
-        perpendicular(): Vector;
-        /**
-         * Returns the normal vector to this one, same as the perpendicular of length 1
-         */
-        normal(): Vector;
-        /**
-         * Negate the current vector
-         */
-        negate(): Vector;
-        /**
-         * Returns the angle of this vector.
-         */
-        toAngle(): number;
-        /**
-         * Rotates the current vector around a point by a certain number of
-         * degrees in radians
-         */
-        rotate(angle: number, anchor?: Vector): Vector;
-        /**
-         * Creates new vector that has the same values as the previous.
-         */
-        clone(): Vector;
-        /**
-         * Returns a string repesentation of the vector.
-         */
-        toString(): string;
-    }
-    /**
-     * A 2D ray that can be cast into the scene to do collision detection
-     */
-    export class Ray {
-        pos: Vector;
-        dir: Vector;
-        /**
-         * @param pos The starting position for the ray
-         * @param dir The vector indicating the direction of the ray
-         */
-        constructor(pos: Vector, dir: Vector);
-        /**
-         * Tests a whether this ray intersects with a line segment. Returns a number greater than or equal to 0 on success.
-         * This number indicates the mathematical intersection time.
-         * @param line  The line to test
-         */
-        intersect(line: Line): number;
-        /**
-         * Returns the point of intersection given the intersection time
-         */
-        getPoint(time: number): Vector;
-    }
-    /**
-     * A 2D line segment
-     */
-    export class Line {
-        begin: Vector;
-        end: Vector;
-        /**
-         * @param begin  The starting point of the line segment
-         * @param end  The ending point of the line segment
-         */
-        constructor(begin: Vector, end: Vector);
-        /**
-         * Gets the raw slope (m) of the line. Will return (+/-)Infinity for vertical lines.
-         */
-        readonly slope: number;
-        /**
-         * Gets the Y-intercept (b) of the line. Will return (+/-)Infinity if there is no intercept.
-         */
-        readonly intercept: number;
-        /**
-         * Returns the slope of the line in the form of a vector
-         */
-        getSlope(): Vector;
-        /**
-         * Returns the length of the line segment in pixels
-         */
-        getLength(): number;
-        /**
-         * Finds a point on the line given only an X or a Y value. Given an X value, the function returns
-         * a new point with the calculated Y value and vice-versa.
-         *
-         * @param x The known X value of the target point
-         * @param y The known Y value of the target point
-         * @returns A new point with the other calculated axis value
-         */
-        findPoint(x?: number, y?: number): Vector;
-        /**
-         * Whether or not the given point lies on this line. This method is precise by default
-         * meaning the point must lie exactly on the line. Adjust threshold to
-         * loosen the strictness of the check for floating-point calculations.
-         */
-        hasPoint(x: number, y: number, threshold?: number): boolean;
-        /**
-         * Whether or not the given point lies on this line. This method is precise by default
-         * meaning the point must lie exactly on the line. Adjust threshold to
-         * loosen the strictness of the check for floating-point calculations.
-         */
-        hasPoint(v: Vector, threshold?: number): boolean;
-    }
-    /**
-     * A 1 dimensional projection on an axis, used to test overlaps
-     */
-    export class Projection {
-        min: number;
-        max: number;
-        constructor(min: number, max: number);
-        overlaps(projection: Projection): boolean;
-        getOverlap(projection: Projection): number;
-    }
-}
-declare module "Physics" {
-    import { Vector } from "Algebra";
-    /**
-     * Possible collision resolution strategies
-     *
-     * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
-     *
-     * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
-     * simulated physical interactions.
-     */
-    export enum CollisionResolutionStrategy {
-        Box = 0,
-        RigidBody = 1,
-    }
-    /**
-     * Possible broadphase collision pair identification strategies
-     *
-     * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
-     * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
-     * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
-     */
-    export enum BroadphaseStrategy {
-        Naive = 0,
-        DynamicAABBTree = 1,
-    }
-    /**
-     * Possible numerical integrators for position and velocity
-     */
-    export enum Integrator {
-        Euler = 0,
-    }
-    /**
-     * The [[Physics]] object is the global configuration object for all Excalibur physics.
-     *
-     * [[include:Physics.md]]
-     */
-    export class Physics {
-        /**
-         * Global acceleration that is applied to all vanilla actors (it wont effect [[Label|labels]], [[UIActor|ui actors]], or
-         * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collision type).
-         *
-         *
-         * This is a great way to globally simulate effects like gravity.
-         */
-        static acc: Vector;
-        /**
-         * Globally switches all Excalibur physics behavior on or off.
-         */
-        static enabled: boolean;
-        /**
-         * Gets or sets the number of collision passes for Excalibur to perform on physics bodies.
-         *
-         * Reducing collision passes may cause things not to collide as expected in your game, but may increase performance.
-         *
-         * More passes can improve the visual quality of collisions when many objects are on the screen. This can reduce jitter, improve the
-         * collision resolution of fast move objects, or the stability of large numbers of objects stacked together.
-         *
-         * Fewer passes will improve the performance of the game at the cost of collision quality, more passes will improve quality at the
-         * cost of performance.
-         *
-         * The default is set to 5 passes which is a good start.
-         */
-        static collisionPasses: number;
-        /**
-         * Gets or sets the broadphase pair identification strategy.
-         *
-         * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
-         * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
-         * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
-         */
-        static broadphaseStrategy: BroadphaseStrategy;
-        /**
-         * Globally switches the debug information for the broadphase strategy
-         */
-        static broadphaseDebug: boolean;
-        /**
-         * Show the normals as a result of collision on the screen.
-         */
-        static showCollisionNormals: boolean;
-        /**
-         * Show the position, velocity, and acceleration as graphical vectors.
-         */
-        static showMotionVectors: boolean;
-        /**
-         * Show the axis-aligned bounding boxes of the collision bodies on the screen.
-         */
-        static showBounds: boolean;
-        /**
-         * Show the bounding collision area shapes
-         */
-        static showArea: boolean;
-        /**
-         * Show points of collision interpreted by excalibur as a result of collision.
-         */
-        static showContacts: boolean;
-        /**
-         * Show the surface normals of the collision areas.
-         */
-        static showNormals: boolean;
-        /**
-         * Gets or sets the global collision resolution strategy (narrowphase).
-         *
-         * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
-         *
-         * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
-         * simulated physical interactions.
-         */
-        static collisionResolutionStrategy: CollisionResolutionStrategy;
-        /**
-         * The default mass to use if none is specified
-         */
-        static defaultMass: number;
-        /**
-         * Gets or sets the position and velocity positional integrator, currently only Euler is supported.
-         */
-        static integrator: Integrator;
-        /**
-         * Number of steps to use in integration. A higher number improves the positional accuracy over time. This can be useful to increase
-         * if you have fast moving objects in your simulation or you have a large number of objects and need to increase stability.
-         */
-        static integrationSteps: number;
-        /**
-         * Gets or sets whether rotation is allowed in a RigidBody collision resolution
-         */
-        static allowRigidBodyRotation: boolean;
-        /**
-         * Configures Excalibur to use box physics. Box physics which performs simple axis aligned arcade style physics.
-         */
-        static useBoxPhysics(): void;
-        /**
-         * Configures Excalibur to use rigid body physics. Rigid body physics allows for complicated
-         * simulated physical interactions.
-         */
-        static useRigidBodyPhysics(): void;
-        /**
-         * Small value to help collision passes settle themselves after the narrowphase.
-         */
-        static collisionShift: number;
-        /**
-         * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
-         */
-        static dynamicTreeVelocityMultiplyer: number;
-        /**
-         * Pad RigidBody BoundingBox by a constant amount
-         */
-        static boundsPadding: number;
-        /**
-         * Surface epsilon is used to help deal with surface penatration
-         */
-        static surfaceEpsilon: number;
-        /**
-         * Enable fast moving body checking, this enables checking for collision pairs via raycast for fast moving objects to prevent
-         * bodies from tunneling through one another.
-         */
-        static checkForFastBodies: boolean;
-        /**
-         * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
-         * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
-         * Excalibur will always perform the fast body raycast regardless of speed.
-         */
-        static disableMinimumSpeedForFastBody: boolean;
     }
 }
 declare module "Util/EasingFunctions" {
@@ -480,117 +86,198 @@ declare module "Util/EasingFunctions" {
         static EaseInOutCubic: EasingFunction;
     }
 }
-declare module "Util/Log" {
+declare module "Promises" {
     /**
-     * Logging level that Excalibur will tag
+     * Valid states for a promise to be in
      */
-    export enum LogLevel {
-        Debug = 0,
-        Info = 1,
-        Warn = 2,
-        Error = 3,
-        Fatal = 4,
+    export enum PromiseState {
+        Resolved = 0,
+        Rejected = 1,
+        Pending = 2,
+    }
+    export interface IPromise<T> {
+        then(successCallback?: (value?: T) => any, rejectCallback?: (value?: T) => any): IPromise<T>;
+        error(rejectCallback?: (value?: any) => any): IPromise<T>;
+        resolve(value?: T): IPromise<T>;
+        reject(value?: any): IPromise<T>;
+        state(): PromiseState;
     }
     /**
-     * Static singleton that represents the logging facility for Excalibur.
-     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
-     * Derive from [[IAppender]] to create your own logging appenders.
+     * Promises are used to do asynchronous work and they are useful for
+     * creating a chain of actions. In Excalibur they are used for loading,
+     * sounds, animation, actions, and more.
      *
-     * [[include:Logger.md]]
+     * [[include:Promises.md]]
      */
-    export class Logger {
-        private static _instance;
-        private _appenders;
-        constructor();
+    export class Promise<T> implements IPromise<T> {
+        private _state;
+        private _value;
+        private _successCallbacks;
+        private _rejectCallback;
+        private _errorCallback;
         /**
-         * Gets or sets the default logging level. Excalibur will only log
-         * messages if equal to or above this level. Default: [[LogLevel.Info]]
+         * Create and resolve a Promise with an optional value
+         * @param value  An optional value to wrap in a resolved promise
          */
-        defaultLevel: LogLevel;
+        static resolve<T>(value?: T): Promise<T>;
         /**
-         * Gets the current static instance of Logger
+         * Create and reject a Promise with an optional value
+         * @param value  An optional value to wrap in a rejected promise
          */
-        static getInstance(): Logger;
+        static reject<T>(value?: T): Promise<T>;
         /**
-         * Adds a new [[IAppender]] to the list of appenders to write to
+         * Returns a new promise that resolves when all the promises passed to it resolve, or rejects
+         * when at least 1 promise rejects.
          */
-        addAppender(appender: IAppender): void;
+        static join<T>(promises: Promise<T>[]): Promise<T>;
         /**
-         * Clears all appenders from the logger
+         * Returns a new promise that resolves when all the promises passed to it resolve, or rejects
+         * when at least 1 promise rejects.
          */
-        clearAppenders(): void;
+        static join<T>(...promises: Promise<T>[]): Promise<T>;
         /**
-         * Logs a message at a given LogLevel
-         * @param level  The LogLevel`to log the message at
-         * @param args   An array of arguments to write to an appender
+         * Chain success and reject callbacks after the promise is resolved
+         * @param successCallback  Call on resolution of promise
+         * @param rejectCallback   Call on rejection of promise
          */
-        private _log(level, args);
+        then(successCallback?: (value?: T) => any, rejectCallback?: (value?: any) => any): this;
         /**
-         * Writes a log message at the [[LogLevel.Debug]] level
-         * @param args  Accepts any number of arguments
+         * Add an error callback to the promise
+         * @param errorCallback  Call if there was an error in a callback
          */
-        debug(...args: any[]): void;
+        error(errorCallback?: (value?: any) => any): this;
         /**
-         * Writes a log message at the [[LogLevel.Info]] level
-         * @param args  Accepts any number of arguments
+         * Resolve the promise and pass an option value to the success callbacks
+         * @param value  Value to pass to the success callbacks
          */
-        info(...args: any[]): void;
+        resolve(value?: T): Promise<T>;
         /**
-         * Writes a log message at the [[LogLevel.Warn]] level
-         * @param args  Accepts any number of arguments
+         * Reject the promise and pass an option value to the reject callbacks
+         * @param value  Value to pass to the reject callbacks
          */
-        warn(...args: any[]): void;
+        reject(value?: any): this;
         /**
-         * Writes a log message at the [[LogLevel.Error]] level
-         * @param args  Accepts any number of arguments
+         * Inspect the current state of a promise
          */
-        error(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Fatal]] level
-         * @param args  Accepts any number of arguments
-         */
-        fatal(...args: any[]): void;
+        state(): PromiseState;
+        private _handleError(e);
     }
+}
+declare module "Math/Random" {
     /**
-     * Contract for any log appender (such as console/screen)
+     * Pseudo-random number generator following the Mersenne_Twister algorithm. Given a seed this generator will produce the same sequence
+     * of numbers each time it is called.
+     * See https://en.wikipedia.org/wiki/Mersenne_Twister for more details.
+     * Uses the MT19937-32 (2002) implementation documented here http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/MT2002/emt19937ar.html
+     *
+     * Api inspired by http://chancejs.com/# https://github.com/chancejs/chancejs
      */
-    export interface IAppender {
+    export class Random {
+        seed: number;
+        private _lowerMask;
+        private _upperMask;
+        private _w;
+        private _n;
+        private _m;
+        private _a;
+        private _u;
+        private _s;
+        private _b;
+        private _t;
+        private _c;
+        private _l;
+        private _f;
+        private _mt;
+        private _index;
         /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
+         * If no seed is specified, the Date.now() is used
          */
-        log(level: LogLevel, args: any[]): void;
-    }
-    /**
-     * Console appender for browsers (i.e. `console.log`)
-     */
-    export class ConsoleAppender implements IAppender {
+        constructor(seed?: number);
         /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
+         * Apply the twist
          */
-        log(level: LogLevel, args: any[]): void;
-    }
-    /**
-     * On-screen (canvas) appender
-     */
-    export class ScreenAppender implements IAppender {
-        private _messages;
-        private _canvas;
-        private _ctx;
+        private _twist();
         /**
-         * @param width   Width of the screen appender in pixels
-         * @param height  Height of the screen appender in pixels
+         * Return next 32 bit integer number in sequence
          */
-        constructor(width?: number, height?: number);
+        nextInt(): number;
         /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
+         * Return a random floating point number between [0, 1)
          */
-        log(level: LogLevel, args: any[]): void;
+        next(): number;
+        /**
+         * Return a random floating point in range [min, max) min is included, max is not included
+         */
+        floating(min: number, max: number): number;
+        /**
+         * Return a random integer in range [min, max] min is included, max is included.
+         * Implemented with rejection sampling, see https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d#.i13tdiu5a
+         */
+        integer(min: number, max: number): number;
+        /**
+         * Returns true or false randomly with 50/50 odds by default.
+         * By default the likelihood of returning a true is .5 (50%).
+         * @param likelihood takes values between [0, 1]
+         */
+        bool(likelihood?: number): boolean;
+        /**
+         * Returns one element from an array at random
+         */
+        pickOne<T>(array: Array<T>): T;
+        /**
+         * Returns a new array random picking elements from the original
+         * @param array Original array to pick from
+         * @param numPicks can be any positive number
+         * @param allowDuplicates indicates whether the returned set is allowed duplicates (it does not mean there will always be duplicates
+         * just that it is possible)
+         */
+        pickSet<T>(array: Array<T>, numPicks: number, allowDuplicates?: boolean): Array<T>;
+        /**
+         * Returns a new array randomly picking elements in the original (not reused)
+         * @param numPicks must be less than or equal to the number of elements in the array.
+         */
+        private _pickSetWithoutDuplicates<T>(array, numPicks);
+        /**
+         * Returns a new array random picking elements from the original allowing duplicates
+         * @param numPicks can be any positive number
+         */
+        private _pickSetWithDuplicates<T>(array, numPicks);
+        /**
+         * Returns a new array that has its elements shuffled. Using the Fisher/Yates method
+         * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+         */
+        shuffle<T>(array: Array<T>): Array<T>;
+        /**
+         * Generate a list of random integer numbers
+         * @param length the length of the final array
+         * @param min the minimum integer number to generate inclusive
+         * @param max the maximum integer number to generate inclusive
+         */
+        range(length: number, min: number, max: number): Array<number>;
+        /**
+         * Returns the result of a d4 dice roll
+         */
+        d4(): number;
+        /**
+         * Returns the result of a d6 dice roll
+         */
+        d6(): number;
+        /**
+         * Returns the result of a d8 dice roll
+         */
+        d8(): number;
+        /**
+         * Returns the result of a d10 dice roll
+         */
+        d10(): number;
+        /**
+         * Returns the result of a d12 dice roll
+         */
+        d12(): number;
+        /**
+         * Returns the result of a d20 dice roll
+         */
+        d20(): number;
     }
 }
 declare module "Collision/Side" {
@@ -607,6 +294,7 @@ declare module "Collision/Side" {
 }
 declare module "Util/Util" {
     import { Vector } from "Algebra";
+    import { Random } from "Math/Random";
     import { Side } from "Collision/Side";
     /**
      * Two PI constant
@@ -651,14 +339,14 @@ declare module "Util/Util" {
      * Clamps a value between a min and max inclusive
      */
     export function clamp(val: number, min: number, max: number): number;
-    export function randomInRange(min: number, max: number): number;
-    export function randomIntInRange(min: number, max: number): number;
+    export function randomInRange(min: number, max: number, random?: Random): number;
+    export function randomIntInRange(min: number, max: number, random?: Random): number;
     export function canonicalizeAngle(angle: number): number;
     export function toDegrees(radians: number): number;
     export function toRadians(degrees: number): number;
     export function getPosition(el: HTMLElement): Vector;
     export function addItemToArray<T>(item: T, array: T[]): boolean;
-    export function removeItemToArray<T>(item: T, array: T[]): boolean;
+    export function removeItemFromArray<T>(item: T, array: T[]): boolean;
     export function contains(array: Array<any>, obj: any): boolean;
     export function getOppositeSide(side: Side): Side;
     export function getSideFromVector(direction: Vector): Side;
@@ -735,513 +423,43 @@ declare module "Util/Util" {
         map(func: (element: T, index: number) => any): void;
     }
 }
-declare module "Util/Decorators" {
-    /**
-     * Obsolete decorator options
-     */
-    export interface IObsoleteOptions {
-        message?: string;
-        alternateMethod?: string;
-    }
-    /**
-     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
-     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
-     */
-    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
-}
-declare module "Promises" {
-    /**
-     * Valid states for a promise to be in
-     */
-    export enum PromiseState {
-        Resolved = 0,
-        Rejected = 1,
-        Pending = 2,
-    }
-    export interface IPromise<T> {
-        then(successCallback?: (value?: T) => any, rejectCallback?: (value?: T) => any): IPromise<T>;
-        error(rejectCallback?: (value?: any) => any): IPromise<T>;
-        resolve(value?: T): IPromise<T>;
-        reject(value?: any): IPromise<T>;
-        state(): PromiseState;
-    }
-    /**
-     * Promises are used to do asynchronous work and they are useful for
-     * creating a chain of actions. In Excalibur they are used for loading,
-     * sounds, animation, actions, and more.
-     *
-     * [[include:Promises.md]]
-     */
-    export class Promise<T> implements IPromise<T> {
-        private _state;
-        private _value;
-        private _successCallbacks;
-        private _rejectCallback;
-        private _errorCallback;
-        /**
-         * Wrap a value in a resolved promise
-         * @param value  An optional value to wrap in a resolved promise
-         * @obsolete Use [[resolve]] instead. This will be deprecated in future versions.
-         */
-        static wrap<T>(value?: T): Promise<T>;
-        /**
-         * Create and resolve a Promise with an optional value
-         * @param value  An optional value to wrap in a resolved promise
-         */
-        static resolve<T>(value?: T): Promise<T>;
-        /**
-         * Create and reject a Promise with an optional value
-         * @param value  An optional value to wrap in a rejected promise
-         */
-        static reject<T>(value?: T): Promise<T>;
-        /**
-         * Returns a new promise that resolves when all the promises passed to it resolve, or rejects
-         * when at least 1 promise rejects.
-         */
-        static join<T>(promises: Promise<T>[]): Promise<T>;
-        /**
-         * Returns a new promise that resolves when all the promises passed to it resolve, or rejects
-         * when at least 1 promise rejects.
-         */
-        static join<T>(...promises: Promise<T>[]): Promise<T>;
-        /**
-         * Chain success and reject callbacks after the promise is resolved
-         * @param successCallback  Call on resolution of promise
-         * @param rejectCallback   Call on rejection of promise
-         */
-        then(successCallback?: (value?: T) => any, rejectCallback?: (value?: any) => any): this;
-        /**
-         * Add an error callback to the promise
-         * @param errorCallback  Call if there was an error in a callback
-         */
-        error(errorCallback?: (value?: any) => any): this;
-        /**
-         * Resolve the promise and pass an option value to the success callbacks
-         * @param value  Value to pass to the success callbacks
-         */
-        resolve(value?: T): Promise<T>;
-        /**
-         * Reject the promise and pass an option value to the reject callbacks
-         * @param value  Value to pass to the reject callbacks
-         */
-        reject(value?: any): this;
-        /**
-         * Inspect the current state of a promise
-         */
-        state(): PromiseState;
-        private _handleError(e);
-    }
-}
-declare module "Camera" {
-    import { Engine } from "Engine";
-    import { EasingFunction } from "Util/EasingFunctions";
-    import { IPromise, Promise } from "Promises";
-    import { Vector } from "Algebra";
+declare module "Interfaces/IActorTrait" {
     import { Actor } from "Actor";
+    import { Engine } from "Engine";
     /**
-     * Cameras
-     *
-     * [[BaseCamera]] is the base class for all Excalibur cameras. Cameras are used
-     * to move around your game and set focus. They are used to determine
-     * what is "off screen" and can be used to scale the game.
-     *
-     * [[include:Cameras.md]]
+     * An interface describing actor update pipeline traits
      */
-    export class BaseCamera {
-        protected _follow: Actor;
-        z: number;
-        dx: number;
-        dy: number;
-        dz: number;
-        ax: number;
-        ay: number;
-        az: number;
-        rotation: number;
-        rx: number;
-        private _x;
-        private _y;
-        private _cameraMoving;
-        private _currentLerpTime;
-        private _lerpDuration;
-        private _lerpStart;
-        private _lerpEnd;
-        private _lerpPromise;
-        protected _isShaking: boolean;
-        private _shakeMagnitudeX;
-        private _shakeMagnitudeY;
-        private _shakeDuration;
-        private _elapsedShakeTime;
-        private _xShake;
-        private _yShake;
-        protected _isZooming: boolean;
-        private _maxZoomScale;
-        private _zoomDuration;
-        private _zoomPromise;
-        private _zoomIncrement;
-        private _easing;
-        /**
-         * Get the camera's x position
-         */
-        /**
-         * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
-         */
-        x: number;
-        /**
-         * Get the camera's y position
-         */
-        /**
-         * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
-         */
-        y: number;
-        /**
-         * Sets the [[Actor]] to follow with the camera
-         * @param actor  The actor to follow
-         */
-        setActorToFollow(actor: Actor): void;
-        /**
-         * Returns the focal point of the camera, a new point giving the x and y position of the camera
-         */
-        getFocus(): Vector;
-        /**
-         * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
-         *
-         * @param pos The target position to move to
-         * @param duration The duration in milliseconds the move should last
-         * @param [easingFn] An optional easing function ([[ex.EasingFunctions.EaseInOutCubic]] by default)
-         * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
-         *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
-         */
-        move(pos: Vector, duration: number, easingFn?: EasingFunction): IPromise<Vector>;
-        /**
-         * Sets the camera to shake at the specified magnitudes for the specified duration
-         * @param magnitudeX  The x magnitude of the shake
-         * @param magnitudeY  The y magnitude of the shake
-         * @param duration    The duration of the shake in milliseconds
-         */
-        shake(magnitudeX: number, magnitudeY: number, duration: number): void;
-        /**
-         * Zooms the camera in or out by the specified scale over the specified duration.
-         * If no duration is specified, it take effect immediately.
-         * @param scale    The scale of the zoom
-         * @param duration The duration of the zoom in milliseconds
-         */
-        zoom(scale: number, duration?: number): Promise<boolean>;
-        /**
-         * Gets the current zoom scale
-         */
-        getZoom(): number;
-        update(_engine: Engine, delta: number): void;
-        /**
-         * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
-         * @param ctx    Canvas context to apply transformations
-         * @param delta  The number of milliseconds since the last update
-         */
-        draw(ctx: CanvasRenderingContext2D): void;
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-        private _isDoneShaking();
-    }
-    /**
-     * An extension of [[BaseCamera]] that is locked vertically; it will only move side to side.
-     *
-     * Common usages: platformers.
-     */
-    export class SideCamera extends BaseCamera {
-        getFocus(): Vector;
-    }
-    /**
-     * An extension of [[BaseCamera]] that is locked to an [[Actor]] or
-     * [[LockedCamera.getFocus|focal point]]; the actor will appear in the
-     * center of the screen.
-     *
-     * Common usages: RPGs, adventure games, top-down games.
-     */
-    export class LockedCamera extends BaseCamera {
-        getFocus(): Vector;
+    export interface IActorTrait {
+        update(actor: Actor, engine: Engine, delta: number): void;
     }
 }
-declare module "DebugFlags" {
-    export interface IDebugFlags {
+declare module "Traits/CapturePointer" {
+    import { IActorTrait } from "Interfaces/IActorTrait";
+    import { Actor } from "Actor";
+    import { Engine } from "Engine";
+    export interface ICapturePointerConfig {
+        /**
+         * Capture PointerMove events (may be expensive!)
+         */
+        captureMoveEvents: boolean;
+        /**
+         * Capture PointerDrag events (may be expensive!)
+         */
+        captureDragEvents: boolean;
+    }
+    /**
+     * Propogates pointer events to the actor
+     */
+    export class CapturePointer implements IActorTrait {
+        update(actor: Actor, engine: Engine): void;
     }
 }
-declare module "Debug" {
-    import { IDebugFlags } from "DebugFlags";
-    /**
-     * Debug stats containing current and previous frame statistics
-     */
-    export interface IDebugStats {
-        currFrame: FrameStats;
-        prevFrame: FrameStats;
-    }
-    /**
-     * Represents a frame's individual statistics
-     */
-    export interface IFrameStats {
-        /**
-         * The number of the frame
-         */
-        id: number;
-        /**
-         * Gets the frame's delta (time since last frame scaled by [[Engine.timescale]]) (in ms)
-         */
-        delta: number;
-        /**
-         * Gets the frame's frames-per-second (FPS)
-         */
-        fps: number;
-        /**
-         * Duration statistics (in ms)
-         */
-        duration: IFrameDurationStats;
-        /**
-         * Actor statistics
-         */
-        actors: IFrameActorStats;
-        /**
-         * Physics statistics
-         */
-        physics: IPhysicsStats;
-    }
-    /**
-     * Represents actor stats for a frame
-     */
-    export interface IFrameActorStats {
-        /**
-         * Gets the frame's number of actors (alive)
-         */
-        alive: number;
-        /**
-         * Gets the frame's number of actors (killed)
-         */
-        killed: number;
-        /**
-         * Gets the frame's number of remaining actors (alive - killed)
-         */
-        remaining: number;
-        /**
-         * Gets the frame's number of UI actors
-         */
-        ui: number;
-        /**
-         * Gets the frame's number of total actors (remaining + UI)
-         */
-        total: number;
-    }
-    /**
-     * Represents duration stats for a frame
-     */
-    export interface IFrameDurationStats {
-        /**
-         * Gets the frame's total time to run the update function (in ms)
-         */
-        update: number;
-        /**
-         * Gets the frame's total time to run the draw function (in ms)
-         */
-        draw: number;
-        /**
-         * Gets the frame's total render duration (update + draw duration) (in ms)
-         */
-        total: number;
-    }
-    /**
-     * Represents physics stats for the current frame
-     */
-    export interface IPhysicsStats {
-        /**
-         * Gets the number of broadphase collision pairs which
-         */
-        pairs: number;
-        /**
-         * Gets the number of actural collisons
-         */
-        collisions: number;
-        /**
-         * Gets the number of fast moving bodies using raycast continuous collisions in the scene
-         */
-        fastBodies: number;
-        /**
-         * Gets the number of bodies that had a fast body collision resolution
-         */
-        fastBodyCollisions: number;
-        /**
-         * Gets the time it took to calculate the broadphase pairs
-         */
-        broadphase: number;
-        /**
-         * Gets the time it took to calculate the narrowphase
-         */
-        narrowphase: number;
-    }
-    /**
-     * Debug statistics and flags for Excalibur. If polling these values, it would be
-     * best to do so on the `postupdate` event for [[Engine]], after all values have been
-     * updated during a frame.
-     */
-    export class Debug implements IDebugFlags {
-        /**
-         * Performance statistics
-         */
-        stats: IDebugStats;
-    }
-    /**
-     * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
-     * creating instances of this every frame.
-     */
-    export class FrameStats implements IFrameStats {
-        private _id;
-        private _delta;
-        private _fps;
-        private _actorStats;
-        private _durationStats;
-        private _physicsStats;
-        /**
-         * Zero out values or clone other IFrameStat stats. Allows instance reuse.
-         *
-         * @param [otherStats] Optional stats to clone
-         */
-        reset(otherStats?: IFrameStats): void;
-        /**
-         * Provides a clone of this instance.
-         */
-        clone(): FrameStats;
-        /**
-         * Gets the frame's id
-         */
-        /**
-         * Sets the frame's id
-         */
-        id: number;
-        /**
-         * Gets the frame's delta (time since last frame)
-         */
-        /**
-         * Sets the frame's delta (time since last frame). Internal use only.
-         * @internal
-         */
-        delta: number;
-        /**
-         * Gets the frame's frames-per-second (FPS)
-         */
-        /**
-         * Sets the frame's frames-per-second (FPS). Internal use only.
-         * @internal
-         */
-        fps: number;
-        /**
-         * Gets the frame's actor statistics
-         */
-        readonly actors: IFrameActorStats;
-        /**
-         * Gets the frame's duration statistics
-         */
-        readonly duration: IFrameDurationStats;
-        /**
-         * Gets the frame's physics statistics
-         */
-        readonly physics: PhysicsStats;
-    }
-    export class PhysicsStats implements IPhysicsStats {
-        private _pairs;
-        private _collisions;
-        private _fastBodies;
-        private _fastBodyCollisions;
-        private _broadphase;
-        private _narrowphase;
-        /**
-         * Zero out values or clone other IPhysicsStats stats. Allows instance reuse.
-         *
-         * @param [otherStats] Optional stats to clone
-         */
-        reset(otherStats?: IPhysicsStats): void;
-        /**
-         * Provides a clone of this instance.
-         */
-        clone(): IPhysicsStats;
-        pairs: number;
-        collisions: number;
-        fastBodies: number;
-        fastBodyCollisions: number;
-        broadphase: number;
-        narrowphase: number;
-    }
-}
-declare module "Interfaces/IEvented" {
-    import { GameEvent } from "Events";
-    export interface IEvented {
-        /**
-         * Emits an event for target
-         * @param eventName  The name of the event to publish
-         * @param event      Optionally pass an event data object to the handler
-         */
-        emit(eventName: string, event?: GameEvent<any>): void;
-        /**
-         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
-         * @param eventName  The name of the event to subscribe to
-         * @param handler    The handler callback to fire on this event
-         */
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * Unsubscribe an event handler(s) from an event. If a specific handler
-         * is specified for an event, only that handler will be unsubscribed.
-         * Otherwise all handlers will be unsubscribed for that event.
-         *
-         * @param eventName  The name of the event to unsubscribe
-         * @param handler    Optionally the specific handler to unsubscribe
-         *
-         */
-        off(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-    }
-}
-declare module "EventDispatcher" {
-    import { GameEvent } from "Events";
-    import { IEvented } from "Interfaces/IEvented";
-    /**
-     * Excalibur's internal event dispatcher implementation.
-     * Callbacks are fired immediately after an event is published.
-     * Typically you will use [[Class.eventDispatcher]] since most classes in
-     * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
-     * yourself.
-     *
-     * [[include:Events.md]]
-     */
-    export class EventDispatcher implements IEvented {
-        private _handlers;
-        private _wiredEventDispatchers;
-        private _target;
-        /**
-         * @param target  The object that will be the recipient of events from this event dispatcher
-         */
-        constructor(target: any);
-        /**
-         * Emits an event for target
-         * @param eventName  The name of the event to publish
-         * @param event      Optionally pass an event data object to the handler
-         */
-        emit(eventName: string, event?: GameEvent<any>): void;
-        /**
-         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
-         * @param eventName  The name of the event to subscribe to
-         * @param handler    The handler callback to fire on this event
-         */
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * Unsubscribe an event handler(s) from an event. If a specific handler
-         * is specified for an event, only that handler will be unsubscribed.
-         * Otherwise all handlers will be unsubscribed for that event.
-         *
-         * @param eventName  The name of the event to unsubscribe
-         * @param handler    Optionally the specific handler to unsubscribe
-         *
-         */
-        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
-        /**
-         * Wires this event dispatcher to also recieve events from another
-         */
-        wire(eventDispatcher: EventDispatcher): void;
-        /**
-         * Unwires this event dispatcher from another
-         */
-        unwire(eventDispatcher: EventDispatcher): void;
+declare module "Traits/EulerMovement" {
+    import { IActorTrait } from "Interfaces/IActorTrait";
+    import { Actor } from "Actor";
+    import { Engine } from "Engine";
+    export class EulerMovement implements IActorTrait {
+        update(actor: Actor, _engine: Engine, delta: number): void;
     }
 }
 declare module "Drawing/Color" {
@@ -1362,8 +580,28 @@ declare module "Drawing/Color" {
         average(color: Color): Color;
         /**
          * Returns a CSS string representation of a color.
+         *
+         * @param format Color representation, accepts: rgb, hsl, or hex
          */
-        toString(): string;
+        toString(format?: 'rgb' | 'hsl' | 'hex'): string;
+        /**
+         * Returns Hex Value of a color component
+         * @param c color component
+         * @see https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+         */
+        private _componentToHex(c);
+        /**
+         * Return Hex representation of a color.
+         */
+        toHex(): string;
+        /**
+         * Return RGBA representation of a color.
+         */
+        toRGBA(): string;
+        /**
+         * Return HSLA representation of a color.
+         */
+        toHSLA(): string;
         /**
          * Returns a CSS string representation of a color.
          */
@@ -1450,6 +688,229 @@ declare module "Drawing/Color" {
         static Transparent: Color;
     }
 }
+declare module "Util/CullingBox" {
+    import { Actor } from "Actor";
+    import { Engine } from "Engine";
+    export class CullingBox {
+        private _topLeft;
+        private _topRight;
+        private _bottomLeft;
+        private _bottomRight;
+        private _xCoords;
+        private _yCoords;
+        private _xMin;
+        private _yMin;
+        private _xMax;
+        private _yMax;
+        private _xMinWorld;
+        private _yMinWorld;
+        private _xMaxWorld;
+        private _yMaxWorld;
+        isSpriteOffScreen(actor: Actor, engine: Engine): boolean;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+}
+declare module "Traits/OffscreenCulling" {
+    import { CullingBox } from "Util/CullingBox";
+    import { IActorTrait } from "Interfaces/IActorTrait";
+    import { Actor } from "Actor";
+    import { Engine } from "Engine";
+    export class OffscreenCulling implements IActorTrait {
+        cullingBox: CullingBox;
+        update(actor: Actor, engine: Engine): void;
+    }
+}
+declare module "Traits/TileMapCollisionDetection" {
+    import { IActorTrait } from "Interfaces/IActorTrait";
+    import { Actor } from "Actor";
+    import { Engine } from "Engine";
+    export class TileMapCollisionDetection implements IActorTrait {
+        update(actor: Actor, engine: Engine): void;
+    }
+}
+declare module "Traits/Index" {
+    export * from "Traits/CapturePointer";
+    export * from "Traits/EulerMovement";
+    export * from "Traits/OffscreenCulling";
+    export * from "Traits/TileMapCollisionDetection";
+}
+declare module "UIActor" {
+    import { Engine } from "Engine";
+    import { Actor, IActorArgs } from "Actor";
+    /**
+     * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
+     * not participate in collisions. Drawn on top of all other actors.
+     */
+    export class UIActor extends Actor {
+        protected _engine: Engine;
+        constructor();
+        constructor(xOrConfig?: number, y?: number, width?: number, height?: number);
+        constructor(config?: IActorArgs);
+        _initialize(engine: Engine): void;
+        contains(x: number, y: number, useWorld?: boolean): boolean;
+    }
+}
+declare module "Util/Log" {
+    /**
+     * Logging level that Excalibur will tag
+     */
+    export enum LogLevel {
+        Debug = 0,
+        Info = 1,
+        Warn = 2,
+        Error = 3,
+        Fatal = 4,
+    }
+    /**
+     * Static singleton that represents the logging facility for Excalibur.
+     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
+     * Derive from [[IAppender]] to create your own logging appenders.
+     *
+     * [[include:Logger.md]]
+     */
+    export class Logger {
+        private static _instance;
+        private _appenders;
+        constructor();
+        /**
+         * Gets or sets the default logging level. Excalibur will only log
+         * messages if equal to or above this level. Default: [[LogLevel.Info]]
+         */
+        defaultLevel: LogLevel;
+        /**
+         * Gets the current static instance of Logger
+         */
+        static getInstance(): Logger;
+        /**
+         * Adds a new [[IAppender]] to the list of appenders to write to
+         */
+        addAppender(appender: IAppender): void;
+        /**
+         * Clears all appenders from the logger
+         */
+        clearAppenders(): void;
+        /**
+         * Logs a message at a given LogLevel
+         * @param level  The LogLevel`to log the message at
+         * @param args   An array of arguments to write to an appender
+         */
+        private _log(level, args);
+        /**
+         * Writes a log message at the [[LogLevel.Debug]] level
+         * @param args  Accepts any number of arguments
+         */
+        debug(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Info]] level
+         * @param args  Accepts any number of arguments
+         */
+        info(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Warn]] level
+         * @param args  Accepts any number of arguments
+         */
+        warn(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Error]] level
+         * @param args  Accepts any number of arguments
+         */
+        error(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Fatal]] level
+         * @param args  Accepts any number of arguments
+         */
+        fatal(...args: any[]): void;
+    }
+    /**
+     * Contract for any log appender (such as console/screen)
+     */
+    export interface IAppender {
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+    /**
+     * Console appender for browsers (i.e. `console.log`)
+     */
+    export class ConsoleAppender implements IAppender {
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+    /**
+     * On-screen (canvas) appender
+     */
+    export class ScreenAppender implements IAppender {
+        private _messages;
+        private _canvas;
+        private _ctx;
+        /**
+         * @param width   Width of the screen appender in pixels
+         * @param height  Height of the screen appender in pixels
+         */
+        constructor(width?: number, height?: number);
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+}
+declare module "Timer" {
+    import { Scene } from "Scene";
+    /**
+     * The Excalibur timer hooks into the internal timer and fires callbacks,
+     * after a certain interval, optionally repeating.
+     */
+    export class Timer {
+        static id: number;
+        id: number;
+        interval: number;
+        fcn: () => void;
+        repeats: boolean;
+        private _elapsedTime;
+        private _totalTimeAlive;
+        private _paused;
+        complete: boolean;
+        scene: Scene;
+        /**
+         * @param fcn        The callback to be fired after the interval is complete.
+         * @param interval   Interval length
+         * @param repeats    Indicates whether this call back should be fired only once, or repeat after every interval as completed.
+         */
+        constructor(fcn: () => void, interval: number, repeats?: boolean);
+        /**
+         * Updates the timer after a certain number of milliseconds have elapsed. This is used internally by the engine.
+         * @param delta  Number of elapsed milliseconds since the last update.
+         */
+        update(delta: number): void;
+        /**
+         * Resets the timer so that it can be reused, and optionally reconfigure the timers interval.
+         * @param newInterval If specified, sets a new non-negative interval in milliseconds to refire the callback
+         */
+        reset(newInterval?: number): void;
+        getTimeRunning(): number;
+        /**
+         * Pauses the timer so that no more time will be incremented towards the next call
+         */
+        pause(): void;
+        /**
+         * Unpauses the timer. Time will now increment towards the next call
+         */
+        unpause(): void;
+        /**
+         * Cancels the timer, preventing any further executions.
+         */
+        cancel(): void;
+    }
+}
 declare module "Collision/CollisionContact" {
     import { ICollisionArea } from "Collision/ICollisionArea";
     import { Vector } from "Algebra";
@@ -1485,7 +946,7 @@ declare module "Collision/CollisionContact" {
         normal: Vector;
         constructor(bodyA: ICollisionArea, bodyB: ICollisionArea, mtv: Vector, point: Vector, normal: Vector);
         resolve(strategy: CollisionResolutionStrategy): void;
-        private _applyBoxImpluse(bodyA, bodyB, mtv, side);
+        private _applyBoxImpulse(bodyA, bodyB, mtv);
         private _resolveBoxCollision();
         private _resolveRigidBodyCollision();
     }
@@ -1551,20 +1012,6 @@ declare module "Collision/ICollisionArea" {
          */
         debugDraw(ctx: CanvasRenderingContext2D, color: Color): void;
     }
-}
-declare module "Collision/CollisionJumpTable" {
-    import { CircleArea } from "Collision/CircleArea";
-    import { CollisionContact } from "Collision/CollisionContact";
-    import { PolygonArea } from "Collision/PolygonArea";
-    import { EdgeArea } from "Collision/EdgeArea";
-    export var CollisionJumpTable: {
-        CollideCircleCircle(circleA: CircleArea, circleB: CircleArea): CollisionContact;
-        CollideCirclePolygon(circle: CircleArea, polygon: PolygonArea): CollisionContact;
-        CollideCircleEdge(circle: CircleArea, edge: EdgeArea): CollisionContact;
-        CollideEdgeEdge(): CollisionContact;
-        CollidePolygonEdge(polygon: PolygonArea, edge: EdgeArea): CollisionContact;
-        CollidePolygonPolygon(polyA: PolygonArea, polyB: PolygonArea): CollisionContact;
-    };
 }
 declare module "Collision/CircleArea" {
     import { Body } from "Collision/Body";
@@ -1642,264 +1089,19 @@ declare module "Collision/CircleArea" {
         debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
     }
 }
-declare module "Util/DrawUtil" {
-    import { Color } from "Drawing/Color";
-    import { Vector } from "Algebra";
-    /**
-     * A canvas linecap style. "butt" is the default flush style, "round" is a semi-circle cap with a radius half the width of
-     * the line, and "square" is a rectangle that is an equal width and half height cap.
-     */
-    export type LineCapStyle = 'butt' | 'round' | 'square';
-    /**
-     * Draw a line on canvas context
-     *
-     * @param ctx The canvas context
-     * @param color The color of the line
-     * @param x1 The start x coordinate
-     * @param y1 The start y coordinate
-     * @param x2 The ending x coordinate
-     * @param y2 The ending y coordinate
-     * @param thickness The line thickness
-     * @param cap The [[LineCapStyle]] (butt, round, or square)
-     */
-    export function line(ctx: CanvasRenderingContext2D, color: Color, x1: number, y1: number, x2: number, y2: number, thickness?: number, cap?: LineCapStyle): void;
-    /**
-     * Draw the vector as a point onto the canvas.
-     */
-    export function point(ctx: CanvasRenderingContext2D, color: Color, point: Vector): void;
-    /**
-     * Draw the vector as a line onto the canvas starting a origin point.
-     */
-    export function vector(ctx: CanvasRenderingContext2D, color: Color, origin: Vector, vector: Vector, scale?: number): void;
-    /**
-     * Represents border radius values
-     */
-    export interface IBorderRadius {
-        /**
-         * Top-left
-         */
-        tl: number;
-        /**
-         * Top-right
-         */
-        tr: number;
-        /**
-         * Bottom-right
-         */
-        br: number;
-        /**
-         * Bottom-left
-         */
-        bl: number;
-    }
-    /**
-     * Draw a round rectangle on a canvas context
-     *
-     * @param ctx The canvas context
-     * @param x The top-left x coordinate
-     * @param y The top-left y coordinate
-     * @param width The width of the rectangle
-     * @param height The height of the rectangle
-     * @param radius The border radius of the rectangle
-     * @param fill The [[Color]] to fill rectangle with
-     * @param stroke The [[Color]] to stroke rectangle with
-     */
-    export function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | IBorderRadius, stroke?: Color, fill?: Color): void;
-    export function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, stroke?: Color, fill?: Color): void;
-}
-declare module "Collision/Body" {
-    import { ICollisionArea } from "Collision/ICollisionArea";
-    import { BoundingBox } from "Collision/BoundingBox";
-    import { Vector } from "Algebra";
-    import { Actor } from "Actor";
-    export class Body {
-        actor: Actor;
-        /**
-         * Constructs a new physics body associated with an actor
-         */
-        constructor(actor: Actor);
-        /**
-         * [ICollisionArea|Collision area] of this physics body, defines the shape for rigid body collision
-         */
-        collisionArea: ICollisionArea;
-        /**
-         * The (x, y) position of the actor this will be in the middle of the actor if the
-         * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
-         * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
-         */
-        pos: Vector;
-        /**
-         * The position of the actor last frame (x, y) in pixels
-         */
-        oldPos: Vector;
-        /**
-         * The current velocity vector (vx, vy) of the actor in pixels/second
-         */
-        vel: Vector;
-        /**
-         * The velocity of the actor last frame (vx, vy) in pixels/second
-         */
-        oldVel: Vector;
-        /**
-         * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
-         * be useful to simulate a gravitational effect.
-         */
-        acc: Vector;
-        /**
-         * The current torque applied to the actor
-         */
-        torque: number;
-        /**
-         * The current mass of the actor, mass can be thought of as the resistance to acceleration.
-         */
-        mass: number;
-        /**
-         * The current moment of inertia, moi can be thought of as the resistance to rotation.
-         */
-        moi: number;
-        /**
-         * The current "motion" of the actor, used to calculated sleep in the physics simulation
-         */
-        motion: number;
-        /**
-         * The coefficient of friction on this actor
-         */
-        friction: number;
-        /**
-         * The coefficient of restitution of this actor, represents the amount of energy preserved after collision
-         */
-        restitution: number;
-        /**
-         * The rotation of the actor in radians
-         */
-        rotation: number;
-        /**
-         * The rotational velocity of the actor in radians/second
-         */
-        rx: number;
-        private _totalMtv;
-        /**
-         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
-         */
-        addMtv(mtv: Vector): void;
-        /**
-         * Applies the accumulated translation vectors to the actors position
-         */
-        applyMtv(): void;
-        /**
-         * Returns the body's [[BoundingBox]] calculated for this instant in world space.
-         */
-        getBounds(): BoundingBox;
-        /**
-         * Returns the actor's [[BoundingBox]] relative to the actors position.
-         */
-        getRelativeBounds(): BoundingBox;
-        /**
-         * Updates the collision area geometry and internal caches
-         */
-        update(): void;
-        /**
-         * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        useBoxCollision(center?: Vector): void;
-        /**
-         * Sets up a polygon collision area based on a list of of points relative to the anchor of the associated actor of this physics body.
-         *
-         * Only [convex polygon](https://en.wikipedia.org/wiki/Convex_polygon) definitions are supported.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        usePolygonCollision(points: Vector[], center?: Vector): void;
-        /**
-         * Sets up a [[CircleArea|circle collision area]] with a specified radius in pixels.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        useCircleCollision(radius?: number, center?: Vector): void;
-        /**
-         * Sets up an [[EdgeArea|edge collision]] with a start point and an end point relative to the anchor of the associated actor
-         * of this physics body.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        useEdgeCollision(begin: Vector, end: Vector): void;
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-    }
-}
-declare module "Collision/EdgeArea" {
-    import { Body } from "Collision/Body";
-    import { BoundingBox } from "Collision/BoundingBox";
+declare module "Collision/CollisionJumpTable" {
+    import { CircleArea } from "Collision/CircleArea";
     import { CollisionContact } from "Collision/CollisionContact";
-    import { ICollisionArea } from "Collision/ICollisionArea";
-    import { Vector, Ray, Projection } from "Algebra";
-    import { Color } from "Drawing/Color";
-    export interface IEdgeAreaOptions {
-        begin?: Vector;
-        end?: Vector;
-        body?: Body;
-    }
-    export class EdgeArea implements ICollisionArea {
-        body: Body;
-        pos: Vector;
-        begin: Vector;
-        end: Vector;
-        constructor(options: IEdgeAreaOptions);
-        /**
-         * Get the center of the collision area in world coordinates
-         */
-        getCenter(): Vector;
-        private _getBodyPos();
-        private _getTransformedBegin();
-        private _getTransformedEnd();
-        /**
-         * Returns the slope of the line in the form of a vector
-         */
-        getSlope(): Vector;
-        /**
-         * Returns the length of the line segment in pixels
-         */
-        getLength(): number;
-        /**
-         * Tests if a point is contained in this collision area
-         */
-        contains(): boolean;
-        /**
-         * @inheritdoc
-         */
-        rayCast(ray: Ray, max?: number): Vector;
-        /**
-         * @inheritdoc
-         */
-        collide(area: ICollisionArea): CollisionContact;
-        /**
-         * Find the point on the shape furthest in the direction specified
-         */
-        getFurthestPoint(direction: Vector): Vector;
-        /**
-         * Get the axis aligned bounding box for the circle area
-         */
-        getBounds(): BoundingBox;
-        /**
-         * Get the axis associated with the edge
-         */
-        getAxes(): Vector[];
-        /**
-         * Get the moment of inertia for an edge
-         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-         */
-        getMomentOfInertia(): number;
-        /**
-         * @inheritdoc
-         */
-        recalc(): void;
-        /**
-         * Project the edge along a specified axis
-         */
-        project(axis: Vector): Projection;
-        debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
-    }
+    import { PolygonArea } from "Collision/PolygonArea";
+    import { EdgeArea } from "Collision/EdgeArea";
+    export var CollisionJumpTable: {
+        CollideCircleCircle(circleA: CircleArea, circleB: CircleArea): CollisionContact;
+        CollideCirclePolygon(circle: CircleArea, polygon: PolygonArea): CollisionContact;
+        CollideCircleEdge(circle: CircleArea, edge: EdgeArea): CollisionContact;
+        CollideEdgeEdge(): CollisionContact;
+        CollidePolygonEdge(polygon: PolygonArea, edge: EdgeArea): CollisionContact;
+        CollidePolygonPolygon(polyA: PolygonArea, polyB: PolygonArea): CollisionContact;
+    };
 }
 declare module "Collision/PolygonArea" {
     import { Color } from "Drawing/Color";
@@ -1956,6 +1158,14 @@ declare module "Collision/PolygonArea" {
          * Find the point on the shape furthest in the direction specified
          */
         getFurthestPoint(direction: Vector): Vector;
+        /**
+         * Finds the closes face to the point using perpendicular distance
+         * @param point point to test against polygon
+         */
+        getClosestFace(point: Vector): {
+            distance: Vector;
+            face: Line;
+        };
         /**
          * Get the axis aligned bounding box for the polygon area
          */
@@ -2074,6 +1284,740 @@ declare module "Collision/BoundingBox" {
          */
         collides(collidable: ICollidable): Vector;
         debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
+    }
+}
+declare module "Collision/EdgeArea" {
+    import { Body } from "Collision/Body";
+    import { BoundingBox } from "Collision/BoundingBox";
+    import { CollisionContact } from "Collision/CollisionContact";
+    import { ICollisionArea } from "Collision/ICollisionArea";
+    import { Vector, Ray, Projection } from "Algebra";
+    import { Color } from "Drawing/Color";
+    export interface IEdgeAreaOptions {
+        begin?: Vector;
+        end?: Vector;
+        body?: Body;
+    }
+    export class EdgeArea implements ICollisionArea {
+        body: Body;
+        pos: Vector;
+        begin: Vector;
+        end: Vector;
+        constructor(options: IEdgeAreaOptions);
+        /**
+         * Get the center of the collision area in world coordinates
+         */
+        getCenter(): Vector;
+        private _getBodyPos();
+        private _getTransformedBegin();
+        private _getTransformedEnd();
+        /**
+         * Returns the slope of the line in the form of a vector
+         */
+        getSlope(): Vector;
+        /**
+         * Returns the length of the line segment in pixels
+         */
+        getLength(): number;
+        /**
+         * Tests if a point is contained in this collision area
+         */
+        contains(): boolean;
+        /**
+         * @inheritdoc
+         */
+        rayCast(ray: Ray, max?: number): Vector;
+        /**
+         * @inheritdoc
+         */
+        collide(area: ICollisionArea): CollisionContact;
+        /**
+         * Find the point on the shape furthest in the direction specified
+         */
+        getFurthestPoint(direction: Vector): Vector;
+        /**
+         * Get the axis aligned bounding box for the circle area
+         */
+        getBounds(): BoundingBox;
+        /**
+         * Get the axis associated with the edge
+         */
+        getAxes(): Vector[];
+        /**
+         * Get the moment of inertia for an edge
+         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+         */
+        getMomentOfInertia(): number;
+        /**
+         * @inheritdoc
+         */
+        recalc(): void;
+        /**
+         * Project the edge along a specified axis
+         */
+        project(axis: Vector): Projection;
+        debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
+    }
+}
+declare module "Util/DrawUtil" {
+    import { Color } from "Drawing/Color";
+    import { Vector } from "Algebra";
+    /**
+     * A canvas linecap style. "butt" is the default flush style, "round" is a semi-circle cap with a radius half the width of
+     * the line, and "square" is a rectangle that is an equal width and half height cap.
+     */
+    export type LineCapStyle = 'butt' | 'round' | 'square';
+    /**
+     * Draw a line on canvas context
+     *
+     * @param ctx The canvas context
+     * @param color The color of the line
+     * @param x1 The start x coordinate
+     * @param y1 The start y coordinate
+     * @param x2 The ending x coordinate
+     * @param y2 The ending y coordinate
+     * @param thickness The line thickness
+     * @param cap The [[LineCapStyle]] (butt, round, or square)
+     */
+    export function line(ctx: CanvasRenderingContext2D, color: Color, x1: number, y1: number, x2: number, y2: number, thickness?: number, cap?: LineCapStyle): void;
+    /**
+     * Draw the vector as a point onto the canvas.
+     */
+    export function point(ctx: CanvasRenderingContext2D, color: Color, point: Vector): void;
+    /**
+     * Draw the vector as a line onto the canvas starting a origin point.
+     */
+    export function vector(ctx: CanvasRenderingContext2D, color: Color, origin: Vector, vector: Vector, scale?: number): void;
+    /**
+     * Represents border radius values
+     */
+    export interface IBorderRadius {
+        /**
+         * Top-left
+         */
+        tl: number;
+        /**
+         * Top-right
+         */
+        tr: number;
+        /**
+         * Bottom-right
+         */
+        br: number;
+        /**
+         * Bottom-left
+         */
+        bl: number;
+    }
+    /**
+     * Draw a round rectangle on a canvas context
+     *
+     * @param ctx The canvas context
+     * @param x The top-left x coordinate
+     * @param y The top-left y coordinate
+     * @param width The width of the rectangle
+     * @param height The height of the rectangle
+     * @param radius The border radius of the rectangle
+     * @param fill The [[Color]] to fill rectangle with
+     * @param stroke The [[Color]] to stroke rectangle with
+     */
+    export function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | IBorderRadius, stroke?: Color, fill?: Color): void;
+    export function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, stroke?: Color, fill?: Color): void;
+}
+declare module "Collision/Pair" {
+    import { Body } from "Collision/Body";
+    import { CollisionContact } from "Collision/CollisionContact";
+    import { CollisionResolutionStrategy } from "Physics";
+    /**
+     * Models a potential collision between 2 bodies
+     */
+    export class Pair {
+        bodyA: Body;
+        bodyB: Body;
+        id: string;
+        collision: CollisionContact;
+        constructor(bodyA: Body, bodyB: Body);
+        /**
+         * Returns whether or not it is possible for the pairs to collide
+         */
+        readonly canCollide: boolean;
+        /**
+         * Runs the collison intersection logic on the members of this pair
+         */
+        collide(): void;
+        /**
+         * Resovles the collision body position and velocity if a collision occured
+         */
+        resolve(strategy: CollisionResolutionStrategy): void;
+        /**
+         * Calculates the unique pair hash id for this collision pair
+         */
+        static calculatePairHash(bodyA: Body, bodyB: Body): string;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+}
+declare module "Collision/Body" {
+    import { ICollisionArea } from "Collision/ICollisionArea";
+    import { BoundingBox } from "Collision/BoundingBox";
+    import { Vector } from "Algebra";
+    import { Actor } from "Actor";
+    export class Body {
+        actor: Actor;
+        /**
+         * Constructs a new physics body associated with an actor
+         */
+        constructor(actor: Actor);
+        /**
+         * [[ICollisionArea|Collision area]] of this physics body, defines the shape for rigid body collision
+         */
+        collisionArea: ICollisionArea;
+        /**
+         * The (x, y) position of the actor this will be in the middle of the actor if the
+         * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
+         * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
+         */
+        pos: Vector;
+        /**
+         * The position of the actor last frame (x, y) in pixels
+         */
+        oldPos: Vector;
+        /**
+         * The current velocity vector (vx, vy) of the actor in pixels/second
+         */
+        vel: Vector;
+        /**
+         * The velocity of the actor last frame (vx, vy) in pixels/second
+         */
+        oldVel: Vector;
+        /**
+         * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
+         * be useful to simulate a gravitational effect.
+         */
+        acc: Vector;
+        /**
+         * The current torque applied to the actor
+         */
+        torque: number;
+        /**
+         * The current mass of the actor, mass can be thought of as the resistance to acceleration.
+         */
+        mass: number;
+        /**
+         * The current moment of inertia, moi can be thought of as the resistance to rotation.
+         */
+        moi: number;
+        /**
+         * The current "motion" of the actor, used to calculated sleep in the physics simulation
+         */
+        motion: number;
+        /**
+         * The coefficient of friction on this actor
+         */
+        friction: number;
+        /**
+         * The coefficient of restitution of this actor, represents the amount of energy preserved after collision
+         */
+        restitution: number;
+        /**
+         * The rotation of the actor in radians
+         */
+        rotation: number;
+        /**
+         * The rotational velocity of the actor in radians/second
+         */
+        rx: number;
+        private _totalMtv;
+        /**
+         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
+         */
+        addMtv(mtv: Vector): void;
+        /**
+         * Applies the accumulated translation vectors to the actors position
+         */
+        applyMtv(): void;
+        /**
+         * Returns the body's [[BoundingBox]] calculated for this instant in world space.
+         */
+        getBounds(): BoundingBox;
+        /**
+         * Returns the actor's [[BoundingBox]] relative to the actors position.
+         */
+        getRelativeBounds(): BoundingBox;
+        /**
+         * Updates the collision area geometry and internal caches
+         */
+        update(): void;
+        /**
+         * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        useBoxCollision(center?: Vector): void;
+        /**
+         * Sets up a polygon collision area based on a list of of points relative to the anchor of the associated actor of this physics body.
+         *
+         * Only [convex polygon](https://en.wikipedia.org/wiki/Convex_polygon) definitions are supported.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        usePolygonCollision(points: Vector[], center?: Vector): void;
+        /**
+         * Sets up a [[CircleArea|circle collision area]] with a specified radius in pixels.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        useCircleCollision(radius?: number, center?: Vector): void;
+        /**
+         * Sets up an [[EdgeArea|edge collision]] with a start point and an end point relative to the anchor of the associated actor
+         * of this physics body.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        useEdgeCollision(begin: Vector, end: Vector): void;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+        /**
+         * Returns a boolean indicating whether this body collided with
+         * or was in stationary contact with
+         * the body of the other [[Actor]]
+         */
+        touching(other: Actor): boolean;
+    }
+}
+declare module "DebugFlags" {
+    export interface IDebugFlags {
+    }
+}
+declare module "Debug" {
+    import { IDebugFlags } from "DebugFlags";
+    import { Pair } from "Collision/Pair";
+    /**
+     * Debug stats containing current and previous frame statistics
+     */
+    export interface IDebugStats {
+        currFrame: FrameStats;
+        prevFrame: FrameStats;
+    }
+    /**
+     * Hash containing the [[Pair.id]]s of pairs that collided in a frame
+     */
+    export interface ICollidersHash {
+        [pairId: string]: Pair;
+    }
+    /**
+     * Represents a frame's individual statistics
+     */
+    export interface IFrameStats {
+        /**
+         * The number of the frame
+         */
+        id: number;
+        /**
+         * Gets the frame's delta (time since last frame scaled by [[Engine.timescale]]) (in ms)
+         */
+        delta: number;
+        /**
+         * Gets the frame's frames-per-second (FPS)
+         */
+        fps: number;
+        /**
+         * Duration statistics (in ms)
+         */
+        duration: IFrameDurationStats;
+        /**
+         * Actor statistics
+         */
+        actors: IFrameActorStats;
+        /**
+         * Physics statistics
+         */
+        physics: IPhysicsStats;
+    }
+    /**
+     * Represents actor stats for a frame
+     */
+    export interface IFrameActorStats {
+        /**
+         * Gets the frame's number of actors (alive)
+         */
+        alive: number;
+        /**
+         * Gets the frame's number of actors (killed)
+         */
+        killed: number;
+        /**
+         * Gets the frame's number of remaining actors (alive - killed)
+         */
+        remaining: number;
+        /**
+         * Gets the frame's number of UI actors
+         */
+        ui: number;
+        /**
+         * Gets the frame's number of total actors (remaining + UI)
+         */
+        total: number;
+    }
+    /**
+     * Represents duration stats for a frame
+     */
+    export interface IFrameDurationStats {
+        /**
+         * Gets the frame's total time to run the update function (in ms)
+         */
+        update: number;
+        /**
+         * Gets the frame's total time to run the draw function (in ms)
+         */
+        draw: number;
+        /**
+         * Gets the frame's total render duration (update + draw duration) (in ms)
+         */
+        total: number;
+    }
+    /**
+     * Represents physics stats for the current frame
+     */
+    export interface IPhysicsStats {
+        /**
+         * Gets the number of broadphase collision pairs which
+         */
+        pairs: number;
+        /**
+         * Gets the number of actual collisons
+         */
+        collisions: number;
+        /**
+         * A Hash storing the [[Pair.id]]s of [[Pair]]s that collided in the frame
+         */
+        collidersHash: ICollidersHash;
+        /**
+         * Gets the number of fast moving bodies using raycast continuous collisions in the scene
+         */
+        fastBodies: number;
+        /**
+         * Gets the number of bodies that had a fast body collision resolution
+         */
+        fastBodyCollisions: number;
+        /**
+         * Gets the time it took to calculate the broadphase pairs
+         */
+        broadphase: number;
+        /**
+         * Gets the time it took to calculate the narrowphase
+         */
+        narrowphase: number;
+    }
+    /**
+     * Debug statistics and flags for Excalibur. If polling these values, it would be
+     * best to do so on the `postupdate` event for [[Engine]], after all values have been
+     * updated during a frame.
+     */
+    export class Debug implements IDebugFlags {
+        /**
+         * Performance statistics
+         */
+        stats: IDebugStats;
+    }
+    /**
+     * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
+     * creating instances of this every frame.
+     */
+    export class FrameStats implements IFrameStats {
+        private _id;
+        private _delta;
+        private _fps;
+        private _actorStats;
+        private _durationStats;
+        private _physicsStats;
+        /**
+         * Zero out values or clone other IFrameStat stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        reset(otherStats?: IFrameStats): void;
+        /**
+         * Provides a clone of this instance.
+         */
+        clone(): FrameStats;
+        /**
+         * Gets the frame's id
+         */
+        /**
+         * Sets the frame's id
+         */
+        id: number;
+        /**
+         * Gets the frame's delta (time since last frame)
+         */
+        /**
+         * Sets the frame's delta (time since last frame). Internal use only.
+         * @internal
+         */
+        delta: number;
+        /**
+         * Gets the frame's frames-per-second (FPS)
+         */
+        /**
+         * Sets the frame's frames-per-second (FPS). Internal use only.
+         * @internal
+         */
+        fps: number;
+        /**
+         * Gets the frame's actor statistics
+         */
+        readonly actors: IFrameActorStats;
+        /**
+         * Gets the frame's duration statistics
+         */
+        readonly duration: IFrameDurationStats;
+        /**
+         * Gets the frame's physics statistics
+         */
+        readonly physics: PhysicsStats;
+    }
+    export class PhysicsStats implements IPhysicsStats {
+        private _pairs;
+        private _collisions;
+        private _collidersHash;
+        private _fastBodies;
+        private _fastBodyCollisions;
+        private _broadphase;
+        private _narrowphase;
+        /**
+         * Zero out values or clone other IPhysicsStats stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        reset(otherStats?: IPhysicsStats): void;
+        /**
+         * Provides a clone of this instance.
+         */
+        clone(): IPhysicsStats;
+        pairs: number;
+        collisions: number;
+        collidersHash: ICollidersHash;
+        fastBodies: number;
+        fastBodyCollisions: number;
+        broadphase: number;
+        narrowphase: number;
+    }
+}
+declare module "Collision/ICollisionResolver" {
+    import { Body } from "Collision/Body";
+    import { FrameStats } from "Debug";
+    import { Pair } from "Collision/Pair";
+    import { Actor } from "Actor";
+    import { CollisionResolutionStrategy } from "Physics";
+    /**
+     * Definition for collision broadphase
+     */
+    export interface ICollisionBroadphase {
+        /**
+         * Track a physics body
+         */
+        track(target: Body): void;
+        /**
+         * Untrack a physics body
+         */
+        untrack(tartet: Body): void;
+        /**
+         * Detect potential collision pairs
+         */
+        broadphase(targets: Actor[], delta: number, stats?: FrameStats): Pair[];
+        /**
+         * Identify actual collisions from those pairs, and calculate collision impulse
+         */
+        narrowphase(pairs: Pair[], stats?: FrameStats): Pair[];
+        /**
+         * Resolve the position and velocity of the physics bodies
+         */
+        resolve(pairs: Pair[], delta: number, strategy: CollisionResolutionStrategy): Pair[];
+        /**
+         * Publish collision start/end events
+         */
+        runCollisionStartEnd(pairs: Pair[]): void;
+        /**
+         * Update the internal structures to track bodies
+         */
+        update(targets: Actor[], delta: number): number;
+        /**
+         * Draw any debug information
+         */
+        debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
+    }
+}
+declare module "Collision/DynamicTree" {
+    import { BoundingBox } from "Collision/BoundingBox";
+    import { Body } from "Collision/Body";
+    import { Ray } from "Algebra";
+    /**
+     * Dynamic Tree Node used for tracking bounds within the tree
+     */
+    export class TreeNode {
+        parent: TreeNode;
+        left: TreeNode;
+        right: TreeNode;
+        bounds: BoundingBox;
+        height: number;
+        body: Body;
+        constructor(parent?: TreeNode);
+        isLeaf(): boolean;
+    }
+    /**
+     * The DynamicTrees provides a spatial partiioning data structure for quickly querying for overlapping bounding boxes for
+     * all tracked bodies. The worst case performance of this is O(n*log(n)) where n is the number of bodies in the tree.
+     *
+     * Internally the bounding boxes are organized as a balanced binary tree of bounding boxes, where the leaf nodes are tracked bodies.
+     * Every non-leaf node is a bounding box that contains child bounding boxes.
+     */
+    export class DynamicTree {
+        worldBounds: BoundingBox;
+        root: TreeNode;
+        nodes: {
+            [key: number]: TreeNode;
+        };
+        constructor(worldBounds?: BoundingBox);
+        /**
+         * Inserts a node into the dynamic tree
+         */
+        private _insert(leaf);
+        /**
+         * Removes a node from the dynamic tree
+         */
+        private _remove(leaf);
+        /**
+         * Tracks a body in the dynamic tree
+         */
+        trackBody(body: Body): void;
+        /**
+         * Updates the dynamic tree given the current bounds of each body being tracked
+         */
+        updateBody(body: Body): boolean;
+        /**
+         * Untracks a body from the dynamic tree
+         */
+        untrackBody(body: Body): void;
+        /**
+         * Balances the tree about a node
+         */
+        private _balance(node);
+        /**
+         * Returns the internal height of the tree, shorter trees are better. Performance drops as the tree grows
+         */
+        getHeight(): number;
+        /**
+         * Queries the Dynamic Axis Aligned Tree for bodies that could be colliding with the provided body.
+         *
+         * In the query callback, it will be passed a potential collider. Returning true from this callback indicates
+         * that you are complete with your query and you do not want to continue. Returning false will continue searching
+         * the tree until all possible colliders have been returned.
+         */
+        query(body: Body, callback: (other: Body) => boolean): void;
+        /**
+         * Queries the Dynamic Axis Aligned Tree for bodies that could be intersecting. By default the raycast query uses an infinitely
+         * long ray to test the tree specified by `max`.
+         *
+         * In the query callback, it will be passed a potential body that intersects with the racast. Returning true from this
+         * callback indicates that your are complete with your query and do not want to continue. Return false will continue searching
+         * the tree until all possible bodies that would intersect with the ray have been returned.
+         */
+        rayCastQuery(ray: Ray, max: number, callback: (other: Body) => boolean): void;
+        getNodes(): TreeNode[];
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+}
+declare module "Collision/DynamicTreeCollisionBroadphase" {
+    import { ICollisionBroadphase } from "Collision/ICollisionResolver";
+    import { Pair } from "Collision/Pair";
+    import { Body } from "Collision/Body";
+    import { Actor } from "Actor";
+    import { FrameStats } from "Debug";
+    import { CollisionResolutionStrategy } from "Physics";
+    export class DynamicTreeCollisionBroadphase implements ICollisionBroadphase {
+        private _dynamicCollisionTree;
+        private _collisionHash;
+        private _collisionPairCache;
+        private _lastFramePairs;
+        private _lastFramePairsHash;
+        /**
+         * Tracks a physics body for collisions
+         */
+        track(target: Body): void;
+        /**
+         * Untracks a physics body
+         */
+        untrack(target: Body): void;
+        private _canCollide(actorA, actorB);
+        /**
+         * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
+         */
+        broadphase(targets: Actor[], delta: number, stats?: FrameStats): Pair[];
+        /**
+         * Applies narrow phase on collision pairs to find actual area intersections
+         * Adds actual colliding pairs to stats' Frame data
+         */
+        narrowphase(pairs: Pair[], stats?: FrameStats): Pair[];
+        /**
+         * Perform collision resolution given a strategy (rigid body or box) and move objects out of intersect.
+         */
+        resolve(pairs: Pair[], delta: number, strategy: CollisionResolutionStrategy): Pair[];
+        runCollisionStartEnd(pairs: Pair[]): void;
+        /**
+         * Update the dynamic tree positions
+         */
+        update(targets: Actor[]): number;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+}
+declare module "Util/SortedList" {
+    /**
+     * A sorted list implementation. NOTE: this implementation is not self-balancing
+     */
+    export class SortedList<T> {
+        private _getComparable;
+        private _root;
+        constructor(getComparable: () => any);
+        find(element: any): boolean;
+        private _find(node, element);
+        get(key: number): any[];
+        private _get(node, key);
+        add(element: any): boolean;
+        private _insert(node, element);
+        removeByComparable(element: any): void;
+        private _remove(node, element);
+        private _cleanup(node, element);
+        private _findMinNode(node);
+        list(): Array<T>;
+        private _list(treeNode, results);
+    }
+    /**
+     * A tree node part of [[SortedList]]
+     */
+    export class BinaryTreeNode {
+        private _key;
+        private _data;
+        private _left;
+        private _right;
+        constructor(key: number, data: Array<any>, left: BinaryTreeNode, right: BinaryTreeNode);
+        getKey(): number;
+        setKey(key: number): void;
+        getData(): Array<any>;
+        setData(data: any): void;
+        getLeft(): BinaryTreeNode;
+        setLeft(left: BinaryTreeNode): void;
+        getRight(): BinaryTreeNode;
+        setRight(right: BinaryTreeNode): void;
+    }
+    /**
+     * Mock element for testing
+     *
+     * @internal
+     */
+    export class MockedElement {
+        private _key;
+        constructor(key: number);
+        getTheKey(): number;
+        setKey(key: number): void;
     }
 }
 declare module "Actions/ActionContext" {
@@ -2239,10 +2183,180 @@ declare module "Actions/ActionContext" {
         asPromise<T>(): Promise<T>;
     }
 }
+declare module "Interfaces/IEvented" {
+    import { GameEvent } from "Events";
+    export interface IEvented {
+        /**
+         * Emits an event for target
+         * @param eventName  The name of the event to publish
+         * @param event      Optionally pass an event data object to the handler
+         */
+        emit(eventName: string, event?: GameEvent<any>): void;
+        /**
+         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
+         * @param eventName  The name of the event to subscribe to
+         * @param handler    The handler callback to fire on this event
+         */
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Unsubscribe an event handler(s) from an event. If a specific handler
+         * is specified for an event, only that handler will be unsubscribed.
+         * Otherwise all handlers will be unsubscribed for that event.
+         *
+         * @param eventName  The name of the event to unsubscribe
+         * @param handler    Optionally the specific handler to unsubscribe
+         *
+         */
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * Once listens to an event once then auto unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+    }
+}
 declare module "Actions/IActionable" {
     import { ActionContext } from "Actions/ActionContext";
     export interface IActionable {
         actions: ActionContext;
+    }
+}
+declare module "EventDispatcher" {
+    import { GameEvent } from "Events";
+    import { IEvented } from "Interfaces/IEvented";
+    /**
+     * Excalibur's internal event dispatcher implementation.
+     * Callbacks are fired immediately after an event is published.
+     * Typically you will use [[Class.eventDispatcher]] since most classes in
+     * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
+     * yourself.
+     *
+     * [[include:Events.md]]
+     */
+    export class EventDispatcher implements IEvented {
+        private _handlers;
+        private _wiredEventDispatchers;
+        private _target;
+        /**
+         * @param target  The object that will be the recipient of events from this event dispatcher
+         */
+        constructor(target: any);
+        /**
+         * Emits an event for target
+         * @param eventName  The name of the event to publish
+         * @param event      Optionally pass an event data object to the handler
+         */
+        emit(eventName: string, event?: GameEvent<any>): void;
+        /**
+         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
+         * @param eventName  The name of the event to subscribe to
+         * @param handler    The handler callback to fire on this event
+         */
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Unsubscribe an event handler(s) from an event. If a specific handler
+         * is specified for an event, only that handler will be unsubscribed.
+         * Otherwise all handlers will be unsubscribed for that event.
+         *
+         * @param eventName  The name of the event to unsubscribe
+         * @param handler    Optionally the specific handler to unsubscribe
+         *
+         */
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * Once listens to an event one time, then unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Wires this event dispatcher to also recieve events from another
+         */
+        wire(eventDispatcher: EventDispatcher): void;
+        /**
+         * Unwires this event dispatcher from another
+         */
+        unwire(eventDispatcher: EventDispatcher): void;
+    }
+}
+declare module "Class" {
+    import { GameEvent } from "Events";
+    import { EventDispatcher } from "EventDispatcher";
+    import { IEvented } from "Interfaces/IEvented";
+    /**
+     * Excalibur base class that provides basic functionality such as [[EventDispatcher]]
+     * and extending abilities for vanilla Javascript projects
+     */
+    export class Class implements IEvented {
+        /**
+         * Direct access to the game object event dispatcher.
+         */
+        eventDispatcher: EventDispatcher;
+        constructor();
+        /**
+         * Alias for `addEventListener`. You can listen for a variety of
+         * events off of the engine; see the events section below for a complete list.
+         * @param eventName  Name of the event to listen for
+         * @param handler    Event handler for the thrown event
+         */
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Alias for `removeEventListener`. If only the eventName is specified
+         * it will remove all handlers registered for that specific event. If the eventName
+         * and the handler instance are specified only that handler will be removed.
+         *
+         * @param eventName  Name of the event to listen for
+         * @param handler    Event handler for the thrown event
+         */
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * Emits a new event
+         * @param eventName   Name of the event to emit
+         * @param eventObject Data associated with this event
+         */
+        emit(eventName: string, eventObject?: GameEvent<any>): void;
+        /**
+         * Once listens to an event one time, then unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * You may wish to extend native Excalibur functionality in vanilla Javascript.
+         * Any method on a class inheriting [[Class]] may be extended to support
+         * additional functionality. In the example below we create a new type called `MyActor`.
+         *
+         *
+         * ```js
+         * var MyActor = Actor.extend({
+         *
+         *    constructor: function() {
+         *       this.newprop = 'something';
+         *       Actor.apply(this, arguments);
+         *    },
+         *
+         *    update: function(engine, delta) {
+         *       // Implement custom update
+         *       // Call super constructor update
+         *       Actor.prototype.update.call(this, engine, delta);
+         *
+         *       console.log("Something cool!");
+         *    }
+         * });
+         *
+         * var myActor = new MyActor(100, 100, 100, 100, Color.Azure);
+         * ```
+         *
+         * In TypeScript, you only need to use the `extends` syntax, you do not need
+         * to use this method of extension.
+         *
+         * @param methods A JSON object contain any methods/properties you want to extend
+         */
+        static extend(methods: any): any;
     }
 }
 declare module "Group" {
@@ -2416,19 +2530,19 @@ declare module "Interfaces/IDrawable" {
         /**
          * Indicates the current width of the drawing in pixels, factoring in the scale
          */
-        width: number;
+        drawWidth: number;
         /**
          * Indicates the current height of the drawing in pixels, factoring in the scale
          */
-        height: number;
+        drawHeight: number;
         /**
          * Indicates the natural width of the drawing in pixels, this is the original width of the source image
          */
-        naturalWidth: number;
+        width: number;
         /**
          * Indicates the natural height of the drawing in pixels, this is the original height of the source image
          */
-        naturalHeight: number;
+        height: number;
         /**
          * Adds a new [[ISpriteEffect]] to this drawing.
          * @param effect  Effect to add to the this drawing
@@ -2537,23 +2651,22 @@ declare module "Resources/Resource" {
      */
     export class Resource<T> extends Class implements ILoadable {
         path: string;
-        responseType: string;
+        responseType: '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
         bustCache: boolean;
         data: T;
         logger: Logger;
-        private _engine;
         /**
          * @param path          Path to the remote resource
-         * @param responseType  The Content-Type to expect (e.g. `application/json`)
+         * @param responseType  The type to expect as a response: "" | "arraybuffer" | "blob" | "document" | "json" | "text";
          * @param bustCache     Whether or not to cache-bust requests
          */
-        constructor(path: string, responseType: string, bustCache?: boolean);
+        constructor(path: string, responseType: '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text', bustCache?: boolean);
         /**
          * Returns true if the Resource is completely loaded and is ready
          * to be drawn.
          */
         isLoaded(): boolean;
-        wireEngine(engine: Engine): void;
+        wireEngine(_engine: Engine): void;
         private _cacheBust(uri);
         private _start();
         /**
@@ -2627,6 +2740,26 @@ declare module "Resources/Texture" {
         asSprite(): Sprite;
     }
 }
+declare module "Configurable" {
+    export type Constructor<T> = {
+        new (...args: any[]): T;
+    };
+    export function Configurable<T extends Constructor<{}>>(base: T): T;
+}
+declare module "Util/Decorators" {
+    /**
+     * Obsolete decorator options
+     */
+    export interface IObsoleteOptions {
+        message?: string;
+        alternateMethod?: string;
+    }
+    /**
+     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
+     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
+     */
+    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
+}
 declare module "Drawing/Sprite" {
     import * as Effects from "Drawing/SpriteEffects";
     import { Color } from "Drawing/Color";
@@ -2635,17 +2768,22 @@ declare module "Drawing/Sprite" {
     import { Vector } from "Algebra";
     import { Logger } from "Util/Log";
     /**
-     * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
-     * images or parts of images from a [[Texture]] resource to the screen.
-     *
-     * [[include:Sprites.md]]
+     * @hidden
      */
-    export class Sprite implements IDrawable {
-        sx: number;
-        sy: number;
-        swidth: number;
-        sheight: number;
+    export class SpriteImpl implements IDrawable {
         private _texture;
+        x: number;
+        y: number;
+        readonly drawWidth: number;
+        readonly drawHeight: number;
+        /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
+        sx: number;
+        /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
+        sy: number;
+        /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
+        swidth: number;
+        /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use [[Sprite.height]] */
+        sheight: number;
         rotation: number;
         anchor: Vector;
         scale: Vector;
@@ -2658,11 +2796,9 @@ declare module "Drawing/Sprite" {
          * Draws the sprite flipped horizontally
          */
         flipHorizontal: boolean;
+        effects: Effects.ISpriteEffect[];
         width: number;
         height: number;
-        effects: Effects.ISpriteEffect[];
-        naturalWidth: number;
-        naturalHeight: number;
         private _spriteCanvas;
         private _spriteCtx;
         private _pixelData;
@@ -2670,12 +2806,12 @@ declare module "Drawing/Sprite" {
         private _dirtyEffect;
         /**
          * @param image   The backing image texture to build the Sprite
-         * @param sx      The x position of the sprite
-         * @param sy      The y position of the sprite
-         * @param swidth  The width of the sprite in pixels
-         * @param sheight The height of the sprite in pixels
+         * @param x      The x position of the sprite
+         * @param y      The y position of the sprite
+         * @param width  The width of the sprite in pixels
+         * @param height The height of the sprite in pixels
          */
-        constructor(image: Texture, sx: number, sy: number, swidth: number, sheight: number);
+        constructor(imageOrConfig: Texture | ISpriteArgs, x: number, y: number, width: number, height: number);
         private _loadPixels();
         /**
          * Applies the [[Opacity]] effect to a sprite, setting the alpha of all pixels to a given value
@@ -2749,23 +2885,54 @@ declare module "Drawing/Sprite" {
         /**
          * Produces a copy of the current sprite
          */
-        clone(): Sprite;
+        clone(): SpriteImpl;
+    }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface ISpriteArgs extends Partial<SpriteImpl> {
+        image?: Texture;
+        x?: number;
+        /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
+        sx?: number;
+        y?: number;
+        /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
+        sy?: number;
+        width?: number;
+        /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
+        swidth?: number;
+        height?: number;
+        /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use ex.[[Sprite.height]] */
+        sheight?: number;
+        rotation?: number;
+        anchor?: Vector;
+        scale?: Vector;
+        flipVertical?: boolean;
+        flipHorizontal?: boolean;
+    }
+    /**
+     * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
+     * images or parts of images from a [[Texture]] resource to the screen.
+     *
+     * [[include:Sprites.md]]
+     */
+    export class Sprite extends SpriteImpl {
+        constructor(config: ISpriteArgs);
+        constructor(image: Texture, x: number, y: number, width: number, height: number);
     }
 }
 declare module "Drawing/Animation" {
     import { Sprite } from "Drawing/Sprite";
+    import { IAnimationArgs } from "Drawing/Animation";
     import * as Effects from "Drawing/SpriteEffects";
     import { Color } from "Drawing/Color";
     import { IDrawable } from "Interfaces/IDrawable";
     import { Vector } from "Algebra";
     import { Engine } from "Engine";
     /**
-     * Animations allow you to display a series of images one after another,
-     * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
-     *
-     * [[include:Animations.md]]
+     * @hidden
      */
-    export class Animation implements IDrawable {
+    export class AnimationImpl implements IDrawable {
         /**
          * The sprite frames to play, in order. See [[SpriteSheet.getAnimationForAll]] to quickly
          * generate an [[Animation]].
@@ -2801,10 +2968,10 @@ declare module "Drawing/Animation" {
          * Flip each frame horizontally. Sets [[Sprite.flipHorizontal]].
          */
         flipHorizontal: boolean;
+        drawWidth: number;
+        drawHeight: number;
         width: number;
         height: number;
-        naturalWidth: number;
-        naturalHeight: number;
         /**
          * Typically you will use a [[SpriteSheet]] to generate an [[Animation]].
          *
@@ -2813,7 +2980,7 @@ declare module "Drawing/Animation" {
          * @param speed   The number in milliseconds to display each frame in the animation
          * @param loop    Indicates whether the animation should loop after it is completed
          */
-        constructor(engine: Engine, images: Sprite[], speed: number, loop?: boolean);
+        constructor(engineOrConfig: Engine | IAnimationArgs, sprites: Sprite[], speed: number, loop?: boolean);
         /**
          * Applies the opacity effect to a sprite, setting the alpha of all pixels to a given value
          */
@@ -2900,132 +3067,31 @@ declare module "Drawing/Animation" {
          */
         play(x: number, y: number): void;
     }
-}
-declare module "Drawing/SpriteSheet" {
-    import { Sprite } from "Drawing/Sprite";
-    import { Animation } from "Drawing/Animation";
-    import { Color } from "Drawing/Color";
-    import { Texture } from "Resources/Texture";
-    import { Engine } from "Engine";
-    import { TextAlign, BaseAlign } from "Label";
     /**
-     * Sprite sheets are a useful mechanism for slicing up image resources into
-     * separate sprites or for generating in game animations. [[Sprite|Sprites]] are organized
-     * in row major order in the [[SpriteSheet]].
-     *
-     * [[include:SpriteSheets.md]]
+     * [[include:Constructors.md]]
      */
-    export class SpriteSheet {
-        image: Texture;
-        columns: number;
-        rows: number;
+    export interface IAnimationArgs extends Partial<AnimationImpl> {
+        engine: Engine;
         sprites: Sprite[];
-        private _internalImage;
-        /**
-         * @param image     The backing image texture to build the SpriteSheet
-         * @param columns   The number of columns in the image texture
-         * @param rows      The number of rows in the image texture
-         * @param spWidth   The width of each individual sprite in pixels
-         * @param spHeight  The height of each individual sprite in pixels
-         */
-        constructor(image: Texture, columns: number, rows: number, spWidth: number, spHeight: number);
-        /**
-         * Create an animation from the this SpriteSheet by listing out the
-         * sprite indices. Sprites are organized in row major order in the SpriteSheet.
-         * @param engine   Reference to the current game [[Engine]]
-         * @param indices  An array of sprite indices to use in the animation
-         * @param speed    The number in milliseconds to display each frame in the animation
-         */
-        getAnimationByIndices(engine: Engine, indices: number[], speed: number): Animation;
-        /**
-         * Create an animation from the this SpriteSheet by specifing the range of
-         * images with the beginning and ending index
-         * @param engine      Reference to the current game Engine
-         * @param beginIndex  The index to start taking frames
-         * @param endIndex    The index to stop taking frames
-         * @param speed       The number in milliseconds to display each frame in the animation
-         */
-        getAnimationBetween(engine: Engine, beginIndex: number, endIndex: number, speed: number): Animation;
-        /**
-         * Treat the entire SpriteSheet as one animation, organizing the frames in
-         * row major order.
-         * @param engine  Reference to the current game [[Engine]]
-         * @param speed   The number in milliseconds to display each frame the animation
-         */
-        getAnimationForAll(engine: Engine, speed: number): Animation;
-        /**
-         * Retreive a specific sprite from the SpriteSheet by its index. Sprites are organized
-         * in row major order in the SpriteSheet.
-         * @param index  The index of the sprite
-         */
-        getSprite(index: number): Sprite;
+        speed: number;
+        loop?: boolean;
+        anchor?: Vector;
+        rotation?: number;
+        scale?: Vector;
+        flipVertical?: boolean;
+        flipHorizontal?: boolean;
+        width?: number;
+        height?: number;
     }
     /**
-     * Sprite fonts are a used in conjunction with a [[Label]] to specify
-     * a particular bitmap as a font. Note that some font features are not
-     * supported by Sprite fonts.
+     * Animations allow you to display a series of images one after another,
+     * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
      *
-     * [[include:SpriteFonts.md]]
+     * [[include:Animations.md]]
      */
-    export class SpriteFont extends SpriteSheet {
-        image: Texture;
-        private alphabet;
-        private caseInsensitive;
-        spWidth: number;
-        spHeight: number;
-        private _currentColor;
-        private _currentOpacity;
-        private _sprites;
-        private _textShadowOn;
-        private _textShadowDirty;
-        private _textShadowColor;
-        private _textShadowSprites;
-        private _shadowOffsetX;
-        private _shadowOffsetY;
-        /**
-         * @param image           The backing image texture to build the SpriteFont
-         * @param alphabet        A string representing all the characters in the image, in row major order.
-         * @param caseInsensitive  Indicate whether this font takes case into account
-         * @param columns         The number of columns of characters in the image
-         * @param rows            The number of rows of characters in the image
-         * @param spWidth         The width of each character in pixels
-         * @param spHeight        The height of each character in pixels
-         */
-        constructor(image: Texture, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
-        /**
-         * Returns a dictionary that maps each character in the alphabet to the appropriate [[Sprite]].
-         */
-        getTextSprites(): {
-            [key: string]: Sprite;
-        };
-        /**
-         * Sets the text shadow for sprite fonts
-         * @param offsetX      The x offset in pixels to place the shadow
-         * @param offsetY      The y offset in pixels to place the shadow
-         * @param shadowColor  The color of the text shadow
-         */
-        setTextShadow(offsetX: number, offsetY: number, shadowColor: Color): void;
-        /**
-         * Toggles text shadows on or off
-         */
-        useTextShadow(on: boolean): void;
-        /**
-         * Draws the current sprite font
-         */
-        draw(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, options: ISpriteFontOptions): void;
-        private _parseOptions(options);
-    }
-    /**
-     * Specify various font attributes for sprite fonts
-     */
-    export interface ISpriteFontOptions {
-        color?: Color;
-        opacity?: number;
-        fontSize?: number;
-        letterSpacing?: number;
-        textAlign?: TextAlign;
-        baseAlign?: BaseAlign;
-        maxWidth?: number;
+    export class Animation extends AnimationImpl {
+        constructor(config: IAnimationArgs);
+        constructor(engine: Engine, images: Sprite[], speed: number, loop?: boolean);
     }
 }
 declare module "Label" {
@@ -3033,6 +3099,7 @@ declare module "Label" {
     import { Color } from "Drawing/Color";
     import { SpriteFont } from "Drawing/SpriteSheet";
     import { Actor } from "Actor";
+    import { Vector } from "Algebra";
     /**
      * Enum representing the different font size units
      * https://developer.mozilla.org/en-US/docs/Web/CSS/font-size
@@ -3130,12 +3197,24 @@ declare module "Label" {
         Oblique = 2,
     }
     /**
-     * Labels are the way to draw small amounts of text to the screen. They are
-     * actors and inherit all of the benefits and capabilities.
-     *
-     * [[include:Labels.md]]
+     * [[include:Constructors.md]]
      */
-    export class Label extends Actor {
+    export interface ILabelArgs extends Partial<LabelImpl> {
+        text?: string;
+        bold?: boolean;
+        pos?: Vector;
+        spriteFont?: SpriteFont;
+        fontFamily?: string;
+        fontSize?: number;
+        fontStyle?: FontStyle;
+        fontUnit?: FontUnit;
+        textAlign?: TextAlign;
+        maxWidth?: number;
+    }
+    /**
+     * @hidden
+     */
+    export class LabelImpl extends Actor {
         /**
          * The text to draw.
          */
@@ -3188,7 +3267,6 @@ declare module "Label" {
         private _textShadowOn;
         private _shadowOffsetX;
         private _shadowOffsetY;
-        private _shadowColor;
         /**
          * @param text        The text of the label
          * @param x           The x position of the label
@@ -3197,7 +3275,7 @@ declare module "Label" {
          * @param spriteFont  Use an Excalibur sprite font for the label's font, if a SpriteFont is provided it will take precedence
          * over a css font.
          */
-        constructor(text?: string, x?: number, y?: number, fontFamily?: string, spriteFont?: SpriteFont);
+        constructor(textOrConfig?: string | Partial<LabelImpl>, x?: number, y?: number, fontFamily?: string, spriteFont?: SpriteFont);
         /**
          * Returns the width of the text in the label (in pixels);
          * @param ctx  Rendering context to measure the string with
@@ -3227,6 +3305,2102 @@ declare module "Label" {
         private _fontDraw(ctx);
         protected readonly _fontString: string;
         debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+    /**
+     * Labels are the way to draw small amounts of text to the screen. They are
+     * actors and inherit all of the benefits and capabilities.
+     *
+     * [[include:Labels.md]]
+     */
+    export class Label extends LabelImpl {
+        constructor();
+        constructor(config?: ILabelArgs);
+        constructor(text?: string, x?: number, y?: number, fontFamily?: string, spriteFont?: SpriteFont);
+    }
+}
+declare module "Drawing/SpriteSheet" {
+    import { Sprite, ISpriteArgs } from "Drawing/Sprite";
+    import { Animation } from "Drawing/Animation";
+    import { Color } from "Drawing/Color";
+    import { Texture } from "Resources/Texture";
+    import { Engine } from "Engine";
+    import { TextAlign, BaseAlign } from "Label";
+    /**
+     * @hidden
+     */
+    export class SpriteSheetImpl {
+        sprites: Sprite[];
+        image: Texture;
+        columns: number;
+        rows: number;
+        spWidth: number;
+        spHeight: number;
+        /**
+         * @param image     The backing image texture to build the SpriteSheet
+         * @param columns   The number of columns in the image texture
+         * @param rows      The number of rows in the image texture
+         * @param spWidth   The width of each individual sprite in pixels
+         * @param spHeight  The height of each individual sprite in pixels
+         */
+        constructor(imageOrConfigOrSprites: Texture | ISpriteSheetArgs | Sprite[], columns?: number, rows?: number, spWidth?: number, spHeight?: number);
+        /**
+         * Create an animation from the this SpriteSheet by listing out the
+         * sprite indices. Sprites are organized in row major order in the SpriteSheet.
+         * @param engine   Reference to the current game [[Engine]]
+         * @param indices  An array of sprite indices to use in the animation
+         * @param speed    The number in milliseconds to display each frame in the animation
+         */
+        getAnimationByIndices(engine: Engine, indices: number[], speed: number): Animation;
+        /**
+         * Create an animation from the this SpriteSheet by specifing the range of
+         * images with the beginning (inclusive) and ending (exclusive) index
+         * For example `getAnimationBetween(engine, 0, 5, 200)` returns an animation with 5 frames.
+         * @param engine      Reference to the current game Engine
+         * @param beginIndex  The index to start taking frames (inclusive)
+         * @param endIndex    The index to stop taking frames (exclusive)
+         * @param speed       The number in milliseconds to display each frame in the animation
+         */
+        getAnimationBetween(engine: Engine, beginIndex: number, endIndex: number, speed: number): Animation;
+        /**
+         * Treat the entire SpriteSheet as one animation, organizing the frames in
+         * row major order.
+         * @param engine  Reference to the current game [[Engine]]
+         * @param speed   The number in milliseconds to display each frame the animation
+         */
+        getAnimationForAll(engine: Engine, speed: number): Animation;
+        /**
+         * Retreive a specific sprite from the SpriteSheet by its index. Sprites are organized
+         * in row major order in the SpriteSheet.
+         * @param index  The index of the sprite
+         */
+        getSprite(index: number): Sprite;
+        /**
+         * Get an animation with bespoke sprite coordinates. This is useful if the SpriteSheet is
+         * packed and not a uniform width or height. The resulting [[Animation]] will have the height and width of the
+         * largest dimension (width, height) from among the sprite coordinates
+         * @param engine
+         * @param spriteCoordinates
+         * @param speed
+         */
+        getAnimationByCoords(engine: Engine, spriteCoordinates: ISpriteArgs[], speed: number): Animation;
+    }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface ISpriteSheetArgs extends Partial<SpriteSheetImpl> {
+        image: Texture;
+        sprites?: Sprite[];
+        spWidth: number;
+        spHeight: number;
+        rows: number;
+        columns: number;
+    }
+    /**
+     * Sprite sheets are a useful mechanism for slicing up image resources into
+     * separate sprites or for generating in game animations. [[Sprite|Sprites]] are organized
+     * in row major order in the [[SpriteSheet]].
+     *
+     * [[include:SpriteSheets.md]]
+     */
+    export class SpriteSheet extends SpriteSheetImpl {
+        constructor(config: ISpriteSheetArgs);
+        constructor(sprites: Sprite[]);
+        constructor(image: Texture, columns: number, rows: number, spWidth: number, spHeight: number);
+    }
+    export class SpriteFontImpl extends SpriteSheet {
+        private _currentColor;
+        private _currentOpacity;
+        private _sprites;
+        private _textShadowOn;
+        private _textShadowDirty;
+        private _textShadowColor;
+        private _textShadowSprites;
+        private _shadowOffsetX;
+        private _shadowOffsetY;
+        private _alphabet;
+        private _caseInsensitive;
+        /**
+         * @param image           The backing image texture to build the SpriteFont
+         * @param alphabet        A string representing all the characters in the image, in row major order.
+         * @param caseInsensitive  Indicate whether this font takes case into account
+         * @param columns         The number of columns of characters in the image
+         * @param rows            The number of rows of characters in the image
+         * @param spWidth         The width of each character in pixels
+         * @param spHeight        The height of each character in pixels
+         */
+        constructor(imageOrConfig: Texture | ISpriteFontInitArgs, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
+        /**
+         * Returns a dictionary that maps each character in the alphabet to the appropriate [[Sprite]].
+         */
+        getTextSprites(): {
+            [key: string]: Sprite;
+        };
+        /**
+         * Sets the text shadow for sprite fonts
+         * @param offsetX      The x offset in pixels to place the shadow
+         * @param offsetY      The y offset in pixels to place the shadow
+         * @param shadowColor  The color of the text shadow
+         */
+        setTextShadow(offsetX: number, offsetY: number, shadowColor: Color): void;
+        /**
+         * Toggles text shadows on or off
+         */
+        useTextShadow(on: boolean): void;
+        /**
+         * Draws the current sprite font
+         */
+        draw(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, options: ISpriteFontOptions): void;
+        private _parseOptions(options);
+    }
+    /**
+     * Specify various font attributes for sprite fonts
+     */
+    export interface ISpriteFontOptions {
+        color?: Color;
+        opacity?: number;
+        fontSize?: number;
+        letterSpacing?: number;
+        textAlign?: TextAlign;
+        baseAlign?: BaseAlign;
+        maxWidth?: number;
+    }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface ISpriteFontInitArgs extends ISpriteSheetArgs {
+        image: Texture;
+        columns: number;
+        rows: number;
+        spWidth: number;
+        spHeight: number;
+        alphabet: string;
+        caseInsensitive: boolean;
+    }
+    /**
+     * Sprite fonts are a used in conjunction with a [[Label]] to specify
+     * a particular bitmap as a font. Note that some font features are not
+     * supported by Sprite fonts.
+     *
+     * [[include:SpriteFonts.md]]
+     */
+    export class SpriteFont extends SpriteFontImpl {
+        constructor(config: ISpriteFontInitArgs);
+        constructor(image: Texture, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
+    }
+}
+declare module "TileMap" {
+    import { BoundingBox } from "Collision/BoundingBox";
+    import { Class } from "Class";
+    import { Engine } from "Engine";
+    import { Vector } from "Algebra";
+    import { Actor } from "Actor";
+    import { Logger } from "Util/Log";
+    import { SpriteSheet } from "Drawing/SpriteSheet";
+    import * as Events from "Events";
+    /**
+     * @hidden
+     */
+    export class TileMapImpl extends Class {
+        private _collidingX;
+        private _collidingY;
+        private _onScreenXStart;
+        private _onScreenXEnd;
+        private _onScreenYStart;
+        private _onScreenYEnd;
+        private _spriteSheets;
+        logger: Logger;
+        data: Cell[];
+        x: number;
+        y: number;
+        cellWidth: number;
+        cellHeight: number;
+        rows: number;
+        cols: number;
+        on(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): void;
+        on(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
+        on(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): void;
+        on(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): void;
+        on(eventName: string, handler: (event?: Events.GameEvent<any>) => void): void;
+        /**
+         * @param x             The x coordinate to anchor the TileMap's upper left corner (should not be changed once set)
+         * @param y             The y coordinate to anchor the TileMap's upper left corner (should not be changed once set)
+         * @param cellWidth     The individual width of each cell (in pixels) (should not be changed once set)
+         * @param cellHeight    The individual height of each cell (in pixels) (should not be changed once set)
+         * @param rows          The number of rows in the TileMap (should not be changed once set)
+         * @param cols          The number of cols in the TileMap (should not be changed once set)
+         */
+        constructor(xOrConfig: number | ITileMapArgs, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
+        registerSpriteSheet(key: string, spriteSheet: SpriteSheet): void;
+        /**
+         * Returns the intersection vector that can be used to resolve collisions with actors. If there
+         * is no collision null is returned.
+         */
+        collides(actor: Actor): Vector;
+        /**
+         * Returns the [[Cell]] by index (row major order)
+         */
+        getCellByIndex(index: number): Cell;
+        /**
+         * Returns the [[Cell]] by its x and y coordinates
+         */
+        getCell(x: number, y: number): Cell;
+        /**
+         * Returns the [[Cell]] by testing a point in global coordinates,
+         * returns `null` if no cell was found.
+         */
+        getCellByPoint(x: number, y: number): Cell;
+        update(engine: Engine, delta: number): void;
+        /**
+         * Draws the tile map to the screen. Called by the [[Scene]].
+         * @param ctx    The current rendering context
+         * @param delta  The number of milliseconds since the last draw
+         */
+        draw(ctx: CanvasRenderingContext2D, delta: number): void;
+        /**
+         * Draws all the tile map's debug info. Called by the [[Scene]].
+         * @param ctx  The current rendering context
+         */
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface ITileMapArgs extends Partial<TileMapImpl> {
+        x: number;
+        y: number;
+        cellWidth: number;
+        cellHeight: number;
+        rows: number;
+        cols: number;
+    }
+    /**
+     * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
+     * without the overhead of actors.
+     *
+     * [[include:TileMaps.md]]
+     */
+    export class TileMap extends TileMapImpl {
+        constructor(config: ITileMapArgs);
+        constructor(x: number, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
+    }
+    /**
+     * Tile sprites are used to render a specific sprite from a [[TileMap]]'s spritesheet(s)
+     */
+    export class TileSprite {
+        spriteSheetKey: string;
+        spriteId: number;
+        /**
+         * @param spriteSheetKey  The key of the spritesheet to use
+         * @param spriteId        The index of the sprite in the [[SpriteSheet]]
+         */
+        constructor(spriteSheetKey: string, spriteId: number);
+    }
+    /**
+     * @hidden
+     */
+    export class CellImpl {
+        private _bounds;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        index: number;
+        solid: boolean;
+        sprites: TileSprite[];
+        /**
+         * @param x       Gets or sets x coordinate of the cell in world coordinates
+         * @param y       Gets or sets y coordinate of the cell in world coordinates
+         * @param width   Gets or sets the width of the cell
+         * @param height  Gets or sets the height of the cell
+         * @param index   The index of the cell in row major order
+         * @param solid   Gets or sets whether this cell is solid
+         * @param sprites The list of tile sprites to use to draw in this cell (in order)
+         */
+        constructor(xOrConfig: number | ICellArgs, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
+        /**
+         * Returns the bounding box for this cell
+         */
+        getBounds(): BoundingBox;
+        /**
+         * Gets the center coordinate of this cell
+         */
+        getCenter(): Vector;
+        /**
+         * Add another [[TileSprite]] to this cell
+         */
+        pushSprite(tileSprite: TileSprite): void;
+        /**
+         * Remove an instance of [[TileSprite]] from this cell
+         */
+        removeSprite(tileSprite: TileSprite): void;
+        /**
+         * Clear all sprites from this cell
+         */
+        clearSprites(): void;
+    }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface ICellArgs extends Partial<CellImpl> {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        index: number;
+        solid?: boolean;
+        sprites?: TileSprite[];
+    }
+    /**
+     * TileMap Cell
+     *
+     * A light-weight object that occupies a space in a collision map. Generally
+     * created by a [[TileMap]].
+     *
+     * Cells can draw multiple sprites. Note that the order of drawing is the order
+     * of the sprites in the array so the last one will be drawn on top. You can
+     * use transparency to create layers this way.
+     */
+    export class Cell extends CellImpl {
+        constructor(config: ICellArgs);
+        constructor(x: number, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
+    }
+}
+declare module "Trigger" {
+    import { Engine } from "Engine";
+    import { Actor } from "Actor";
+    import { Vector } from "Algebra";
+    /**
+     * ITriggerOptions
+     */
+    export interface ITriggerOptions {
+        pos: Vector;
+        width: number;
+        height: number;
+        visible: boolean;
+        action: () => void;
+        target: Actor;
+        filter: (actor: Actor) => boolean;
+        repeat: number;
+    }
+    /**
+     * Triggers are a method of firing arbitrary code on collision. These are useful
+     * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
+     * are invisible, and can only be seen when [[Trigger.visible]] is set to `true`.
+     *
+     * [[include:Triggers.md]]
+     */
+    export class Trigger extends Actor {
+        private _target;
+        /**
+         * Action to fire when triggered by collision
+         */
+        action: () => void;
+        /**
+         * Filter to add additional granularity to action dispatch, if a filter is specified the action will only fire when
+         * filter return true for the collided actor.
+         */
+        filter: (actor: Actor) => boolean;
+        /**
+         * Number of times to repeat before killing the trigger,
+         */
+        repeat: number;
+        /**
+         *
+         * @param opts Trigger options
+         */
+        constructor(opts: Partial<ITriggerOptions>);
+        target: Actor;
+        _initialize(engine: Engine): void;
+        private _dispatchAction();
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+}
+declare module "Util/Actors" {
+    import { Actor } from "Actor";
+    export function isVanillaActor(actor: Actor): boolean;
+    export function isUIActor(actor: Actor): boolean;
+}
+declare module "Scene" {
+    import { UIActor } from "UIActor";
+    import { InitializeEvent, ActivateEvent, DeactivateEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent } from "Events";
+    import { Timer } from "Timer";
+    import { Engine } from "Engine";
+    import { Group } from "Group";
+    import { TileMap } from "TileMap";
+    import { BaseCamera } from "Camera";
+    import { Actor } from "Actor";
+    import { Class } from "Class";
+    import { ICanInitialize, ICanActivate, ICanDeactivate, ICanUpdate, ICanDraw } from "Interfaces/LifecycleEvents";
+    import * as Events from "Events";
+    import { Trigger } from "Trigger";
+    /**
+     * [[Actor|Actors]] are composed together into groupings called Scenes in
+     * Excalibur. The metaphor models the same idea behind real world
+     * actors in a scene. Only actors in scenes will be updated and drawn.
+     *
+     * Typical usages of a scene include: levels, menus, loading screens, etc.
+     *
+     * [[include:Scenes.md]]
+     */
+    export class Scene extends Class implements ICanInitialize, ICanActivate, ICanDeactivate, ICanUpdate, ICanDraw {
+        /**
+         * Gets or sets the current camera for the scene
+         */
+        camera: BaseCamera;
+        /**
+         * The actors in the current scene
+         */
+        actors: Actor[];
+        /**
+         * The triggers in the current scene
+         */
+        triggers: Trigger[];
+        /**
+         * The [[TileMap]]s in the scene, if any
+         */
+        tileMaps: TileMap[];
+        /**
+         * The [[Group]]s in the scene, if any
+         */
+        groups: {
+            [key: string]: Group;
+        };
+        /**
+         * Access to the Excalibur engine
+         */
+        engine: Engine;
+        /**
+         * The [[UIActor]]s in a scene, if any; these are drawn last
+         */
+        uiActors: Actor[];
+        private _isInitialized;
+        private _sortedDrawingTree;
+        private _broadphase;
+        private _killQueue;
+        private _triggerKillQueue;
+        private _timers;
+        private _cancelQueue;
+        private _logger;
+        constructor(engine?: Engine);
+        on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
+        on(eventName: Events.activate, handler: (event?: ActivateEvent) => void): void;
+        on(eventName: Events.deactivate, handler: (event?: DeactivateEvent) => void): void;
+        on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        on(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): void;
+        on(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
+        once(eventName: Events.activate, handler: (event?: ActivateEvent) => void): void;
+        once(eventName: Events.deactivate, handler: (event?: DeactivateEvent) => void): void;
+        once(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        once(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        once(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        once(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        once(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): void;
+        once(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: Events.initialize, handler?: (event?: InitializeEvent) => void): void;
+        off(eventName: Events.activate, handler?: (event?: ActivateEvent) => void): void;
+        off(eventName: Events.deactivate, handler?: (event?: DeactivateEvent) => void): void;
+        off(eventName: Events.preupdate, handler?: (event?: PreUpdateEvent) => void): void;
+        off(eventName: Events.postupdate, handler?: (event?: PostUpdateEvent) => void): void;
+        off(eventName: Events.predraw, handler?: (event?: PreDrawEvent) => void): void;
+        off(eventName: Events.postdraw, handler?: (event?: PostDrawEvent) => void): void;
+        off(eventName: Events.predebugdraw, handler?: (event?: PreDebugDrawEvent) => void): void;
+        off(eventName: Events.postdebugdraw, handler?: (event?: PostDebugDrawEvent) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * This is called before the first update of the [[Scene]]. Initializes scene members like the camera. This method is meant to be
+         * overridden. This is where initialization of child actors should take place.
+         */
+        onInitialize(_engine: Engine): void;
+        /**
+         * This is called when the scene is made active and started. It is meant to be overriden,
+         * this is where you should setup any DOM UI or event handlers needed for the scene.
+         */
+        onActivate(_oldScene: Scene, _newScene: Scene): void;
+        /**
+         * This is called when the scene is made transitioned away from and stopped. It is meant to be overriden,
+         * this is where you should cleanup any DOM UI or event handlers needed for the scene.
+         */
+        onDeactivate(_oldScene: Scene, _newScene: Scene): void;
+        /**
+         * Safe to override onPreUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPreUpdate` is called directly before a scene is updated.
+         */
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPostUpdate` is called directly after a scene is updated.
+         */
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Safe to override onPreDraw lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPreDraw` is called directly before a scene is drawn.
+         */
+        onPreDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Safe to override onPostDraw lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPostDraw` is called directly after a scene is drawn.
+         */
+        onPostDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Initializes actors in the scene
+         */
+        private _initializeChildren();
+        /**
+         * Gets whether or not the [[Scene]] has been initialized
+         */
+        readonly isInitialized: boolean;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Initializes the scene before the first update, meant to be called by engine not by users of
+         * Excalibur
+         * @internal
+         */
+        _initialize(engine: Engine): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Activates the scene with the base behavior, then calls the overridable `onActivate` implementation.
+         * @internal
+         */
+        _activate(oldScene: Scene, newScene: Scene): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Deactivates the scene with the base behavior, then calls the overridable `onDeactivate` implementation.
+         * @internal
+         */
+        _deactivate(oldScene: Scene, newScene: Scene): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
+         * @internal
+         */
+        _preupdate(_engine: Engine, delta: number): void;
+        /**
+         *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
+         * @internal
+         */
+        _postupdate(_engine: Engine, delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _predraw handler for [[onPreDraw]] lifecycle event
+         *
+         * @internal
+         */
+        _predraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _postdraw handler for [[onPostDraw]] lifecycle event
+         *
+         * @internal
+         */
+        _postdraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Updates all the actors and timers in the scene. Called by the [[Engine]].
+         * @param engine  Reference to the current Engine
+         * @param delta   The number of milliseconds since the last update
+         */
+        update(engine: Engine, delta: number): void;
+        private _processKillQueue(killQueue, collection);
+        /**
+         * Draws all the actors in the Scene. Called by the [[Engine]].
+         * @param ctx    The current rendering context
+         * @param delta  The number of milliseconds since the last draw
+         */
+        draw(ctx: CanvasRenderingContext2D, delta: number): void;
+        /**
+         * Draws all the actors' debug information in the Scene. Called by the [[Engine]].
+         * @param ctx  The current rendering context
+         */
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+        /**
+         * Checks whether an actor is contained in this scene or not
+         */
+        contains(actor: Actor): boolean;
+        /**
+         * Adds a [[Timer]] to the current [[Scene]].
+         * @param timer  The timer to add to the current [[Scene]].
+         */
+        add(timer: Timer): void;
+        /**
+         * Adds a [[TileMap]] to the [[Scene]], once this is done the [[TileMap]] will be drawn and updated.
+         */
+        add(tileMap: TileMap): void;
+        /**
+         * Adds a [[Trigger]] to the [[Scene]], once this is done the [[Trigger]] will listen for interactions with other actors.
+         * @param trigger
+         */
+        add(trigger: Trigger): void;
+        /**
+         * Adds an actor to the scene, once this is done the [[Actor]] will be drawn and updated.
+         * @param actor  The actor to add to the current scene
+         */
+        add(actor: Actor): void;
+        /**
+         * Adds a [[UIActor]] to the scene.
+         * @param uiActor  The UIActor to add to the current scene
+         */
+        add(uiActor: UIActor): void;
+        /**
+         * Removes a [[Timer]] from the current scene, it will no longer be updated.
+         * @param timer  The timer to remove to the current scene.
+         */
+        remove(timer: Timer): void;
+        /**
+         * Removes a [[TileMap]] from the scene, it will no longer be drawn or updated.
+         * @param tileMap {TileMap}
+         */
+        remove(tileMap: TileMap): void;
+        /**
+         * Removes an actor from the scene, it will no longer be drawn or updated.
+         * @param actor  The actor to remove from the current scene.
+         */
+        remove(actor: Actor): void;
+        /**
+         * Removes a [[UIActor]] to the scene, it will no longer be drawn or updated
+         * @param uiActor  The UIActor to remove from the current scene
+         */
+        remove(uiActor: UIActor): void;
+        /**
+         * Adds (any) actor to act as a piece of UI, meaning it is always positioned
+         * in screen coordinates. UI actors do not participate in collisions.
+         * @todo Should this be `UIActor` only?
+         */
+        addUIActor(actor: Actor): void;
+        /**
+         * Removes an actor as a piece of UI
+         */
+        removeUIActor(actor: Actor): void;
+        /**
+         * Adds an actor to the scene, once this is done the actor will be drawn and updated.
+         */
+        protected _addChild(actor: Actor): void;
+        /**
+         * Adds a [[TileMap]] to the scene, once this is done the TileMap will be drawn and updated.
+         */
+        addTileMap(tileMap: TileMap): void;
+        /**
+         * Removes a [[TileMap]] from the scene, it will no longer be drawn or updated.
+         */
+        removeTileMap(tileMap: TileMap): void;
+        /**
+         * Removes an actor from the scene, it will no longer be drawn or updated.
+         */
+        protected _removeChild(actor: Actor): void;
+        /**
+         * Adds a [[Timer]] to the scene
+         * @param timer  The timer to add
+         */
+        addTimer(timer: Timer): Timer;
+        /**
+         * Removes a [[Timer]] from the scene.
+         * @warning Can be dangerous, use [[cancelTimer]] instead
+         * @param timer  The timer to remove
+         */
+        removeTimer(timer: Timer): Timer;
+        /**
+         * Cancels a [[Timer]], removing it from the scene nicely
+         * @param timer  The timer to cancel
+         */
+        cancelTimer(timer: Timer): Timer;
+        /**
+         * Tests whether a [[Timer]] is active in the scene
+         */
+        isTimerActive(timer: Timer): boolean;
+        /**
+         * Creates and adds a [[Group]] to the scene with a name
+         */
+        createGroup(name: string): Group;
+        /**
+         * Returns a [[Group]] by name
+         */
+        getGroup(name: string): Group;
+        /**
+         * Removes a [[Group]] by name
+         */
+        removeGroup(name: string): void;
+        /**
+         * Removes a [[Group]] by reference
+         */
+        removeGroup(group: Group): void;
+        /**
+         * Removes the given actor from the sorted drawing tree
+         */
+        cleanupDrawTree(actor: Actor): void;
+        /**
+         * Updates the given actor's position in the sorted drawing tree
+         */
+        updateDrawTree(actor: Actor): void;
+        private _collectActorStats(engine);
+    }
+}
+declare module "Input/Gamepad" {
+    import { Class } from "Class";
+    import { GameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent } from "Events";
+    import * as Events from "Events";
+    /**
+     * Excalibur leverages the HTML5 Gamepad API [where it is supported](http://caniuse.com/#feat=gamepad)
+     * to provide controller support for your games.
+     *
+     * [[include:Gamepads.md]]
+     */
+    export class Gamepads extends Class {
+        /**
+         * Whether or not to poll for Gamepad input (default: `false`)
+         */
+        enabled: boolean;
+        /**
+         * Whether or not Gamepad API is supported
+         */
+        supported: boolean;
+        /**
+         * The minimum value an axis has to move before considering it a change
+         */
+        static MinAxisMoveThreshold: number;
+        private _gamePadTimeStamps;
+        private _oldPads;
+        private _pads;
+        private _initSuccess;
+        private _navigator;
+        private _minimumConfiguration;
+        constructor();
+        init(): void;
+        /**
+         * Sets the minimum gamepad configuration, for example {axis: 4, buttons: 4} means
+         * this game requires at minimum 4 axis inputs and 4 buttons, this is not restrictive
+         * all other controllers with more axis or buttons are valid as well. If no minimum
+         * configuration is set all pads are valid.
+         */
+        setMinimumGamepadConfiguration(config: IGamepadConfiguration): void;
+        /**
+         * When implicitly enabled, set the enabled flag and run an update so information is updated
+         */
+        private _enableAndUpdate();
+        /**
+         * Checks a navigator gamepad against the minimum configuration if present.
+         */
+        private _isGamepadValid(pad);
+        on(eventName: Events.connect, handler: (event?: GamepadConnectEvent) => void): void;
+        on(eventName: Events.disconnect, handler: (event?: GamepadDisconnectEvent) => void): void;
+        on(eventName: Events.button, handler: (event?: GamepadButtonEvent) => void): void;
+        on(eventName: Events.axis, handler: (event?: GamepadAxisEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * Updates Gamepad state and publishes Gamepad events
+         */
+        update(): void;
+        /**
+         * Safely retrieves a Gamepad at a specific index and creates one if it doesn't yet exist
+         */
+        at(index: number): Gamepad;
+        /**
+         * Returns a list of all valid gamepads that meet the minimum configuration requirement.
+         */
+        getValidGamepads(): Gamepad[];
+        /**
+         * Gets the number of connected gamepads
+         */
+        count(): number;
+        private _clonePads(pads);
+        /**
+         * Fastest way to clone a known object is to do it yourself
+         */
+        private _clonePad(pad);
+    }
+    /**
+     * Gamepad holds state information for a connected controller. See [[Gamepads]]
+     * for more information on handling controller input.
+     */
+    export class Gamepad extends Class {
+        connected: boolean;
+        navigatorGamepad: INavigatorGamepad;
+        private _buttons;
+        private _axes;
+        constructor();
+        /**
+         * Whether or not the given button is pressed
+         * @param button     The button to query
+         * @param threshold  The threshold over which the button is considered to be pressed
+         */
+        isButtonPressed(button: Buttons, threshold?: number): boolean;
+        /**
+         * Gets the given button value between 0 and 1
+         */
+        getButton(button: Buttons): number;
+        /**
+         * Gets the given axis value between -1 and 1. Values below
+         * [[MinAxisMoveThreshold]] are considered 0.
+         */
+        getAxes(axes: Axes): number;
+        updateButton(buttonIndex: number, value: number): void;
+        updateAxes(axesIndex: number, value: number): void;
+    }
+    /**
+     * Gamepad Buttons enumeration
+     */
+    export enum Buttons {
+        /**
+         * Face 1 button (e.g. A)
+         */
+        Face1 = 0,
+        /**
+         * Face 2 button (e.g. B)
+         */
+        Face2 = 1,
+        /**
+         * Face 3 button (e.g. X)
+         */
+        Face3 = 2,
+        /**
+         * Face 4 button (e.g. Y)
+         */
+        Face4 = 3,
+        /**
+         * Left bumper button
+         */
+        LeftBumper = 4,
+        /**
+         * Right bumper button
+         */
+        RightBumper = 5,
+        /**
+         * Left trigger button
+         */
+        LeftTrigger = 6,
+        /**
+         * Right trigger button
+         */
+        RightTrigger = 7,
+        /**
+         * Select button
+         */
+        Select = 8,
+        /**
+         * Start button
+         */
+        Start = 9,
+        /**
+         * Left analog stick press (e.g. L3)
+         */
+        LeftStick = 10,
+        /**
+         * Right analog stick press (e.g. R3)
+         */
+        RightStick = 11,
+        /**
+         * D-pad up
+         */
+        DpadUp = 12,
+        /**
+         * D-pad down
+         */
+        DpadDown = 13,
+        /**
+         * D-pad left
+         */
+        DpadLeft = 14,
+        /**
+         * D-pad right
+         */
+        DpadRight = 15,
+    }
+    /**
+     * Gamepad Axes enumeration
+     */
+    export enum Axes {
+        /**
+         * Left analogue stick X direction
+         */
+        LeftStickX = 0,
+        /**
+         * Left analogue stick Y direction
+         */
+        LeftStickY = 1,
+        /**
+         * Right analogue stick X direction
+         */
+        RightStickX = 2,
+        /**
+         * Right analogue stick Y direction
+         */
+        RightStickY = 3,
+    }
+    /**
+     * @internal
+     */
+    export interface INavigatorGamepad {
+        axes: number[];
+        buttons: INavigatorGamepadButton[];
+        connected: boolean;
+        id: string;
+        index: number;
+        mapping: string;
+        timestamp: number;
+    }
+    /**
+     * @internal
+     */
+    export interface INavigatorGamepadButton {
+        pressed: boolean;
+        value: number;
+    }
+    /**
+     * @internal
+     */
+    export interface INavigatorGamepadEvent {
+        gamepad: INavigatorGamepad;
+    }
+    /**
+     * @internal
+     */
+    export interface IGamepadConfiguration {
+        axis: number;
+        buttons: number;
+    }
+}
+declare module "Input/Pointer" {
+    import { Engine } from "Engine";
+    import { GameEvent } from "Events";
+    import { Actor } from "Actor";
+    import { Vector, GlobalCoordinates } from "Algebra";
+    import { Class } from "Class";
+    import * as Events from "Events";
+    /**
+     * The type of pointer for a [[PointerEvent]].
+     */
+    export enum PointerType {
+        Touch = 0,
+        Mouse = 1,
+        Pen = 2,
+        Unknown = 3,
+    }
+    /**
+     * The mouse button being pressed.
+     */
+    export enum PointerButton {
+        Left = 0,
+        Middle = 1,
+        Right = 2,
+        Unknown = 3,
+    }
+    export enum WheelDeltaMode {
+        Pixel = 0,
+        Line = 1,
+        Page = 2,
+    }
+    /**
+     * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
+     */
+    export enum PointerScope {
+        /**
+         * Handle events on the `canvas` element only. Events originating outside the
+         * `canvas` will not be handled.
+         */
+        Canvas = 0,
+        /**
+         * Handles events on the entire document. All events will be handled by Excalibur.
+         */
+        Document = 1,
+    }
+    /**
+     * Pointer events
+     *
+     * Represents a mouse, touch, or stylus event. See [[Pointers]] for more information on
+     * handling pointer input.
+     *
+     * For mouse-based events, you can inspect [[PointerEvent.button]] to see what button was pressed.
+     */
+    export class PointerEvent extends GameEvent<any> {
+        private coordinates;
+        pointer: Pointer;
+        index: number;
+        pointerType: PointerType;
+        button: PointerButton;
+        ev: any;
+        /** @obsolete Use [[PointerEvent]].worldPos.x instead. */
+        readonly x: number;
+        /** @obsolete Use [[PointerEvent]].worldPos.y instead. */
+        readonly y: number;
+        /** @obsolete Use [[PointerEvent]].worldPos.x instead. */
+        readonly worldX: number;
+        /** @obsolete Use [[PointerEvent]].worldPos.y instead. */
+        readonly worldY: number;
+        /** @obsolete Use [[PointerEvent]].pagePos.x instead. */
+        readonly pageX: number;
+        /** @obsolete Use [[PointerEvent]].pagePos.y instead. */
+        readonly pageY: number;
+        /** @obsolete Use [[PointerEvent]].screenPos.x instead. */
+        readonly screenX: number;
+        /** @obsolete Use [[PointerEvent]].screenPos.y instead. */
+        readonly screenY: number;
+        /** The world coordinates of the event. */
+        readonly worldPos: Vector;
+        /** The page coordinates of the event. */
+        readonly pagePos: Vector;
+        /** The screen coordinates of the event. */
+        readonly screenPos: Vector;
+        /**
+         * @param coordinates         The [[GlobalCoordinates]] of the event
+         * @param pointer             The [[Pointer]] of the event
+         * @param index               The index of the pointer (zero-based)
+         * @param pointerType         The type of pointer
+         * @param button              The button pressed (if [[PointerType.Mouse]])
+         * @param ev                  The raw DOM event being handled
+         * @param pos                 (Will be added to signature in 0.14.0 release) The position of the event (in world coordinates)
+         */
+        constructor(coordinates: GlobalCoordinates, pointer: Pointer, index: number, pointerType: PointerType, button: PointerButton, ev: any);
+        readonly pos: Vector;
+    }
+    export class PointerDragEvent extends PointerEvent {
+    }
+    /**
+     * Wheel Events
+     *
+     * Represents a mouse wheel event. See [[Pointers]] for more information on
+     * handling point input.
+     */
+    export class WheelEvent extends GameEvent<any> {
+        x: number;
+        y: number;
+        pageX: number;
+        pageY: number;
+        screenX: number;
+        screenY: number;
+        index: number;
+        deltaX: number;
+        deltaY: number;
+        deltaZ: number;
+        deltaMode: WheelDeltaMode;
+        ev: any;
+        /**
+         * @param x            The `x` coordinate of the event (in world coordinates)
+         * @param y            The `y` coordinate of the event (in world coordinates)
+         * @param pageX        The `x` coordinate of the event (in document coordinates)
+         * @param pageY        The `y` coordinate of the event (in document coordinates)
+         * @param screenX      The `x` coordinate of the event (in screen coordinates)
+         * @param screenY      The `y` coordinate of the event (in screen coordinates)
+         * @param index        The index of the pointer (zero-based)
+         * @param deltaX       The type of pointer
+         * @param deltaY       The type of pointer
+         * @param deltaZ       The type of pointer
+         * @param deltaMode    The type of movement [[WheelDeltaMode]]
+         * @param ev           The raw DOM event being handled
+         */
+        constructor(x: number, y: number, pageX: number, pageY: number, screenX: number, screenY: number, index: number, deltaX: number, deltaY: number, deltaZ: number, deltaMode: WheelDeltaMode, ev: any);
+    }
+    /**
+     * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
+     * [W3C Pointer Events](http://www.w3.org/TR/pointerevents/).
+     *
+     * [[include:Pointers.md]]
+     */
+    export class Pointers extends Class {
+        private _engine;
+        private _pointerDown;
+        private _pointerUp;
+        private _pointerMove;
+        private _pointerCancel;
+        private _wheel;
+        private _pointers;
+        private _activePointers;
+        constructor(engine: Engine);
+        on(eventName: Events.up, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.down, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.move, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.enter, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.leave, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.cancel, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.wheel, handler: (event?: WheelEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Primary pointer (mouse, 1 finger, stylus, etc.)
+         */
+        primary: Pointer;
+        /**
+         * Initializes pointer event listeners
+         */
+        init(target?: GlobalEventHandlers): void;
+        update(): void;
+        /**
+         * Safely gets a Pointer at a specific index and initializes one if it doesn't yet exist
+         * @param index  The pointer index to retrieve
+         */
+        at(index: number): Pointer;
+        /**
+         * Get number of pointers being watched
+         */
+        count(): number;
+        /**
+         * Propogates events to actor if necessary
+         */
+        propogate(actor: Actor): void;
+        private _handleMouseEvent(eventName, eventArr);
+        private _handleTouchEvent(eventName, eventArr);
+        private _handlePointerEvent(eventName, eventArr);
+        private _handleWheelEvent(eventName, eventArr);
+        /**
+         * Gets the index of the pointer specified for the given pointer ID or finds the next empty pointer slot available.
+         * This is required because IE10/11 uses incrementing pointer IDs so we need to store a mapping of ID => idx
+         */
+        private _getPointerIndex(pointerId);
+        private _stringToPointerType(s);
+    }
+    /**
+     * Captures and dispatches PointerEvents
+     */
+    export class Pointer extends Class {
+        private _isDown;
+        private _wasDown;
+        /**
+         * Whether the Pointer is currently dragging.
+         */
+        readonly isDragging: boolean;
+        /**
+         * Whether the Pointer just started dragging.
+         */
+        readonly isDragStart: boolean;
+        /**
+         * Whether the Pointer just ended dragging.
+         */
+        readonly isDragEnd: boolean;
+        /**
+         * The last position on the document this pointer was at. Can be `null` if pointer was never active.
+         */
+        lastPagePos: Vector;
+        /**
+         * The last position on the screen this pointer was at. Can be `null` if pointer was never active.
+         */
+        lastScreenPos: Vector;
+        /**
+         * The last position in the game world coordinates this pointer was at. Can be `null` if pointer was never active.
+         */
+        lastWorldPos: Vector;
+        actorsUnderPointer: {
+            [ActorId: number]: Actor;
+        };
+        constructor();
+        update(): void;
+        private _onPointerMove(ev);
+        private _onPointerDown();
+        private _onPointerUp();
+    }
+}
+declare module "Input/Keyboard" {
+    import { Class } from "Class";
+    import { GameEvent } from "Events";
+    import * as Events from "Events";
+    /**
+     * Enum representing input key codes
+     */
+    export enum Keys {
+        Num1 = 97,
+        Num2 = 98,
+        Num3 = 99,
+        Num4 = 100,
+        Num5 = 101,
+        Num6 = 102,
+        Num7 = 103,
+        Num8 = 104,
+        Num9 = 105,
+        Num0 = 96,
+        Numlock = 144,
+        Semicolon = 186,
+        A = 65,
+        B = 66,
+        C = 67,
+        D = 68,
+        E = 69,
+        F = 70,
+        G = 71,
+        H = 72,
+        I = 73,
+        J = 74,
+        K = 75,
+        L = 76,
+        M = 77,
+        N = 78,
+        O = 79,
+        P = 80,
+        Q = 81,
+        R = 82,
+        S = 83,
+        T = 84,
+        U = 85,
+        V = 86,
+        W = 87,
+        X = 88,
+        Y = 89,
+        Z = 90,
+        Shift = 16,
+        Alt = 18,
+        Up = 38,
+        Down = 40,
+        Left = 37,
+        Right = 39,
+        Space = 32,
+        Esc = 27,
+    }
+    /**
+     * Event thrown on a game object for a key event
+     */
+    export class KeyEvent extends GameEvent<any> {
+        key: Keys;
+        /**
+         * @param key  The key responsible for throwing the event
+         */
+        constructor(key: Keys);
+    }
+    /**
+     * Provides keyboard support for Excalibur.
+     *
+     * [[include:Keyboard.md]]
+     */
+    export class Keyboard extends Class {
+        private _keys;
+        private _keysUp;
+        private _keysDown;
+        constructor();
+        on(eventName: Events.press, handler: (event?: KeyEvent) => void): void;
+        on(eventName: Events.release, handler: (event?: KeyEvent) => void): void;
+        on(eventName: Events.hold, handler: (event?: KeyEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Initialize Keyboard event listeners
+         */
+        init(global?: GlobalEventHandlers): void;
+        update(): void;
+        /**
+         * Gets list of keys being pressed down
+         */
+        getKeys(): Keys[];
+        /**
+         * Tests if a certain key was just pressed this frame. This is cleared at the end of the update frame.
+         * @param key Test whether a key was just pressed
+         */
+        wasPressed(key: Keys): boolean;
+        /**
+         * Tests if a certain key is held down. This is persisted between frames.
+         * @param key  Test whether a key is held down
+         */
+        isHeld(key: Keys): boolean;
+        /**
+         * Tests if a certain key was just released this frame. This is cleared at the end of the update frame.
+         * @param key  Test whether a key was just released
+         */
+        wasReleased(key: Keys): boolean;
+        /**
+         * Normalizes some browser event key codes to map to standard Excalibur key codes
+         * @param code Event keyCode
+         * @see http://unixpapa.com/js/key.html
+         */
+        private _normalizeKeyCode(code);
+    }
+}
+declare module "Input/IEngineInput" {
+    import { Keyboard } from "Input/Keyboard";
+    import { Gamepads } from "Input/Gamepad";
+    import { Pointers } from "Input/Pointer";
+    export interface IEngineInput {
+        keyboard: Keyboard;
+        pointers: Pointers;
+        gamepads: Gamepads;
+    }
+}
+declare module "Input/Index" {
+    /**
+     * Provides support for mice, keyboards, and controllers.
+     *
+     * [[include:Input.md]]
+     */
+    /**
+     * @typedoc
+     */
+    export * from "Input/Gamepad";
+    export * from "Input/Pointer";
+    export * from "Input/Keyboard";
+    export * from "Input/IEngineInput";
+}
+declare module "Events" {
+    import { Scene } from "Scene";
+    import { Vector } from "Algebra";
+    import { Actor } from "Actor";
+    import { Trigger } from "Trigger";
+    import { FrameStats } from "Debug";
+    import { Engine } from "Engine";
+    import { TileMap } from "TileMap";
+    import { Side } from "Collision/Side";
+    import * as Input from "Input/Index";
+    import { Pair, BaseCamera } from "Index";
+    export type kill = 'kill';
+    export type prekill = 'prekill';
+    export type postkill = 'postkill';
+    export type predraw = 'predraw';
+    export type postdraw = 'postdraw';
+    export type predebugdraw = 'predebugdraw';
+    export type postdebugdraw = 'postdebugdraw';
+    export type preupdate = 'preupdate';
+    export type postupdate = 'postupdate';
+    export type preframe = 'preframe';
+    export type postframe = 'postframe';
+    export type precollision = 'precollision';
+    export type collisionstart = 'collisionstart';
+    export type collisionend = 'collisionend';
+    export type postcollision = 'postcollision';
+    export type initialize = 'initialize';
+    export type activate = 'activate';
+    export type deactivate = 'deactivate';
+    export type exitviewport = 'exitviewport';
+    export type enterviewport = 'enterviewport';
+    export type exittrigger = 'exit';
+    export type entertrigger = 'enter';
+    export type connect = 'connect';
+    export type disconnect = 'disconnect';
+    export type button = 'button';
+    export type axis = 'axis';
+    export type subscribe = 'subscribe';
+    export type unsubscribe = 'unsubscribe';
+    export type visible = 'visible';
+    export type hidden = 'hidden';
+    export type start = 'start';
+    export type stop = 'stop';
+    export type pointerup = 'pointerup';
+    export type pointerdown = 'pointerdown';
+    export type pointermove = 'pointermove';
+    export type pointerenter = 'pointerenter';
+    export type pointerleave = 'pointerleave';
+    export type pointercancel = 'pointercancel';
+    export type pointerwheel = 'pointerwheel';
+    export type up = 'up';
+    export type down = 'down';
+    export type move = 'move';
+    export type enter = 'enter';
+    export type leave = 'leave';
+    export type cancel = 'cancel';
+    export type wheel = 'wheel';
+    export type press = 'press';
+    export type release = 'release';
+    export type hold = 'hold';
+    export type pointerdragstart = 'pointerdragstart';
+    export type pointerdragend = 'pointerdragend';
+    export type pointerdragenter = 'pointerdragenter';
+    export type pointerdragleave = 'pointerdragleave';
+    export type pointerdragmove = 'pointerdragmove';
+    /**
+     * Base event type in Excalibur that all other event types derive from. Not all event types are thrown on all Excalibur game objects,
+     * some events are unique to a type, others are not.
+     *
+     */
+    export class GameEvent<T> {
+        /**
+         * Target object for this event.
+         */
+        target: T;
+    }
+    /**
+     * The 'kill' event is emitted on actors when it is killed. The target is the actor that was killed.
+     */
+    export class KillEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+    }
+    /**
+     * The 'prekill' event is emitted directly before an actor is killed.
+     */
+    export class PreKillEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+    }
+    /**
+     * The 'postkill' event is emitted directly after the actor is killed.
+     */
+    export class PostKillEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+    }
+    /**
+     * The 'start' event is emitted on engine when has started and is ready for interaction.
+     */
+    export class GameStartEvent extends GameEvent<Engine> {
+        target: Engine;
+        constructor(target: Engine);
+    }
+    /**
+     * The 'stop' event is emitted on engine when has been stopped and will no longer take input, update or draw.
+     */
+    export class GameStopEvent extends GameEvent<Engine> {
+        target: Engine;
+        constructor(target: Engine);
+    }
+    /**
+     * The 'predraw' event is emitted on actors, scenes, and engine before drawing starts. Actors' predraw happens inside their graphics
+     * transform so that all drawing takes place with the actor as the origin.
+     *
+     */
+    export class PreDrawEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
+        ctx: CanvasRenderingContext2D;
+        delta: number;
+        target: Actor | Scene | Engine | TileMap;
+        constructor(ctx: CanvasRenderingContext2D, delta: number, target: Actor | Scene | Engine | TileMap);
+    }
+    /**
+     * The 'postdraw' event is emitted on actors, scenes, and engine after drawing finishes. Actors' postdraw happens inside their graphics
+     * transform so that all drawing takes place with the actor as the origin.
+     *
+     */
+    export class PostDrawEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
+        ctx: CanvasRenderingContext2D;
+        delta: number;
+        target: Actor | Scene | Engine | TileMap;
+        constructor(ctx: CanvasRenderingContext2D, delta: number, target: Actor | Scene | Engine | TileMap);
+    }
+    /**
+     * The 'predebugdraw' event is emitted on actors, scenes, and engine before debug drawing starts.
+     */
+    export class PreDebugDrawEvent extends GameEvent<Actor | Scene | Engine> {
+        ctx: CanvasRenderingContext2D;
+        target: Actor | Scene | Engine;
+        constructor(ctx: CanvasRenderingContext2D, target: Actor | Scene | Engine);
+    }
+    /**
+     * The 'postdebugdraw' event is emitted on actors, scenes, and engine after debug drawing starts.
+     */
+    export class PostDebugDrawEvent extends GameEvent<Actor | Scene | Engine> {
+        ctx: CanvasRenderingContext2D;
+        target: Actor | Scene | Engine;
+        constructor(ctx: CanvasRenderingContext2D, target: Actor | Scene | Engine);
+    }
+    /**
+     * The 'preupdate' event is emitted on actors, scenes, camera, and engine before the update starts.
+     */
+    export class PreUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap | BaseCamera> {
+        engine: Engine;
+        delta: number;
+        target: Actor | Scene | Engine | TileMap | BaseCamera;
+        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap | BaseCamera);
+    }
+    /**
+     * The 'postupdate' event is emitted on actors, scenes, camera, and engine after the update ends.
+     */
+    export class PostUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap | BaseCamera> {
+        engine: Engine;
+        delta: number;
+        target: Actor | Scene | Engine | TileMap | BaseCamera;
+        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap | BaseCamera);
+    }
+    /**
+     * The 'preframe' event is emitted on the engine, before the frame begins.
+     */
+    export class PreFrameEvent extends GameEvent<Engine> {
+        engine: Engine;
+        prevStats: FrameStats;
+        constructor(engine: Engine, prevStats: FrameStats);
+    }
+    /**
+     * The 'postframe' event is emitted on the engine, after a frame ends.
+     */
+    export class PostFrameEvent extends GameEvent<Engine> {
+        engine: Engine;
+        stats: FrameStats;
+        constructor(engine: Engine, stats: FrameStats);
+    }
+    /**
+     * Event received when a gamepad is connected to Excalibur. [[Gamepads]] receives this event.
+     */
+    export class GamepadConnectEvent extends GameEvent<Input.Gamepad> {
+        index: number;
+        gamepad: Input.Gamepad;
+        constructor(index: number, gamepad: Input.Gamepad);
+    }
+    /**
+     * Event received when a gamepad is disconnected from Excalibur. [[Gamepads]] receives this event.
+     */
+    export class GamepadDisconnectEvent extends GameEvent<Input.Gamepad> {
+        index: number;
+        gamepad: Input.Gamepad;
+        constructor(index: number, gamepad: Input.Gamepad);
+    }
+    /**
+     * Gamepad button event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
+     */
+    export class GamepadButtonEvent extends GameEvent<Input.Gamepad> {
+        button: Input.Buttons;
+        value: number;
+        target: Input.Gamepad;
+        /**
+         * @param button  The Gamepad button
+         * @param value   A numeric value between 0 and 1
+         */
+        constructor(button: Input.Buttons, value: number, target: Input.Gamepad);
+    }
+    /**
+     * Gamepad axis event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
+     */
+    export class GamepadAxisEvent extends GameEvent<Input.Gamepad> {
+        axis: Input.Axes;
+        value: number;
+        target: Input.Gamepad;
+        /**
+         * @param axis  The Gamepad axis
+         * @param value A numeric value between -1 and 1
+         */
+        constructor(axis: Input.Axes, value: number, target: Input.Gamepad);
+    }
+    /**
+     * Subscribe event thrown when handlers for events other than subscribe are added. Meta event that is received by
+     * [[EventDispatcher|event dispatchers]].
+     */
+    export class SubscribeEvent<T> extends GameEvent<T> {
+        topic: string;
+        handler: (event?: GameEvent<T>) => void;
+        constructor(topic: string, handler: (event?: GameEvent<T>) => void);
+    }
+    /**
+     * Unsubscribe event thrown when handlers for events other than unsubscribe are removed. Meta event that is received by
+     * [[EventDispatcher|event dispatchers]].
+     */
+    export class UnsubscribeEvent<T> extends GameEvent<T> {
+        topic: string;
+        handler: (event?: GameEvent<T>) => void;
+        constructor(topic: string, handler: (event?: GameEvent<T>) => void);
+    }
+    /**
+     * Event received by the [[Engine]] when the browser window is visible on a screen.
+     */
+    export class VisibleEvent extends GameEvent<Engine> {
+        target: Engine;
+        constructor(target: Engine);
+    }
+    /**
+     * Event received by the [[Engine]] when the browser window is hidden from all screens.
+     */
+    export class HiddenEvent extends GameEvent<Engine> {
+        target: Engine;
+        constructor(target: Engine);
+    }
+    /**
+     * Event thrown on an [[Actor|actor]] when a collision will occur this frame if it resolves
+     */
+    export class PreCollisionEvent extends GameEvent<Actor> {
+        actor: Actor;
+        other: Actor;
+        side: Side;
+        intersection: Vector;
+        /**
+         * @param actor         The actor the event was thrown on
+         * @param other         The actor that will collided with the current actor
+         * @param side          The side that will be collided with the current actor
+         * @param intersection  Intersection vector
+         */
+        constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
+    }
+    /**
+     * Event thrown on an [[Actor|actor]] when a collision has been resolved (body reacted) this frame
+     */
+    export class PostCollisionEvent extends GameEvent<Actor> {
+        actor: Actor;
+        other: Actor;
+        side: Side;
+        intersection: Vector;
+        /**
+         * @param actor         The actor the event was thrown on
+         * @param other         The actor that did collide with the current actor
+         * @param side          The side that did collide with the current actor
+         * @param intersection  Intersection vector
+         */
+        constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
+    }
+    /**
+     * Event thrown the first time an [[Actor|actor]] collides with another, after an actor is in contact normal collision events are fired.
+     */
+    export class CollisionStartEvent extends GameEvent<Actor> {
+        actor: Actor;
+        other: Actor;
+        pair: Pair;
+        /**
+         *
+         */
+        constructor(actor: Actor, other: Actor, pair: Pair);
+    }
+    /**
+     * Event thrown when the [[Actor|actor]] is no longer colliding with another
+     */
+    export class CollisionEndEvent extends GameEvent<Actor> {
+        actor: Actor;
+        other: Actor;
+        /**
+         *
+         */
+        constructor(actor: Actor, other: Actor);
+    }
+    /**
+     * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
+     */
+    export class InitializeEvent extends GameEvent<Actor | Scene | Engine | BaseCamera> {
+        engine: Engine;
+        target: Actor | Scene | Engine | BaseCamera;
+        /**
+         * @param engine  The reference to the current engine
+         */
+        constructor(engine: Engine, target: Actor | Scene | Engine | BaseCamera);
+    }
+    /**
+     * Event thrown on a [[Scene]] on activation
+     */
+    export class ActivateEvent extends GameEvent<Scene> {
+        oldScene: Scene;
+        target: Scene;
+        /**
+         * @param oldScene  The reference to the old scene
+         */
+        constructor(oldScene: Scene, target: Scene);
+    }
+    /**
+     * Event thrown on a [[Scene]] on deactivation
+     */
+    export class DeactivateEvent extends GameEvent<Scene> {
+        newScene: Scene;
+        target: Scene;
+        /**
+         * @param newScene  The reference to the new scene
+         */
+        constructor(newScene: Scene, target: Scene);
+    }
+    /**
+     * Event thrown on an [[Actor]] when it completely leaves the screen.
+     */
+    export class ExitViewPortEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+    }
+    /**
+     * Event thrown on an [[Actor]] when it completely leaves the screen.
+     */
+    export class EnterViewPortEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+    }
+    export class EnterTriggerEvent extends GameEvent<Actor> {
+        target: Trigger;
+        actor: Actor;
+        constructor(target: Trigger, actor: Actor);
+    }
+    export class ExitTriggerEvent extends GameEvent<Actor> {
+        target: Trigger;
+        actor: Actor;
+        constructor(target: Trigger, actor: Actor);
+    }
+}
+declare module "Interfaces/LifecycleEvents" {
+    import { Engine } from "Engine";
+    import * as Events from "Events";
+    import { Scene } from "Scene";
+    export interface ICanInitialize {
+        /**
+         * Overridable implementation
+         */
+        onInitialize(_engine: Engine): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.initialize, handler: (event?: Events.InitializeEvent) => void): void;
+        once(eventName: Events.initialize, handler: (event?: Events.InitializeEvent) => void): void;
+        off(eventName: Events.initialize, handler?: (event?: Events.InitializeEvent) => void): void;
+    }
+    export interface ICanActivate {
+        /**
+         * Overridable implementation
+         */
+        onActivate(oldScene: Scene, newScene: Scene): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.activate, handler: (event?: Events.ActivateEvent) => void): void;
+        once(eventName: Events.activate, handler: (event?: Events.ActivateEvent) => void): void;
+        off(eventName: Events.activate, handler?: (event?: Events.ActivateEvent) => void): void;
+    }
+    export interface ICanDeactivate {
+        /**
+         * Overridable implementation
+         */
+        onDeactivate(oldScene: Scene, newScene: Scene): void;
+        /**
+         * Event signature
+         */
+        on(eventName: Events.deactivate, handler: (event?: Events.DeactivateEvent) => void): void;
+        once(eventName: Events.deactivate, handler: (event?: Events.DeactivateEvent) => void): void;
+        off(eventName: Events.deactivate, handler?: (event?: Events.DeactivateEvent) => void): void;
+    }
+    export interface ICanUpdate {
+        /**
+         * Overridable implementation
+         */
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Event signature
+         */
+        on(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): void;
+        once(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): void;
+        off(eventName: Events.preupdate, handler?: (event?: Events.PreUpdateEvent) => void): void;
+        /**
+         * Overridable implementation
+         */
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
+        once(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
+        off(eventName: Events.postupdate, handler?: (event?: Events.PostUpdateEvent) => void): void;
+    }
+    export interface ICanDraw {
+        /**
+         * Overridable implementation
+         */
+        onPreDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): void;
+        once(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): void;
+        off(eventName: Events.predraw, handler?: (event?: Events.PreDrawEvent) => void): void;
+        /**
+         * Overridable implementation
+         */
+        onPostDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): void;
+        once(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): void;
+        off(eventName: Events.postdraw, handler?: (event?: Events.PostDrawEvent) => void): void;
+    }
+    export interface ICanBeKilled {
+        /**
+         * Overridable implementation
+         */
+        onPreKill(_scene: Scene): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.prekill, handler: (event?: Events.PreKillEvent) => void): void;
+        once(eventName: Events.prekill, handler: (event?: Events.PreKillEvent) => void): void;
+        off(eventName: Events.prekill, handler: (event?: Events.PreKillEvent) => void): void;
+        /**
+         * Overridable implementation
+         */
+        onPostKill(_scene: Scene): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.postkill, handler: (event?: Events.PostKillEvent) => void): void;
+        once(eventName: Events.postkill, handler: (event?: Events.PostKillEvent) => void): void;
+        off(eventName: Events.postkill, handler: (event?: Events.PostKillEvent) => void): void;
+    }
+}
+declare module "Camera" {
+    import { Engine } from "Engine";
+    import { EasingFunction } from "Util/EasingFunctions";
+    import { IPromise, Promise } from "Promises";
+    import { Vector } from "Algebra";
+    import { Actor } from "Actor";
+    import { ICanUpdate, ICanInitialize } from "Interfaces/LifecycleEvents";
+    import { PreUpdateEvent, PostUpdateEvent, GameEvent, InitializeEvent } from "Events";
+    import { Class } from "Class";
+    /**
+     * Interface that describes a custom camera strategy for tracking targets
+     */
+    export interface ICameraStrategy<T> {
+        /**
+         * Target of the camera strategy that will be passed to the action
+         */
+        target: T;
+        /**
+         * Camera strategies perform an action to calculate a new focus returned out of the strategy
+         * @param target The target object to apply this camera strategy (if any)
+         * @param camera The current camera implementation in excalibur running the game
+         * @param engine The current engine running the game
+         * @param delta The elapsed time in milliseconds since the last frame
+         */
+        action: (target: T, camera: BaseCamera, engine: Engine, delta: number) => Vector;
+    }
+    /**
+     * Container to house convenience strategy methods
+     * @internal
+     */
+    export class StrategyContainer {
+        camera: BaseCamera;
+        constructor(camera: BaseCamera);
+        /**
+         * Creates and adds the [[LockCameraToActorStrategy]] on the current camera.
+         * @param actor The actor to lock the camera to
+         */
+        lockToActor(actor: Actor): void;
+        /**
+         * Creates and adds the [[LockCameraToActorAxisStrategy]] on the current camera
+         * @param actor The actor to lock the camera to
+         * @param axis The axis to follow the actor on
+         */
+        lockToActorAxis(actor: Actor, axis: Axis): void;
+        /**
+         * Creates and adds the [[ElasticToActorStrategy]] on the current camera
+         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
+         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+         * correct and bounce around the target
+         *
+         * @param target Target actor to elastically follow
+         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
+         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
+         */
+        elasticToActor(actor: Actor, cameraElasticity: number, cameraFriction: number): void;
+        /**
+         * Creates and adds the [[RadiusAroundActorStrategy]] on the current camera
+         * @param target Target actor to follow when it is "radius" pixels away
+         * @param radius Number of pixels away before the camera will follow
+         */
+        radiusAroundActor(actor: Actor, radius: number): void;
+    }
+    /**
+     * Camera axis enum
+     */
+    export enum Axis {
+        X = 0,
+        Y = 1,
+    }
+    /**
+     * Lock a camera to the exact x/y postition of an actor.
+     */
+    export class LockCameraToActorStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+        action: (target: Actor, _cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    /**
+     * Lock a camera to a specific axis around an actor.
+     */
+    export class LockCameraToActorAxisStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        axis: Axis;
+        constructor(target: Actor, axis: Axis);
+        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    /**
+     * Using [Hook's law](https://en.wikipedia.org/wiki/Hooke's_law), elastically move the camera towards the target actor.
+     */
+    export class ElasticToActorStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        cameraElasticity: number;
+        cameraFriction: number;
+        /**
+         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
+         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+         * correct and bounce around the target
+         *
+         * @param target Target actor to elastically follow
+         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
+         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
+         */
+        constructor(target: Actor, cameraElasticity: number, cameraFriction: number);
+        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    export class RadiusAroundActorStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        radius: number;
+        /**
+         *
+         * @param target Target actor to follow when it is "radius" pixels away
+         * @param radius Number of pixels away before the camera will follow
+         */
+        constructor(target: Actor, radius: number);
+        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    /**
+     * Cameras
+     *
+     * [[BaseCamera]] is the base class for all Excalibur cameras. Cameras are used
+     * to move around your game and set focus. They are used to determine
+     * what is "off screen" and can be used to scale the game.
+     *
+     * [[include:Cameras.md]]
+     */
+    export class BaseCamera extends Class implements ICanUpdate, ICanInitialize {
+        protected _follow: Actor;
+        private _cameraStrategies;
+        strategy: StrategyContainer;
+        z: number;
+        dx: number;
+        dy: number;
+        dz: number;
+        ax: number;
+        ay: number;
+        az: number;
+        rotation: number;
+        rx: number;
+        private _x;
+        private _y;
+        private _cameraMoving;
+        private _currentLerpTime;
+        private _lerpDuration;
+        private _lerpStart;
+        private _lerpEnd;
+        private _lerpPromise;
+        protected _isShaking: boolean;
+        private _shakeMagnitudeX;
+        private _shakeMagnitudeY;
+        private _shakeDuration;
+        private _elapsedShakeTime;
+        private _xShake;
+        private _yShake;
+        protected _isZooming: boolean;
+        private _maxZoomScale;
+        private _zoomPromise;
+        private _zoomIncrement;
+        private _easing;
+        /**
+         * Get the camera's x position
+         */
+        /**
+         * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
+         */
+        x: number;
+        /**
+         * Get the camera's y position
+         */
+        /**
+         * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
+         */
+        y: number;
+        /**
+         * Get the camera's position as a vector
+         */
+        /**
+         * Set the cameras position
+         */
+        pos: Vector;
+        /**
+         * Get the camera's velocity as a vector
+         */
+        /**
+         * Set the camera's velocity
+         */
+        vel: Vector;
+        /**
+         * Returns the focal point of the camera, a new point giving the x and y position of the camera
+         */
+        getFocus(): Vector;
+        /**
+         * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
+         *
+         * @param pos The target position to move to
+         * @param duration The duration in milliseconds the move should last
+         * @param [easingFn] An optional easing function ([[ex.EasingFunctions.EaseInOutCubic]] by default)
+         * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
+         *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
+         */
+        move(pos: Vector, duration: number, easingFn?: EasingFunction): IPromise<Vector>;
+        /**
+         * Sets the camera to shake at the specified magnitudes for the specified duration
+         * @param magnitudeX  The x magnitude of the shake
+         * @param magnitudeY  The y magnitude of the shake
+         * @param duration    The duration of the shake in milliseconds
+         */
+        shake(magnitudeX: number, magnitudeY: number, duration: number): void;
+        /**
+         * Zooms the camera in or out by the specified scale over the specified duration.
+         * If no duration is specified, it take effect immediately.
+         * @param scale    The scale of the zoom
+         * @param duration The duration of the zoom in milliseconds
+         */
+        zoom(scale: number, duration?: number): Promise<boolean>;
+        /**
+         * Gets the current zoom scale
+         */
+        getZoom(): number;
+        /**
+         * Adds a new camera strategy to this camera
+         * @param cameraStrategy Instance of an [[ICameraStrategy]]
+         */
+        addStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
+        /**
+         * Removes a camera strategy by reference
+         * @param cameraStrategy Instance of an [[ICameraStrategy]]
+         */
+        removeStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
+        /**
+         * Clears all camera strategies from the camera
+         */
+        clearAllStrategies(): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
+         * @internal
+         */
+        _preupdate(engine: Engine, delta: number): void;
+        /**
+         * Safe to override onPreUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPreUpdate` is called directly before a scene is updated.
+         */
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
+         * @internal
+         */
+        _postupdate(engine: Engine, delta: number): void;
+        /**
+         * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPostUpdate` is called directly after a scene is updated.
+         */
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        private _isInitialized;
+        readonly isInitialized: boolean;
+        _initialize(_engine: Engine): void;
+        /**
+         * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPostUpdate` is called directly after a scene is updated.
+         */
+        onInitialize(_engine: Engine): void;
+        on(eventName: 'initialize', handler: (event?: InitializeEvent) => void): void;
+        on(eventName: 'preupdate', handler: (event?: PreUpdateEvent) => void): void;
+        on(eventName: 'postupdate', handler: (event?: PostUpdateEvent) => void): void;
+        off(eventName: 'initialize', handler?: (event?: InitializeEvent) => void): void;
+        off(eventName: 'preupdate', handler?: (event?: PreUpdateEvent) => void): void;
+        off(eventName: 'postupdate', handler?: (event?: PostUpdateEvent) => void): void;
+        off(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: 'initialize', handler: (event?: InitializeEvent) => void): void;
+        once(eventName: 'preupdate', handler: (event?: PreUpdateEvent) => void): void;
+        once(eventName: 'postupdate', handler: (event?: PostUpdateEvent) => void): void;
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        update(_engine: Engine, delta: number): void;
+        /**
+         * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
+         * @param ctx    Canvas context to apply transformations
+         * @param delta  The number of milliseconds since the last update
+         */
+        draw(ctx: CanvasRenderingContext2D): void;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+        private _isDoneShaking();
     }
 }
 declare module "Interfaces/IAudio" {
@@ -3264,6 +5438,7 @@ declare module "Interfaces/IAudio" {
 declare module "Interfaces/IAudioImplementation" {
     import { Promise } from "Promises";
     import { IAudio } from "Interfaces/IAudio";
+    export type ExResponseType = '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
     /**
      * Represents an audio implementation like [[AudioTag]] or [[WebAudio]]
      */
@@ -3271,7 +5446,7 @@ declare module "Interfaces/IAudioImplementation" {
         /**
          * XHR response type
          */
-        responseType: string;
+        responseType: ExResponseType;
         /**
          * Processes raw data and transforms into sound data
          */
@@ -3284,7 +5459,7 @@ declare module "Interfaces/IAudioImplementation" {
 }
 declare module "Resources/Sound" {
     import { ILoadable } from "Interfaces/ILoadable";
-    import { IAudioImplementation } from "Interfaces/IAudioImplementation";
+    import { IAudioImplementation, ExResponseType } from "Interfaces/IAudioImplementation";
     import { IAudio } from "Interfaces/IAudio";
     import { Engine } from "Engine";
     import { Promise } from "Promises";
@@ -3292,7 +5467,7 @@ declare module "Resources/Sound" {
      * An audio implementation for HTML5 audio.
      */
     export class AudioTag implements IAudioImplementation {
-        responseType: string;
+        responseType: ExResponseType;
         /**
          * Transforms raw Blob data into a object URL for use in audio tag
          */
@@ -3307,7 +5482,7 @@ declare module "Resources/Sound" {
      */
     export class WebAudio implements IAudioImplementation {
         private _logger;
-        responseType: string;
+        responseType: ExResponseType;
         /**
          * Processes raw arraybuffer data and decodes into WebAudio buffer (async).
          */
@@ -3383,8 +5558,9 @@ declare module "Resources/Sound" {
         isPlaying(): boolean;
         /**
          * Play the sound, returns a promise that resolves when the sound is done playing
+         * An optional volume argument can be passed in to play the sound. Max volume is 1.0
          */
-        play(): Promise<boolean>;
+        play(volume?: number): Promise<boolean>;
         /**
          * Stop the sound, and do not rewind
          */
@@ -3599,7 +5775,6 @@ declare module "Loader" {
      * ```
      */
     export class PauseAfterLoader extends Loader {
-        private _loaded;
         private _loadedValue;
         private _waitPromise;
         private _playTrigger;
@@ -3608,87 +5783,6 @@ declare module "Loader" {
         private _handleOnTrigger;
     }
 }
-declare module "Interfaces/IActorTrait" {
-    import { Actor } from "Actor";
-    import { Engine } from "Engine";
-    /**
-     * An interface describing actor update pipeline traits
-     */
-    export interface IActorTrait {
-        update(actor: Actor, engine: Engine, delta: number): void;
-    }
-}
-declare module "Traits/CapturePointer" {
-    import { IActorTrait } from "Interfaces/IActorTrait";
-    import { Actor } from "Actor";
-    import { Engine } from "Engine";
-    export interface ICapturePointerConfig {
-        /**
-         * Capture PointerMove events (may be expensive!)
-         */
-        captureMoveEvents: boolean;
-    }
-    /**
-     * Propogates pointer events to the actor
-     */
-    export class CapturePointer implements IActorTrait {
-        update(actor: Actor, engine: Engine): void;
-    }
-}
-declare module "Traits/EulerMovement" {
-    import { IActorTrait } from "Interfaces/IActorTrait";
-    import { Actor } from "Actor";
-    import { Engine } from "Engine";
-    export class EulerMovement implements IActorTrait {
-        update(actor: Actor, _engine: Engine, delta: number): void;
-    }
-}
-declare module "Util/CullingBox" {
-    import { Actor } from "Actor";
-    import { Engine } from "Engine";
-    export class CullingBox {
-        private _topLeft;
-        private _topRight;
-        private _bottomLeft;
-        private _bottomRight;
-        private _xCoords;
-        private _yCoords;
-        private _xMin;
-        private _yMin;
-        private _xMax;
-        private _yMax;
-        private _xMinWorld;
-        private _yMinWorld;
-        private _xMaxWorld;
-        private _yMaxWorld;
-        isSpriteOffScreen(actor: Actor, engine: Engine): boolean;
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-    }
-}
-declare module "Traits/OffscreenCulling" {
-    import { CullingBox } from "Util/CullingBox";
-    import { IActorTrait } from "Interfaces/IActorTrait";
-    import { Actor } from "Actor";
-    import { Engine } from "Engine";
-    export class OffscreenCulling implements IActorTrait {
-        cullingBox: CullingBox;
-        update(actor: Actor, engine: Engine): void;
-    }
-}
-declare module "Traits/TileMapCollisionDetection" {
-    import { IActorTrait } from "Interfaces/IActorTrait";
-    import { Actor } from "Actor";
-    import { Engine } from "Engine";
-    export class TileMapCollisionDetection implements IActorTrait {
-        update(actor: Actor, engine: Engine): void;
-    }
-}
-declare module "Traits/Index" {
-    export * from "Traits/CapturePointer";
-    export * from "Traits/EulerMovement";
-    export * from "Traits/OffscreenCulling";
-    export * from "Traits/TileMapCollisionDetection";
-}
 declare module "Particles" {
     import { Engine } from "Engine";
     import { Actor } from "Actor";
@@ -3696,6 +5790,7 @@ declare module "Particles" {
     import { Color } from "Drawing/Color";
     import { Vector } from "Algebra";
     import * as Util from "Util/Util";
+    import { Random } from "Math/Random";
     /**
      * An enum that represents the types of emitter nozzles
      */
@@ -3710,9 +5805,9 @@ declare module "Particles" {
         Rectangle = 1,
     }
     /**
-     * Particle is used in a [[ParticleEmitter]]
+     * @hidden
      */
-    export class Particle {
+    export class ParticleImpl {
         position: Vector;
         velocity: Vector;
         acceleration: Vector;
@@ -3737,21 +5832,41 @@ declare module "Particles" {
         endSize: number;
         sizeRate: number;
         elapsedMultiplier: number;
-        constructor(emitter: ParticleEmitter, life?: number, opacity?: number, beginColor?: Color, endColor?: Color, position?: Vector, velocity?: Vector, acceleration?: Vector, startSize?: number, endSize?: number);
+        constructor(emitterOrConfig: ParticleEmitter | IParticleArgs, life?: number, opacity?: number, beginColor?: Color, endColor?: Color, position?: Vector, velocity?: Vector, acceleration?: Vector, startSize?: number, endSize?: number);
         kill(): void;
         update(delta: number): void;
         draw(ctx: CanvasRenderingContext2D): void;
     }
     /**
-     * Using a particle emitter is a great way to create interesting effects
-     * in your game, like smoke, fire, water, explosions, etc. `ParticleEmitter`
-     * extend [[Actor]] allowing you to use all of the features that come with.
-     *
-     * [[include:Particles.md]]
+     * [[include:Constructors.md]]
      */
-    export class ParticleEmitter extends Actor {
+    export interface IParticleArgs extends Partial<ParticleImpl> {
+        emitter: ParticleEmitter;
+        position?: Vector;
+        velocity?: Vector;
+        acceleration?: Vector;
+        particleRotationalVelocity?: number;
+        currentRotation?: number;
+        particleSize?: number;
+        particleSprite?: Sprite;
+    }
+    /**
+     * Particle is used in a [[ParticleEmitter]]
+     */
+    export class Particle extends ParticleImpl {
+        constructor(config: IParticleArgs);
+        constructor(emitter: ParticleEmitter, life?: number, opacity?: number, beginColor?: Color, endColor?: Color, position?: Vector, velocity?: Vector, acceleration?: Vector, startSize?: number, endSize?: number);
+    }
+    /**
+     * @hidden
+     */
+    export class ParticleEmitterImpl extends Actor {
         private _particlesToEmit;
         numParticles: number;
+        /**
+         * Random number generator
+         */
+        random: Random;
         /**
          * Gets or sets the isEmitting flag
          */
@@ -3853,7 +5968,7 @@ declare module "Particles" {
          * @param width   The width of the emitter
          * @param height  The height of the emitter
          */
-        constructor(x?: number, y?: number, width?: number, height?: number);
+        constructor(xOrConfig?: number | IParticleEmitterArgs, y?: number, width?: number, height?: number);
         removeParticle(particle: Particle): void;
         /**
          * Causes the emitter to emit particles
@@ -3866,208 +5981,47 @@ declare module "Particles" {
         draw(ctx: CanvasRenderingContext2D): void;
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
-}
-declare module "TileMap" {
-    import { BoundingBox } from "Collision/BoundingBox";
-    import { Class } from "Class";
-    import { Engine } from "Engine";
-    import { Vector } from "Algebra";
-    import { Actor } from "Actor";
-    import { Logger } from "Util/Log";
-    import { SpriteSheet } from "Drawing/SpriteSheet";
-    import * as Events from "Events";
     /**
-     * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
-     * without the overhead of actors.
-     *
-     * [[include:TileMaps.md]]
+     * [[include:Constructors.md]]
      */
-    export class TileMap extends Class {
-        x: number;
-        y: number;
-        cellWidth: number;
-        cellHeight: number;
-        rows: number;
-        cols: number;
-        private _collidingX;
-        private _collidingY;
-        private _onScreenXStart;
-        private _onScreenXEnd;
-        private _onScreenYStart;
-        private _onScreenYEnd;
-        private _spriteSheets;
-        logger: Logger;
-        data: Cell[];
-        on(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): void;
-        on(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
-        on(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): void;
-        on(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): void;
-        on(eventName: string, handler: (event?: Events.GameEvent<any>) => void): void;
-        /**
-         * @param x             The x coordinate to anchor the TileMap's upper left corner (should not be changed once set)
-         * @param y             The y coordinate to anchor the TileMap's upper left corner (should not be changed once set)
-         * @param cellWidth     The individual width of each cell (in pixels) (should not be changed once set)
-         * @param cellHeight    The individual height of each cell (in pixels) (should not be changed once set)
-         * @param rows          The number of rows in the TileMap (should not be changed once set)
-         * @param cols          The number of cols in the TileMap (should not be changed once set)
-         */
-        constructor(x: number, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
-        registerSpriteSheet(key: string, spriteSheet: SpriteSheet): void;
-        /**
-         * Returns the intersection vector that can be used to resolve collisions with actors. If there
-         * is no collision null is returned.
-         */
-        collides(actor: Actor): Vector;
-        /**
-         * Returns the [[Cell]] by index (row major order)
-         */
-        getCellByIndex(index: number): Cell;
-        /**
-         * Returns the [[Cell]] by its x and y coordinates
-         */
-        getCell(x: number, y: number): Cell;
-        /**
-         * Returns the [[Cell]] by testing a point in global coordinates,
-         * returns `null` if no cell was found.
-         */
-        getCellByPoint(x: number, y: number): Cell;
-        update(engine: Engine, delta: number): void;
-        /**
-         * Draws the tile map to the screen. Called by the [[Scene]].
-         * @param ctx    The current rendering context
-         * @param delta  The number of milliseconds since the last draw
-         */
-        draw(ctx: CanvasRenderingContext2D, delta: number): void;
-        /**
-         * Draws all the tile map's debug info. Called by the [[Scene]].
-         * @param ctx  The current rendering context
-         */
-        debugDraw(ctx: CanvasRenderingContext2D): void;
+    export interface IParticleEmitterArgs extends Partial<ParticleEmitterImpl> {
+        width?: number;
+        height?: number;
+        isEmitting?: boolean;
+        minVel?: number;
+        maxVel?: number;
+        acceleration?: Vector;
+        minAngle?: number;
+        maxAngle?: number;
+        emitRate?: number;
+        particleLife?: number;
+        opacity?: number;
+        fadeFlag?: boolean;
+        focus?: Vector;
+        focusAccel?: number;
+        startSize?: number;
+        endSize?: number;
+        minSize?: number;
+        maxSize?: number;
+        beginColor?: Color;
+        endColor?: Color;
+        particleSprite?: Sprite;
+        emitterType?: EmitterType;
+        radius?: number;
+        particleRotationalVelocity?: number;
+        randomRotation?: boolean;
+        random?: Random;
     }
     /**
-     * Tile sprites are used to render a specific sprite from a [[TileMap]]'s spritesheet(s)
-     */
-    export class TileSprite {
-        spriteSheetKey: string;
-        spriteId: number;
-        /**
-         * @param spriteSheetKey  The key of the spritesheet to use
-         * @param spriteId        The index of the sprite in the [[SpriteSheet]]
-         */
-        constructor(spriteSheetKey: string, spriteId: number);
-    }
-    /**
-     * TileMap Cell
+     * Using a particle emitter is a great way to create interesting effects
+     * in your game, like smoke, fire, water, explosions, etc. `ParticleEmitter`
+     * extend [[Actor]] allowing you to use all of the features that come with.
      *
-     * A light-weight object that occupies a space in a collision map. Generally
-     * created by a [[TileMap]].
-     *
-     * Cells can draw multiple sprites. Note that the order of drawing is the order
-     * of the sprites in the array so the last one will be drawn on top. You can
-     * use transparency to create layers this way.
+     * [[include:Particles.md]]
      */
-    export class Cell {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        index: number;
-        solid: boolean;
-        sprites: TileSprite[];
-        private _bounds;
-        /**
-         * @param x       Gets or sets x coordinate of the cell in world coordinates
-         * @param y       Gets or sets y coordinate of the cell in world coordinates
-         * @param width   Gets or sets the width of the cell
-         * @param height  Gets or sets the height of the cell
-         * @param index   The index of the cell in row major order
-         * @param solid   Gets or sets whether this cell is solid
-         * @param sprites The list of tile sprites to use to draw in this cell (in order)
-         */
-        constructor(x: number, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
-        /**
-         * Returns the bounding box for this cell
-         */
-        getBounds(): BoundingBox;
-        /**
-         * Gets the center coordinate of this cell
-         */
-        getCenter(): Vector;
-        /**
-         * Add another [[TileSprite]] to this cell
-         */
-        pushSprite(tileSprite: TileSprite): void;
-        /**
-         * Remove an instance of [[TileSprite]] from this cell
-         */
-        removeSprite(tileSprite: TileSprite): void;
-        /**
-         * Clear all sprites from this cell
-         */
-        clearSprites(): void;
-    }
-}
-declare module "Timer" {
-    import { Scene } from "Scene";
-    /**
-     * The Excalibur timer hooks into the internal timer and fires callbacks,
-     * after a certain interval, optionally repeating.
-     */
-    export class Timer {
-        static id: number;
-        id: number;
-        interval: number;
-        fcn: () => void;
-        repeats: boolean;
-        private _elapsedTime;
-        private _totalTimeAlive;
-        complete: boolean;
-        scene: Scene;
-        /**
-         * @param fcn        The callback to be fired after the interval is complete.
-         * @param interval   Interval length
-         * @param repeats    Indicates whether this call back should be fired only once, or repeat after every interval as completed.
-         */
-        constructor(fcn: () => void, interval: number, repeats?: boolean);
-        /**
-         * Updates the timer after a certain number of milliseconds have elapsed. This is used internally by the engine.
-         * @param delta  Number of elapsed milliseconds since the last update.
-         */
-        update(delta: number): void;
-        getTimeRunning(): number;
-        /**
-         * Cancels the timer, preventing any further executions.
-         */
-        cancel(): void;
-    }
-}
-declare module "Trigger" {
-    import { Engine } from "Engine";
-    import { Actor } from "Actor";
-    /**
-     * Triggers are a method of firing arbitrary code on collision. These are useful
-     * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
-     * are invisible, and can only be seen when [[Engine.isDebug]] is set to `true`.
-     *
-     * [[include:Triggers.md]]
-     */
-    export class Trigger extends Actor {
-        private _action;
-        repeats: number;
-        target: Actor;
-        /**
-         * @param x       The x position of the trigger
-         * @param y       The y position of the trigger
-         * @param width   The width of the trigger
-         * @param height  The height of the trigger
-         * @param action  Callback to fire when trigger is activated, `this` will be bound to the Trigger instance
-         * @param repeats The number of times that this trigger should fire, by default it is 1, if -1 is supplied it will fire indefinitely
-         */
-        constructor(x?: number, y?: number, width?: number, height?: number, action?: () => void, repeats?: number);
-        update(engine: Engine, delta: number): void;
-        private _dispatchAction();
-        draw(_ctx: CanvasRenderingContext2D, _delta: number): void;
-        debugDraw(ctx: CanvasRenderingContext2D): void;
+    export class ParticleEmitter extends ParticleEmitterImpl {
+        constructor(config?: IParticleEmitterArgs);
+        constructor(x?: number | IParticleEmitterArgs, y?: number, width?: number, height?: number);
     }
 }
 declare module "Actions/Index" {
@@ -4079,193 +6033,6 @@ declare module "Actions/Index" {
     export var Internal: {
         Actions: typeof actions;
     };
-}
-declare module "Collision/DynamicTree" {
-    import { BoundingBox } from "Collision/BoundingBox";
-    import { Body } from "Collision/Body";
-    import { Ray } from "Algebra";
-    /**
-     * Dynamic Tree Node used for tracking bounds within the tree
-     */
-    export class TreeNode {
-        parent: TreeNode;
-        left: TreeNode;
-        right: TreeNode;
-        bounds: BoundingBox;
-        height: number;
-        body: Body;
-        constructor(parent?: TreeNode);
-        isLeaf(): boolean;
-    }
-    /**
-     * The DynamicTrees provides a spatial partiioning data structure for quickly querying for overlapping bounding boxes for
-     * all tracked bodies. The worst case performance of this is O(n*log(n)) where n is the number of bodies in the tree.
-     *
-     * Internally the bounding boxes are organized as a balanced binary tree of bounding boxes, where the leaf nodes are tracked bodies.
-     * Every non-leaf node is a bounding box that contains child bounding boxes.
-     */
-    export class DynamicTree {
-        worldBounds: BoundingBox;
-        root: TreeNode;
-        nodes: {
-            [key: number]: TreeNode;
-        };
-        constructor(worldBounds?: BoundingBox);
-        /**
-         * Inserts a node into the dynamic tree
-         */
-        private _insert(leaf);
-        /**
-         * Removes a node from the dynamic tree
-         */
-        private _remove(leaf);
-        /**
-         * Tracks a body in the dynamic tree
-         */
-        trackBody(body: Body): void;
-        /**
-         * Updates the dynamic tree given the current bounds of each body being tracked
-         */
-        updateBody(body: Body): boolean;
-        /**
-         * Untracks a body from the dynamic tree
-         */
-        untrackBody(body: Body): void;
-        /**
-         * Balances the tree about a node
-         */
-        private _balance(node);
-        /**
-         * Returns the internal height of the tree, shorter trees are better. Performance drops as the tree grows
-         */
-        getHeight(): number;
-        /**
-         * Queries the Dynamic Axis Aligned Tree for bodies that could be colliding with the provided body.
-         *
-         * In the query callback, it will be passed a potential collider. Returning true from this callback indicates
-         * that you are complete with your query and you do not want to continue. Returning false will continue searching
-         * the tree until all possible colliders have been returned.
-         */
-        query(body: Body, callback: (other: Body) => boolean): void;
-        /**
-         * Queries the Dynamic Axis Aligned Tree for bodies that could be intersecting. By default the raycast query uses an infinitely
-         * long ray to test the tree specified by `max`.
-         *
-         * In the query callback, it will be passed a potential body that intersects with the racast. Returning true from this
-         * callback indicates that your are complete with your query and do not want to continue. Return false will continue searching
-         * the tree until all possible bodies that would intersect with the ray have been returned.
-         */
-        rayCastQuery(ray: Ray, max: number, callback: (other: Body) => boolean): void;
-        getNodes(): TreeNode[];
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-    }
-}
-declare module "Collision/Pair" {
-    import { Body } from "Collision/Body";
-    import { CollisionContact } from "Collision/CollisionContact";
-    import { CollisionResolutionStrategy } from "Physics";
-    /**
-     * Models a potential collision between 2 bodies
-     */
-    export class Pair {
-        bodyA: Body;
-        bodyB: Body;
-        id: string;
-        collision: CollisionContact;
-        constructor(bodyA: Body, bodyB: Body);
-        /**
-         * Runs the collison intersection logic on the members of this pair
-         */
-        collide(): void;
-        /**
-         * Resovles the collision body position and velocity if a collision occured
-         */
-        resolve(strategy: CollisionResolutionStrategy): void;
-        /**
-         * Calculates the unique pair hash id for this collision pair
-         */
-        static calculatePairHash(bodyA: Body, bodyB: Body): string;
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-    }
-}
-declare module "Collision/ICollisionResolver" {
-    import { Body } from "Collision/Body";
-    import { FrameStats } from "Debug";
-    import { Pair } from "Collision/Pair";
-    import { Actor } from "Actor";
-    import { CollisionResolutionStrategy } from "Physics";
-    /**
-     * Definition for collision broadphase
-     */
-    export interface ICollisionBroadphase {
-        /**
-         * Track a physics body
-         */
-        track(target: Body): void;
-        /**
-         * Untrack a physics body
-         */
-        untrack(tartet: Body): void;
-        /**
-         * Detect potential collision pairs
-         */
-        broadphase(targets: Actor[], delta: number, stats?: FrameStats): Pair[];
-        /**
-         * Identify actual collisions from those pairs, and calculate collision impulse
-         */
-        narrowphase(pairs: Pair[], stats?: FrameStats): void;
-        /**
-         * Resolve the position and velocity of the physics bodies
-         */
-        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
-        /**
-         * Update the internal structures to track bodies
-         */
-        update(targets: Actor[], delta: number): number;
-        /**
-         * Draw any debug information
-         */
-        debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
-    }
-}
-declare module "Collision/DynamicTreeCollisionBroadphase" {
-    import { ICollisionBroadphase } from "Collision/ICollisionResolver";
-    import { Pair } from "Collision/Pair";
-    import { Body } from "Collision/Body";
-    import { Actor } from "Actor";
-    import { FrameStats } from "Debug";
-    import { CollisionResolutionStrategy } from "Physics";
-    export class DynamicTreeCollisionBroadphase implements ICollisionBroadphase {
-        private _dynamicCollisionTree;
-        private _collisionHash;
-        private _collisionPairCache;
-        /**
-         * Tracks a physics body for collisions
-         */
-        track(target: Body): void;
-        /**
-         * Untracks a physics body
-         */
-        untrack(target: Body): void;
-        private _canCollide(actorA, actorB);
-        /**
-         * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
-         */
-        broadphase(targets: Actor[], delta: number, stats?: FrameStats): Pair[];
-        /**
-         * Applies narrow phase on collision pairs to find actual area intersections
-         */
-        narrowphase(pairs: Pair[], stats?: FrameStats): void;
-        /**
-         * Perform collision resolution given a strategy (rigid body or box) and move objects out of intersect.
-         */
-        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
-        /**
-         * Update the dynamic tree positions
-         */
-        update(targets: Actor[]): number;
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-    }
 }
 declare module "Collision/IPhysics" {
     import { Vector } from "Algebra";
@@ -4318,6 +6085,8 @@ declare module "Collision/NaiveCollisionBroadphase" {
     import { Actor } from "Actor";
     import { ICollisionBroadphase } from "Collision/ICollisionResolver";
     export class NaiveCollisionBroadphase implements ICollisionBroadphase {
+        private _lastFramePairs;
+        private _lastFramePairsHash;
         track(): void;
         untrack(): void;
         /**
@@ -4327,11 +6096,12 @@ declare module "Collision/NaiveCollisionBroadphase" {
         /**
          * Identify actual collisions from those pairs, and calculate collision impulse
          */
-        narrowphase(): void;
+        narrowphase(pairs: Pair[]): Pair[];
+        runCollisionStartEnd(pairs: Pair[]): void;
         /**
          * Resolve the position and velocity of the physics bodies
          */
-        resolve(): void;
+        resolve(pairs: Pair[]): Pair[];
         update(): number;
         debugDraw(): void;
     }
@@ -4366,10 +6136,10 @@ declare module "Drawing/Polygon" {
     export class Polygon implements IDrawable {
         flipVertical: boolean;
         flipHorizontal: boolean;
+        drawWidth: number;
+        drawHeight: number;
         width: number;
         height: number;
-        naturalWidth: number;
-        naturalHeight: number;
         /**
          * The color to use for the lines of the polygon
          */
@@ -4415,13 +6185,55 @@ declare module "Drawing/Polygon" {
     }
 }
 declare module "Drawing/Index" {
-    export * from "Drawing/Animation";
+    export { Animation, IAnimationArgs } from "Drawing/Animation";
     export * from "Drawing/Color";
     export * from "Drawing/Polygon";
-    export * from "Drawing/Sprite";
-    export * from "Drawing/SpriteSheet";
+    export { Sprite, ISpriteArgs } from "Drawing/Sprite";
+    export { SpriteSheet, SpriteFont, ISpriteSheetArgs, ISpriteFontInitArgs, ISpriteFontOptions } from "Drawing/SpriteSheet";
     import * as effects from "Drawing/SpriteEffects";
     export { effects as Effects };
+}
+declare module "Interfaces/IPointerEvents" {
+    import * as Events from "Events";
+    import { PointerEvent, WheelEvent, PointerDragEvent } from "Input/Pointer";
+    export interface IPointerEvents {
+        on(eventName: Events.pointerup, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerenter, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerleave, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
+        on(eventName: Events.pointerdragstart, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragend, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragenter, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerup, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerenter, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerleave, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
+        once(eventName: Events.pointerdragstart, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragend, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragenter, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerup, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerdown, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerenter, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerleave, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointermove, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointercancel, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerwheel, handler?: (event?: WheelEvent) => void): void;
+        off(eventName: Events.pointerdragstart, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragend, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragenter, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragleave, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragmove, handler?: (event?: PointerDragEvent) => void): void;
+    }
 }
 declare module "Interfaces/Index" {
     export * from "Interfaces/IActorTrait";
@@ -4431,123 +6243,8 @@ declare module "Interfaces/Index" {
     export * from "Interfaces/IEvented";
     export * from "Interfaces/ILoadable";
     export * from "Interfaces/ILoader";
-}
-declare module "Math/Random" {
-    /**
-     * Pseudo-random number generator following the Mersenne_Twister algorithm. Given a seed this generator will produce the same sequence
-     * of numbers each time it is called.
-     * See https://en.wikipedia.org/wiki/Mersenne_Twister for more details.
-     * Uses the MT19937-32 (2002) implementation documented here http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/MT2002/emt19937ar.html
-     *
-     * Api inspired by http://chancejs.com/# https://github.com/chancejs/chancejs
-     */
-    export class Random {
-        seed: number;
-        private _lowerMask;
-        private _upperMask;
-        private _w;
-        private _n;
-        private _m;
-        private _a;
-        private _u;
-        private _s;
-        private _b;
-        private _t;
-        private _c;
-        private _l;
-        private _f;
-        private _mt;
-        private _index;
-        /**
-         * If no seed is specified, the Date.now() is used
-         */
-        constructor(seed?: number);
-        /**
-         * Apply the twist
-         */
-        private _twist();
-        /**
-         * Return next 32 bit integer number in sequence
-         */
-        nextInt(): number;
-        /**
-         * Return a random floating point number between [0, 1)
-         */
-        next(): number;
-        /**
-         * Return a random floating point in range [min, max) min is included, max is not included
-         */
-        floating(min: number, max: number): number;
-        /**
-         * Return a random integer in range [min, max] min is included, max is included.
-         * Implemented with rejection sampling, see https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d#.i13tdiu5a
-         */
-        integer(min: number, max: number): number;
-        /**
-         * Returns true or false randomly with 50/50 odds by default.
-         * By default the likelihood of returning a true is .5 (50%).
-         * @param likelihood takes values between [0, 1]
-         */
-        bool(likelihood?: number): boolean;
-        /**
-         * Returns one element from an array at random
-         */
-        pickOne<T>(array: Array<T>): T;
-        /**
-         * Returns a new array random picking elements from the original
-         * @param array Original array to pick from
-         * @param numPicks can be any positive number
-         * @param allowDuplicates indicates whether the returned set is allowed duplicates (it does not mean there will always be duplicates
-         * just that it is possible)
-         */
-        pickSet<T>(array: Array<T>, numPicks: number, allowDuplicates?: boolean): Array<T>;
-        /**
-         * Returns a new array randomly picking elements in the original (not reused)
-         * @param numPicks must be less than or equal to the number of elements in the array.
-         */
-        private _pickSetWithoutDuplicates<T>(array, numPicks);
-        /**
-         * Returns a new array random picking elements from the original allowing duplicates
-         * @param numPicks can be any positive number
-         */
-        private _pickSetWithDuplicates<T>(array, numPicks);
-        /**
-         * Returns a new array that has its elements shuffled. Using the Fisher/Yates method
-         * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-         */
-        shuffle<T>(array: Array<T>): Array<T>;
-        /**
-         * Generate a list of random integer numbers
-         * @param length the length of the final array
-         * @param min the minimum integer number to generate inclusive
-         * @param max the maximum integer number to generate inclusive
-         */
-        range(length: number, min: number, max: number): Array<number>;
-        /**
-         * Returns the result of a d4 dice roll
-         */
-        d4(): number;
-        /**
-         * Returns the result of a d6 dice roll
-         */
-        d6(): number;
-        /**
-         * Returns the result of a d8 dice roll
-         */
-        d8(): number;
-        /**
-         * Returns the result of a d10 dice roll
-         */
-        d10(): number;
-        /**
-         * Returns the result of a d12 dice roll
-         */
-        d12(): number;
-        /**
-         * Returns the result of a d20 dice roll
-         */
-        d20(): number;
-    }
+    export * from "Interfaces/LifecycleEvents";
+    export * from "Interfaces/IPointerEvents";
 }
 declare module "Math/PerlinNoise" {
     import { Color } from "Drawing/Color";
@@ -4715,507 +6412,6 @@ declare module "Resources/Index" {
     export * from "Resources/Sound";
     export * from "Resources/Texture";
 }
-declare module "Input/Gamepad" {
-    import { Engine } from "Engine";
-    import { Class } from "Class";
-    import { GameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent } from "Events";
-    import * as Events from "Events";
-    /**
-     * Excalibur leverages the HTML5 Gamepad API [where it is supported](http://caniuse.com/#feat=gamepad)
-     * to provide controller support for your games.
-     *
-     * [[include:Gamepads.md]]
-     */
-    export class Gamepads extends Class {
-        /**
-         * Whether or not to poll for Gamepad input (default: `false`)
-         */
-        enabled: boolean;
-        /**
-         * Whether or not Gamepad API is supported
-         */
-        supported: boolean;
-        /**
-         * The minimum value an axis has to move before considering it a change
-         */
-        static MinAxisMoveThreshold: number;
-        private _gamePadTimeStamps;
-        private _oldPads;
-        private _pads;
-        private _initSuccess;
-        private _engine;
-        private _navigator;
-        private _minimumConfiguration;
-        constructor(engine: Engine);
-        init(): void;
-        /**
-         * Sets the minimum gamepad configuration, for example {axis: 4, buttons: 4} means
-         * this game requires at minimum 4 axis inputs and 4 buttons, this is not restrictive
-         * all other controllers with more axis or buttons are valid as well. If no minimum
-         * configuration is set all pads are valid.
-         */
-        setMinimumGamepadConfiguration(config: IGamepadConfiguration): void;
-        /**
-         * When implicitly enabled, set the enabled flag and run an update so information is updated
-         */
-        private _enableAndUpdate();
-        /**
-         * Checks a navigator gamepad against the minimum configuration if present.
-         */
-        private _isGamepadValid(pad);
-        on(eventName: Events.connect, handler: (event?: GamepadConnectEvent) => void): void;
-        on(eventName: Events.disconnect, handler: (event?: GamepadDisconnectEvent) => void): void;
-        on(eventName: Events.button, handler: (event?: GamepadButtonEvent) => void): void;
-        on(eventName: Events.axis, handler: (event?: GamepadAxisEvent) => void): void;
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
-        /**
-         * Updates Gamepad state and publishes Gamepad events
-         */
-        update(): void;
-        /**
-         * Safely retrieves a Gamepad at a specific index and creates one if it doesn't yet exist
-         */
-        at(index: number): Gamepad;
-        /**
-         * Returns a list of all valid gamepads that meet the minimum configuration requirement.
-         */
-        getValidGamepads(): Gamepad[];
-        /**
-         * Gets the number of connected gamepads
-         */
-        count(): number;
-        private _clonePads(pads);
-        /**
-         * Fastest way to clone a known object is to do it yourself
-         */
-        private _clonePad(pad);
-    }
-    /**
-     * Gamepad holds state information for a connected controller. See [[Gamepads]]
-     * for more information on handling controller input.
-     */
-    export class Gamepad extends Class {
-        connected: boolean;
-        navigatorGamepad: INavigatorGamepad;
-        private _buttons;
-        private _axes;
-        constructor();
-        /**
-         * Whether or not the given button is pressed
-         * @param button     The button to query
-         * @param threshold  The threshold over which the button is considered to be pressed
-         */
-        isButtonPressed(button: Buttons, threshold?: number): boolean;
-        /**
-         * Gets the given button value between 0 and 1
-         */
-        getButton(button: Buttons): number;
-        /**
-         * Gets the given axis value between -1 and 1. Values below
-         * [[MinAxisMoveThreshold]] are considered 0.
-         */
-        getAxes(axes: Axes): number;
-        updateButton(buttonIndex: number, value: number): void;
-        updateAxes(axesIndex: number, value: number): void;
-    }
-    /**
-     * Gamepad Buttons enumeration
-     */
-    export enum Buttons {
-        /**
-         * Face 1 button (e.g. A)
-         */
-        Face1 = 0,
-        /**
-         * Face 2 button (e.g. B)
-         */
-        Face2 = 1,
-        /**
-         * Face 3 button (e.g. X)
-         */
-        Face3 = 2,
-        /**
-         * Face 4 button (e.g. Y)
-         */
-        Face4 = 3,
-        /**
-         * Left bumper button
-         */
-        LeftBumper = 4,
-        /**
-         * Right bumper button
-         */
-        RightBumper = 5,
-        /**
-         * Left trigger button
-         */
-        LeftTrigger = 6,
-        /**
-         * Right trigger button
-         */
-        RightTrigger = 7,
-        /**
-         * Select button
-         */
-        Select = 8,
-        /**
-         * Start button
-         */
-        Start = 9,
-        /**
-         * Left analog stick press (e.g. L3)
-         */
-        LeftStick = 10,
-        /**
-         * Right analog stick press (e.g. R3)
-         */
-        RightStick = 11,
-        /**
-         * D-pad up
-         */
-        DpadUp = 12,
-        /**
-         * D-pad down
-         */
-        DpadDown = 13,
-        /**
-         * D-pad left
-         */
-        DpadLeft = 14,
-        /**
-         * D-pad right
-         */
-        DpadRight = 15,
-    }
-    /**
-     * Gamepad Axes enumeration
-     */
-    export enum Axes {
-        /**
-         * Left analogue stick X direction
-         */
-        LeftStickX = 0,
-        /**
-         * Left analogue stick Y direction
-         */
-        LeftStickY = 1,
-        /**
-         * Right analogue stick X direction
-         */
-        RightStickX = 2,
-        /**
-         * Right analogue stick Y direction
-         */
-        RightStickY = 3,
-    }
-    /**
-     * @internal
-     */
-    export interface INavigatorGamepad {
-        axes: number[];
-        buttons: INavigatorGamepadButton[];
-        connected: boolean;
-        id: string;
-        index: number;
-        mapping: string;
-        timestamp: number;
-    }
-    /**
-     * @internal
-     */
-    export interface INavigatorGamepadButton {
-        pressed: boolean;
-        value: number;
-    }
-    /**
-     * @internal
-     */
-    export interface INavigatorGamepadEvent {
-        gamepad: INavigatorGamepad;
-    }
-    /**
-     * @internal
-     */
-    export interface IGamepadConfiguration {
-        axis: number;
-        buttons: number;
-    }
-}
-declare module "Input/Pointer" {
-    import { Engine } from "Engine";
-    import { GameEvent } from "Events";
-    import { Vector } from "Algebra";
-    import { Class } from "Class";
-    import * as Events from "Events";
-    /**
-     * The type of pointer for a [[PointerEvent]].
-     */
-    export enum PointerType {
-        Touch = 0,
-        Mouse = 1,
-        Pen = 2,
-        Unknown = 3,
-    }
-    /**
-     * The mouse button being pressed.
-     */
-    export enum PointerButton {
-        Left = 0,
-        Middle = 1,
-        Right = 2,
-        Unknown = 3,
-    }
-    /**
-     * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
-     */
-    export enum PointerScope {
-        /**
-         * Handle events on the `canvas` element only. Events originating outside the
-         * `canvas` will not be handled.
-         */
-        Canvas = 0,
-        /**
-         * Handles events on the entire document. All events will be handled by Excalibur.
-         */
-        Document = 1,
-    }
-    /**
-     * Pointer events
-     *
-     * Represents a mouse, touch, or stylus event. See [[Pointers]] for more information on
-     * handling pointer input.
-     *
-     * For mouse-based events, you can inspect [[PointerEvent.button]] to see what button was pressed.
-     */
-    export class PointerEvent extends GameEvent<any> {
-        x: number;
-        y: number;
-        pageX: number;
-        pageY: number;
-        screenX: number;
-        screenY: number;
-        index: number;
-        pointerType: PointerType;
-        button: PointerButton;
-        ev: any;
-        /**
-         * @param x            The `x` coordinate of the event (in world coordinates)
-         * @param y            The `y` coordinate of the event (in world coordinates)
-         * @param pageX        The `x` coordinate of the event (in document coordinates)
-         * @param pageY        The `y` coordinate of the event (in document coordinates)
-         * @param screenX      The `x` coordinate of the event (in screen coordinates)
-         * @param screenY      The `y` coordinate of the event (in screen coordinates)
-         * @param index        The index of the pointer (zero-based)
-         * @param pointerType  The type of pointer
-         * @param button       The button pressed (if [[PointerType.Mouse]])
-         * @param ev           The raw DOM event being handled
-         */
-        constructor(x: number, y: number, pageX: number, pageY: number, screenX: number, screenY: number, index: number, pointerType: PointerType, button: PointerButton, ev: any);
-    }
-    /**
-     * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
-     * [W3C Pointer Events](http://www.w3.org/TR/pointerevents/).
-     *
-     * [[include:Pointers.md]]
-     */
-    export class Pointers extends Class {
-        private _engine;
-        private _pointerDown;
-        private _pointerUp;
-        private _pointerMove;
-        private _pointerCancel;
-        private _pointers;
-        private _activePointers;
-        constructor(engine: Engine);
-        on(eventName: Events.up, handler: (event?: PointerEvent) => void): void;
-        on(eventName: Events.down, handler: (event?: PointerEvent) => void): void;
-        on(eventName: Events.move, handler: (event?: PointerEvent) => void): void;
-        on(eventName: Events.cancel, handler: (event?: PointerEvent) => void): void;
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * Primary pointer (mouse, 1 finger, stylus, etc.)
-         */
-        primary: Pointer;
-        /**
-         * Initializes pointer event listeners
-         */
-        init(scope?: PointerScope): void;
-        update(): void;
-        /**
-         * Safely gets a Pointer at a specific index and initializes one if it doesn't yet exist
-         * @param index  The pointer index to retrieve
-         */
-        at(index: number): Pointer;
-        /**
-         * Get number of pointers being watched
-         */
-        count(): number;
-        /**
-         * Propogates events to actor if necessary
-         */
-        propogate(actor: any): void;
-        private _handleMouseEvent(eventName, eventArr);
-        private _handleTouchEvent(eventName, eventArr);
-        private _handlePointerEvent(eventName, eventArr);
-        /**
-         * Gets the index of the pointer specified for the given pointer ID or finds the next empty pointer slot available.
-         * This is required because IE10/11 uses incrementing pointer IDs so we need to store a mapping of ID => idx
-         */
-        private _getPointerIndex(pointerId);
-        private _stringToPointerType(s);
-    }
-    /**
-     * Captures and dispatches PointerEvents
-     */
-    export class Pointer extends Class {
-        constructor();
-        /**
-         * The last position on the document this pointer was at. Can be `null` if pointer was never active.
-         */
-        lastPagePos: Vector;
-        /**
-         * The last position on the screen this pointer was at. Can be `null` if pointer was never active.
-         */
-        lastScreenPos: Vector;
-        /**
-         * The last position in the game world coordinates this pointer was at. Can be `null` if pointer was never active.
-         */
-        lastWorldPos: Vector;
-        private _onPointerMove(ev);
-    }
-}
-declare module "Input/Keyboard" {
-    import { Engine } from "Engine";
-    import { Class } from "Class";
-    import { GameEvent } from "Events";
-    import * as Events from "Events";
-    /**
-     * Enum representing input key codes
-     */
-    export enum Keys {
-        Num1 = 97,
-        Num2 = 98,
-        Num3 = 99,
-        Num4 = 100,
-        Num5 = 101,
-        Num6 = 102,
-        Num7 = 103,
-        Num8 = 104,
-        Num9 = 105,
-        Num0 = 96,
-        Numlock = 144,
-        Semicolon = 186,
-        A = 65,
-        B = 66,
-        C = 67,
-        D = 68,
-        E = 69,
-        F = 70,
-        G = 71,
-        H = 72,
-        I = 73,
-        J = 74,
-        K = 75,
-        L = 76,
-        M = 77,
-        N = 78,
-        O = 79,
-        P = 80,
-        Q = 81,
-        R = 82,
-        S = 83,
-        T = 84,
-        U = 85,
-        V = 86,
-        W = 87,
-        X = 88,
-        Y = 89,
-        Z = 90,
-        Shift = 16,
-        Alt = 18,
-        Up = 38,
-        Down = 40,
-        Left = 37,
-        Right = 39,
-        Space = 32,
-        Esc = 27,
-    }
-    /**
-     * Event thrown on a game object for a key event
-     */
-    export class KeyEvent extends GameEvent<any> {
-        key: Keys;
-        /**
-         * @param key  The key responsible for throwing the event
-         */
-        constructor(key: Keys);
-    }
-    /**
-     * Provides keyboard support for Excalibur.
-     *
-     * [[include:Keyboard.md]]
-     */
-    export class Keyboard extends Class {
-        private _keys;
-        private _keysUp;
-        private _keysDown;
-        private _engine;
-        constructor(engine: Engine);
-        on(eventName: Events.press, handler: (event?: KeyEvent) => void): void;
-        on(eventName: Events.release, handler: (event?: KeyEvent) => void): void;
-        on(eventName: Events.hold, handler: (event?: KeyEvent) => void): void;
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * Initialize Keyboard event listeners
-         */
-        init(global?: any): void;
-        update(): void;
-        /**
-         * Gets list of keys being pressed down
-         */
-        getKeys(): Keys[];
-        /**
-         * Tests if a certain key was just pressed this frame. This is cleared at the end of the update frame.
-         * @param key Test whether a key was just pressed
-         */
-        wasPressed(key: Keys): boolean;
-        /**
-         * Tests if a certain key is held down. This is persisted between frames.
-         * @param key  Test whether a key is held down
-         */
-        isHeld(key: Keys): boolean;
-        /**
-         * Tests if a certain key was just released this frame. This is cleared at the end of the update frame.
-         * @param key  Test whether a key was just released
-         */
-        wasReleased(key: Keys): boolean;
-    }
-}
-declare module "Input/IEngineInput" {
-    import { Keyboard } from "Input/Keyboard";
-    import { Gamepads } from "Input/Gamepad";
-    import { Pointers } from "Input/Pointer";
-    export interface IEngineInput {
-        keyboard: Keyboard;
-        pointers: Pointers;
-        gamepads: Gamepads;
-    }
-}
-declare module "Input/Index" {
-    /**
-     * Provides support for mice, keyboards, and controllers.
-     *
-     * [[include:Input.md]]
-     */
-    /**
-     * @typedoc
-     */
-    export * from "Input/Gamepad";
-    export * from "Input/Pointer";
-    export * from "Input/Keyboard";
-    export * from "Input/IEngineInput";
-}
 declare module "Util/Index" {
     export * from "Util/Util";
     import * as drawUtil from "Util/DrawUtil";
@@ -5263,78 +6459,28 @@ declare module "Util/Detector" {
         test(): boolean;
     }
 }
-declare module "Util/SortedList" {
-    /**
-     * A sorted list implementation. NOTE: this implementation is not self-balancing
-     */
-    export class SortedList<T> {
-        private _getComparable;
-        private _root;
-        constructor(getComparable: () => any);
-        find(element: any): boolean;
-        private _find(node, element);
-        get(key: number): any[];
-        private _get(node, key);
-        add(element: any): boolean;
-        private _insert(node, element);
-        removeByComparable(element: any): void;
-        private _remove(node, element);
-        private _cleanup(node, element);
-        private _findMinNode(node);
-        list(): Array<T>;
-        private _list(treeNode, results);
-    }
-    /**
-     * A tree node part of [[SortedList]]
-     */
-    export class BinaryTreeNode {
-        private _key;
-        private _data;
-        private _left;
-        private _right;
-        constructor(key: number, data: Array<any>, left: BinaryTreeNode, right: BinaryTreeNode);
-        getKey(): number;
-        setKey(key: number): void;
-        getData(): Array<any>;
-        setData(data: any): void;
-        getLeft(): BinaryTreeNode;
-        setLeft(left: BinaryTreeNode): void;
-        getRight(): BinaryTreeNode;
-        setRight(right: BinaryTreeNode): void;
-    }
-    /**
-     * Mock element for testing
-     *
-     * @internal
-     */
-    export class MockedElement {
-        private _key;
-        constructor(key: number);
-        getTheKey(): number;
-        setKey(key: number): void;
-    }
-}
 declare module "Index" {
     /**
      * The current Excalibur version string
      */
     export var EX_VERSION: string;
-    export * from "Actor";
+    export { Actor, IActorArgs, CollisionType } from "Actor";
     export * from "Algebra";
     export * from "Camera";
     export * from "Class";
+    export * from "Configurable";
     export * from "Debug";
     export * from "Engine";
     export * from "EventDispatcher";
     export * from "Events";
     export * from "Group";
-    export * from "Label";
+    export { Label, FontStyle, FontUnit, TextAlign, BaseAlign } from "Label";
     export * from "Loader";
-    export * from "Particles";
+    export { Particle, ParticleEmitter, IParticleArgs, IParticleEmitterArgs, EmitterType } from "Particles";
     export * from "Physics";
     export * from "Promises";
     export * from "Scene";
-    export * from "TileMap";
+    export { TileMap, Cell, ITileMapArgs, ICellArgs, TileSprite } from "TileMap";
     export * from "Timer";
     export * from "Trigger";
     export * from "UIActor";
@@ -5361,6 +6507,7 @@ declare module "Index" {
     export * from "Util/SortedList";
 }
 declare module "Engine" {
+    import { ICanUpdate, ICanDraw, ICanInitialize } from "Interfaces/LifecycleEvents";
     import { ILoadable } from "Interfaces/ILoadable";
     import { Promise } from "Promises";
     import { Vector } from "Algebra";
@@ -5395,6 +6542,38 @@ declare module "Engine" {
          * Show the game as a fixed size
          */
         Fixed = 2,
+        /**
+         * Allow the game to be positioned with the [[IEngineOptions.position]] option
+         */
+        Position = 3,
+    }
+    /**
+     * Enum representing the different mousewheel event bubble prevention
+     */
+    export enum ScrollPreventionMode {
+        /**
+         * Do not prevent any page scrolling
+         */
+        None = 0,
+        /**
+         * Prevent page scroll if mouse is over the game canvas
+         */
+        Canvas = 1,
+        /**
+         * Prevent all page scrolling via mouse wheel
+         */
+        All = 2,
+    }
+    /**
+     * Interface describing the absolute CSS position of the game window. For use when [[DisplayMode.Position]]
+     * is specified and when the user wants to define exact pixel spacing of the window.
+     * When a number is given, the value is interpreted as pixels
+     */
+    export interface IAbsolutePosition {
+        top?: number | string;
+        left?: number | string;
+        right?: number | string;
+        bottom?: number | string;
     }
     /**
      * Defines the available options to configure the Excalibur engine at constructor time.
@@ -5431,6 +6610,28 @@ declare module "Engine" {
          * browsers or if there is a bug in excalibur preventing execution.
          */
         suppressMinimumBrowserFeatureDetection?: boolean;
+        /**
+         * Suppress HiDPI auto detection and scaling, it is not recommended users of excalibur switch off this feature. This feature detects
+         * and scales the drawing canvas appropriately to accommodate HiDPI screens.
+         */
+        suppressHiDPIScaling?: boolean;
+        /**
+         * Specify how the game window is to be positioned when the [[DisplayMode.Position]] is chosen. This option MUST be specified
+         * if the DisplayMode is set as [[DisplayMode.Position]]. The position can be either a string or an [[IAbsolutePosition]].
+         * String must be in the format of css style background-position. The vertical position must precede the horizontal position in strings.
+         *
+         * Valid String examples: "top left", "top", "bottom", "middle", "middle center", "bottom right"
+         * Valid [[IAbsolutePosition]] examples: `{top: 5, right: 10%}`, `{bottom: 49em, left: 10px}`, `{left: 10, bottom: 40}`
+         */
+        position?: string | IAbsolutePosition;
+        /**
+         * Scroll prevention method.
+         */
+        scrollPreventionMode?: ScrollPreventionMode;
+        /**
+         * Optionally set the background color
+         */
+        backgroundColor?: Color;
     }
     /**
      * The Excalibur Engine
@@ -5441,7 +6642,7 @@ declare module "Engine" {
      *
      * [[include:Engine.md]]
      */
-    export class Engine extends Class {
+    export class Engine extends Class implements ICanInitialize, ICanUpdate, ICanDraw {
         /**
          * Direct access to the engine's canvas element
          */
@@ -5455,23 +6656,48 @@ declare module "Engine" {
          */
         canvasElementId: string;
         /**
-         * The width of the game canvas in pixels
+         * The width of the game canvas in pixels (physical width component of the
+         * resolution of the canvas element)
          */
-        canvasWidth: number;
+        readonly canvasWidth: number;
         /**
-         * The height of the game canvas in pixels
+         * Returns half width of the game canvas in pixels (half physical width component)
          */
-        canvasHeight: number;
+        readonly halfCanvasWidth: number;
+        /**
+         * The height of the game canvas in pixels, (physical height component of
+         * the resolution of the canvas element)
+         */
+        readonly canvasHeight: number;
+        /**
+         * Returns half height of the game canvas in pixels (half physical height component)
+         */
+        readonly halfCanvasHeight: number;
+        /**
+         * Returns the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        readonly drawWidth: number;
+        /**
+         * Returns half the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        readonly halfDrawWidth: number;
+        /**
+         * Returns the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        readonly drawHeight: number;
+        /**
+         * Returns half the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        readonly halfDrawHeight: number;
+        /**
+         * Returns whether excalibur detects the current screen to be HiDPI
+         */
+        readonly isHiDpi: boolean;
         /**
          * Access engine input like pointer, keyboard, or gamepad
          */
         input: Input.IEngineInput;
         private _hasStarted;
-        /**
-         * Current FPS
-         * @obsolete Use [[FrameStats.fps|Engine.stats.fps]]. Will be deprecated in future versions.
-         */
-        readonly fps: number;
         /**
          * Access Excalibur debugging functionality.
          */
@@ -5507,6 +6733,15 @@ declare module "Engine" {
          * Indicates the current [[DisplayMode]] of the engine.
          */
         displayMode: DisplayMode;
+        private _suppressHiDPIScaling;
+        /**
+         * Returns the calculated pixel ration for use in rendering
+         */
+        readonly pixelRatio: number;
+        /**
+         * Indicates the current position of the engine. Valid only when DisplayMode is DisplayMode.Position
+         */
+        position: string | IAbsolutePosition;
         /**
          * Indicates whether audio should be paused when the game is no longer visible.
          */
@@ -5524,6 +6759,10 @@ declare module "Engine" {
          * The action to take when a fatal exception is thrown
          */
         onFatalException: (e: any) => void;
+        /**
+         * The mouse wheel scroll prevention mode
+         */
+        pageScrollPreventionMode: ScrollPreventionMode;
         private _logger;
         private _isSmoothingEnabled;
         private _requestId;
@@ -5531,6 +6770,8 @@ declare module "Engine" {
         private _timescale;
         private _loader;
         private _isLoading;
+        private _isInitialized;
+        on(eventName: Events.initialize, handler: (event?: Events.InitializeEvent) => void): void;
         on(eventName: Events.visible, handler: (event?: VisibleEvent) => void): void;
         on(eventName: Events.hidden, handler: (event?: HiddenEvent) => void): void;
         on(eventName: Events.start, handler: (event?: GameStartEvent) => void): void;
@@ -5542,6 +6783,30 @@ declare module "Engine" {
         on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
         on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: Events.initialize, handler: (event?: Events.InitializeEvent) => void): void;
+        once(eventName: Events.visible, handler: (event?: VisibleEvent) => void): void;
+        once(eventName: Events.hidden, handler: (event?: HiddenEvent) => void): void;
+        once(eventName: Events.start, handler: (event?: GameStartEvent) => void): void;
+        once(eventName: Events.stop, handler: (event?: GameStopEvent) => void): void;
+        once(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        once(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        once(eventName: Events.preframe, handler: (event?: PreFrameEvent) => void): void;
+        once(eventName: Events.postframe, handler: (event?: PostFrameEvent) => void): void;
+        once(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        once(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: Events.initialize, handler?: (event?: Events.InitializeEvent) => void): void;
+        off(eventName: Events.visible, handler?: (event?: VisibleEvent) => void): void;
+        off(eventName: Events.hidden, handler?: (event?: HiddenEvent) => void): void;
+        off(eventName: Events.start, handler?: (event?: GameStartEvent) => void): void;
+        off(eventName: Events.stop, handler?: (event?: GameStopEvent) => void): void;
+        off(eventName: Events.preupdate, handler?: (event?: PreUpdateEvent) => void): void;
+        off(eventName: Events.postupdate, handler?: (event?: PostUpdateEvent) => void): void;
+        off(eventName: Events.preframe, handler?: (event?: PreFrameEvent) => void): void;
+        off(eventName: Events.postframe, handler?: (event?: PostFrameEvent) => void): void;
+        off(eventName: Events.predraw, handler?: (event?: PreDrawEvent) => void): void;
+        off(eventName: Events.postdraw, handler?: (event?: PostDrawEvent) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
         /**
          * Default [[IEngineOptions]]
          */
@@ -5559,7 +6824,8 @@ declare module "Engine" {
          *   height: 0, // the height of the canvas
          *   canvasElementId: '', // the DOM canvas element ID, if you are providing your own
          *   displayMode: ex.DisplayMode.FullScreen, // the display mode
-         *   pointerScope: ex.Input.PointerScope.Document // the scope of capturing pointer (mouse/touch) events
+         *   pointerScope: ex.Input.PointerScope.Document, // the scope of capturing pointer (mouse/touch) events
+         *   backgroundColor: ex.Color.fromHex('#2185d0') // background color of the engine
          * });
          *
          * // call game.start, which is a Promise
@@ -5718,17 +6984,9 @@ declare module "Engine" {
         /**
          * Changes the currently updating and drawing scene to a different,
          * named scene. Calls the [[Scene]] lifecycle events.
-         * @param key  The key of the scene to trasition to.
+         * @param key  The key of the scene to transition to.
          */
         goToScene(key: string): void;
-        /**
-         * Returns the width of the engine's drawing surface in pixels.
-         */
-        getDrawWidth(): number;
-        /**
-         * Returns the height of the engine's drawing surface in pixels.
-         */
-        getDrawHeight(): number;
         /**
          * Transforms the current x, y from screen coordinates to world coordinates
          * @param point  Screen coordinate to convert
@@ -5747,6 +7005,9 @@ declare module "Engine" {
          * Initializes the internal canvas, rendering context, displaymode, and native event listeners
          */
         private _initialize(options?);
+        onInitialize(_engine: Engine): void;
+        private _intializeDisplayModePosition(options);
+        private _initializeHiDpi();
         /**
          * If supported by the browser, this will set the antialiasing flag on the
          * canvas. Set this to `false` if you want a 'jagged' pixel art look to your
@@ -5759,15 +7020,40 @@ declare module "Engine" {
          */
         getAntialiasing(): boolean;
         /**
+         * Gets whether the actor is Initialized
+         */
+        readonly isInitialized: boolean;
+        private _overrideInitialize(engine);
+        /**
          * Updates the entire state of the game
          * @param delta  Number of milliseconds elapsed since the last update.
          */
         private _update(delta);
         /**
+         * @internal
+         */
+        _preupdate(delta: number): void;
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * @internal
+         */
+        _postupdate(delta: number): void;
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        /**
          * Draws the entire game
          * @param delta  Number of milliseconds elapsed since the last draw.
          */
         private _draw(delta);
+        /**
+         * @internal
+         */
+        _predraw(_ctx: CanvasRenderingContext2D, delta: number): void;
+        onPreDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * @internal
+         */
+        _postdraw(_ctx: CanvasRenderingContext2D, delta: number): void;
+        onPostDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
         /**
          * Starts the internal game loop for Excalibur after loading
          * any provided assets.
@@ -5798,630 +7084,436 @@ declare module "Engine" {
         load(loader: ILoadable): Promise<any>;
     }
 }
-declare module "UIActor" {
+declare module "Algebra" {
     import { Engine } from "Engine";
-    import { Actor } from "Actor";
     /**
-     * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
-     * not participate in collisions. Drawn on top of all other actors.
+     * A 2D vector on a plane.
      */
-    export class UIActor extends Actor {
-        protected _engine: Engine;
+    export class Vector {
+        x: number;
+        y: number;
         /**
-         * @param x       The starting x coordinate of the actor
-         * @param y       The starting y coordinate of the actor
-         * @param width   The starting width of the actor
-         * @param height  The starting height of the actor
+         * A (0, 0) vector
          */
-        constructor(x?: number, y?: number, width?: number, height?: number);
-        onInitialize(engine: Engine): void;
-        contains(x: number, y: number, useWorld?: boolean): boolean;
+        static Zero: Vector;
+        /**
+         * A (1, 1) vector
+         */
+        static One: Vector;
+        /**
+         * A (0.5, 0.5) vector
+         */
+        static Half: Vector;
+        /**
+         * A unit vector pointing up (0, -1)
+         */
+        static Up: Vector;
+        /**
+         * A unit vector pointing down (0, 1)
+         */
+        static Down: Vector;
+        /**
+         * A unit vector pointing left (-1, 0)
+         */
+        static Left: Vector;
+        /**
+         * A unit vector pointing right (1, 0)
+         */
+        static Right: Vector;
+        /**
+         * Returns a vector of unit length in the direction of the specified angle in Radians.
+         * @param angle The angle to generate the vector
+         */
+        static fromAngle(angle: number): Vector;
+        /**
+         * Checks if vector is not null, undefined, or if any of its components are NaN or Infinity.
+         */
+        static isValid(vec: Vector): boolean;
+        /**
+         * Calculates distance between two Vectors
+         * @param vec1
+         * @param vec2
+         */
+        static distance(vec1: Vector, vec2: Vector): number;
+        /**
+         * @param x  X component of the Vector
+         * @param y  Y component of the Vector
+         */
+        constructor(x: number, y: number);
+        /**
+         * Sets the x and y components at once
+         */
+        setTo(x: number, y: number): void;
+        /**
+         * Compares this point against another and tests for equality
+         * @param point  The other point to compare to
+         */
+        equals(vector: Vector, tolerance?: number): boolean;
+        /**
+         * The distance to another vector. If no other Vector is specified, this will return the [[magnitude]].
+         * @param v  The other vector. Leave blank to use origin vector.
+         */
+        distance(v?: Vector): number;
+        /**
+         * The magnitude (size) of the Vector
+         */
+        magnitude(): number;
+        /**
+         * Normalizes a vector to have a magnitude of 1.
+         */
+        normalize(): Vector;
+        /**
+         * Returns the average (midpoint) between the current point and the specified
+         */
+        average(vec: Vector): Vector;
+        /**
+         * Scales a vector's by a factor of size
+         * @param size  The factor to scale the magnitude by
+         */
+        scale(size: number): Vector;
+        /**
+         * Adds one vector to another
+         * @param v The vector to add
+         */
+        add(v: Vector): Vector;
+        /**
+         * Subtracts a vector from another, if you subract vector `B.sub(A)` the resulting vector points from A -> B
+         * @param v The vector to subtract
+         */
+        sub(v: Vector): Vector;
+        /**
+         * Adds one vector to this one modifying the original
+         * @param v The vector to add
+         */
+        addEqual(v: Vector): Vector;
+        /**
+         * Subtracts a vector from this one modifying the original
+         * @parallel v The vector to subtract
+         */
+        subEqual(v: Vector): Vector;
+        /**
+         * Scales this vector by a factor of size and modifies the original
+         */
+        scaleEqual(size: number): Vector;
+        /**
+         * Performs a dot product with another vector
+         * @param v  The vector to dot
+         */
+        dot(v: Vector): number;
+        /**
+         * Performs a 2D cross product with scalar. 2D cross products with a scalar return a vector.
+         * @param v  The vector to cross
+         */
+        cross(v: number): Vector;
+        /**
+         * Performs a 2D cross product with another vector. 2D cross products return a scalar value not a vector.
+         * @param v  The vector to cross
+         */
+        cross(v: Vector): number;
+        /**
+         * Returns the perpendicular vector to this one
+         */
+        perpendicular(): Vector;
+        /**
+         * Returns the normal vector to this one, same as the perpendicular of length 1
+         */
+        normal(): Vector;
+        /**
+         * Negate the current vector
+         */
+        negate(): Vector;
+        /**
+         * Returns the angle of this vector.
+         */
+        toAngle(): number;
+        /**
+         * Rotates the current vector around a point by a certain number of
+         * degrees in radians
+         */
+        rotate(angle: number, anchor?: Vector): Vector;
+        /**
+         * Creates new vector that has the same values as the previous.
+         */
+        clone(): Vector;
+        /**
+         * Returns a string repesentation of the vector.
+         */
+        toString(): string;
+    }
+    /**
+     * A 2D ray that can be cast into the scene to do collision detection
+     */
+    export class Ray {
+        pos: Vector;
+        dir: Vector;
+        /**
+         * @param pos The starting position for the ray
+         * @param dir The vector indicating the direction of the ray
+         */
+        constructor(pos: Vector, dir: Vector);
+        /**
+         * Tests a whether this ray intersects with a line segment. Returns a number greater than or equal to 0 on success.
+         * This number indicates the mathematical intersection time.
+         * @param line  The line to test
+         */
+        intersect(line: Line): number;
+        /**
+         * Returns the point of intersection given the intersection time
+         */
+        getPoint(time: number): Vector;
+    }
+    /**
+     * A 2D line segment
+     */
+    export class Line {
+        begin: Vector;
+        end: Vector;
+        /**
+         * @param begin  The starting point of the line segment
+         * @param end  The ending point of the line segment
+         */
+        constructor(begin: Vector, end: Vector);
+        /**
+         * Gets the raw slope (m) of the line. Will return (+/-)Infinity for vertical lines.
+         */
+        readonly slope: number;
+        /**
+         * Gets the Y-intercept (b) of the line. Will return (+/-)Infinity if there is no intercept.
+         */
+        readonly intercept: number;
+        /**
+         * Gets the normal of the line
+         */
+        normal(): Vector;
+        /**
+         * Returns the slope of the line in the form of a vector
+         */
+        getSlope(): Vector;
+        /**
+         * Returns the length of the line segment in pixels
+         */
+        getLength(): number;
+        /**
+         * Find the perpendicular distance from the line to a point
+         * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+         * @param point
+         */
+        distanceToPoint(point: Vector): number;
+        /**
+         * Finds a point on the line given only an X or a Y value. Given an X value, the function returns
+         * a new point with the calculated Y value and vice-versa.
+         *
+         * @param x The known X value of the target point
+         * @param y The known Y value of the target point
+         * @returns A new point with the other calculated axis value
+         */
+        findPoint(x?: number, y?: number): Vector;
+        /**
+         * Whether or not the given point lies on this line. This method is precise by default
+         * meaning the point must lie exactly on the line. Adjust threshold to
+         * loosen the strictness of the check for floating-point calculations.
+         */
+        hasPoint(x: number, y: number, threshold?: number): boolean;
+        /**
+         * Whether or not the given point lies on this line. This method is precise by default
+         * meaning the point must lie exactly on the line. Adjust threshold to
+         * loosen the strictness of the check for floating-point calculations.
+         */
+        hasPoint(v: Vector, threshold?: number): boolean;
+    }
+    /**
+     * A 1 dimensional projection on an axis, used to test overlaps
+     */
+    export class Projection {
+        min: number;
+        max: number;
+        constructor(min: number, max: number);
+        overlaps(projection: Projection): boolean;
+        getOverlap(projection: Projection): number;
+    }
+    export class GlobalCoordinates {
+        worldPos: Vector;
+        pagePos: Vector;
+        screenPos: Vector;
+        static fromPagePosition(x: number, y: number, engine: Engine): GlobalCoordinates;
+        static fromPagePosition(pos: Vector, engine: Engine): GlobalCoordinates;
+        constructor(worldPos: Vector, pagePos: Vector, screenPos: Vector);
     }
 }
-declare module "Util/Actors" {
-    import { Actor } from "Actor";
-    export function isVanillaActor(actor: Actor): boolean;
-    export function isUIActor(actor: Actor): boolean;
-}
-declare module "Scene" {
-    import { UIActor } from "UIActor";
-    import { InitializeEvent, ActivateEvent, DeactivateEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent } from "Events";
-    import { Timer } from "Timer";
-    import { Engine } from "Engine";
-    import { Group } from "Group";
-    import { TileMap } from "TileMap";
-    import { BaseCamera } from "Camera";
-    import { Actor } from "Actor";
-    import { Class } from "Class";
-    import * as Events from "Events";
-    /**
-     * [[Actor|Actors]] are composed together into groupings called Scenes in
-     * Excalibur. The metaphor models the same idea behind real world
-     * actors in a scene. Only actors in scenes will be updated and drawn.
-     *
-     * Typical usages of a scene include: levels, menus, loading screens, etc.
-     *
-     * [[include:Scenes.md]]
-     */
-    export class Scene extends Class {
-        /**
-         * The actor this scene is attached to, if any
-         */
-        actor: Actor;
-        /**
-         * Gets or sets the current camera for the scene
-         */
-        camera: BaseCamera;
-        /**
-         * The actors in the current scene
-         */
-        children: Actor[];
-        /**
-         * The [[TileMap]]s in the scene, if any
-         */
-        tileMaps: TileMap[];
-        /**
-         * The [[Group]]s in the scene, if any
-         */
-        groups: {
-            [key: string]: Group;
-        };
-        /**
-         * Access to the Excalibur engine
-         */
-        engine: Engine;
-        /**
-         * The [[UIActor]]s in a scene, if any; these are drawn last
-         */
-        uiActors: Actor[];
-        private _isInitialized;
-        private _sortedDrawingTree;
-        private _broadphase;
-        private _killQueue;
-        private _timers;
-        private _cancelQueue;
-        private _logger;
-        constructor(engine?: Engine);
-        on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
-        on(eventName: Events.activate, handler: (event?: ActivateEvent) => void): void;
-        on(eventName: Events.deactivate, handler: (event?: DeactivateEvent) => void): void;
-        on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
-        on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
-        on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
-        on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
-        on(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): void;
-        on(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * This is called before the first update of the [[Scene]]. Initializes scene members like the camera. This method is meant to be
-         * overridden. This is where initialization of child actors should take place.
-         */
-        onInitialize(engine: Engine): void;
-        /**
-         * This is called when the scene is made active and started. It is meant to be overriden,
-         * this is where you should setup any DOM UI or event handlers needed for the scene.
-         */
-        onActivate(): void;
-        /**
-         * This is called when the scene is made transitioned away from and stopped. It is meant to be overriden,
-         * this is where you should cleanup any DOM UI or event handlers needed for the scene.
-         */
-        onDeactivate(): void;
-        /**
-         * Initializes actors in the scene
-         */
-        private _initializeChildren();
-        /**
-         * Gets whether or not the [[Scene]] has been initialized
-         */
-        readonly isInitialized: boolean;
-        /**
-         * Initializes the scene before the first update, meant to be called by engine not by users of
-         * Excalibur
-         * @internal
-         */
-        _initialize(engine: Engine): void;
-        /**
-         * Updates all the actors and timers in the scene. Called by the [[Engine]].
-         * @param engine  Reference to the current Engine
-         * @param delta   The number of milliseconds since the last update
-         */
-        update(engine: Engine, delta: number): void;
-        /**
-         * Draws all the actors in the Scene. Called by the [[Engine]].
-         * @param ctx    The current rendering context
-         * @param delta  The number of milliseconds since the last draw
-         */
-        draw(ctx: CanvasRenderingContext2D, delta: number): void;
-        /**
-         * Draws all the actors' debug information in the Scene. Called by the [[Engine]].
-         * @param ctx  The current rendering context
-         */
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-        /**
-         * Checks whether an actor is contained in this scene or not
-         */
-        contains(actor: Actor): boolean;
-        /**
-         * Adds a [[Timer]] to the current scene.
-         * @param timer  The timer to add to the current scene.
-         */
-        add(timer: Timer): void;
-        /**
-         * Adds a [[TileMap]] to the Scene, once this is done the TileMap will be drawn and updated.
-         */
-        add(tileMap: TileMap): void;
-        /**
-         * Adds an actor to the scene, once this is done the [[Actor]] will be drawn and updated.
-         * @param actor  The actor to add to the current scene
-         */
-        add(actor: Actor): void;
-        /**
-         * Adds a [[UIActor]] to the scene.
-         * @param uiActor  The UIActor to add to the current scene
-         */
-        add(uiActor: UIActor): void;
-        /**
-         * Removes a [[Timer]] from the current scene, it will no longer be updated.
-         * @param timer  The timer to remove to the current scene.
-         */
-        remove(timer: Timer): void;
-        /**
-         * Removes a [[TileMap]] from the scene, it will no longer be drawn or updated.
-         * @param tileMap {TileMap}
-         */
-        remove(tileMap: TileMap): void;
-        /**
-         * Removes an actor from the scene, it will no longer be drawn or updated.
-         * @param actor  The actor to remove from the current scene.
-         */
-        remove(actor: Actor): void;
-        /**
-         * Removes a [[UIActor]] to the scene, it will no longer be drawn or updated
-         * @param uiActor  The UIActor to remove from the current scene
-         */
-        remove(uiActor: UIActor): void;
-        /**
-         * Adds (any) actor to act as a piece of UI, meaning it is always positioned
-         * in screen coordinates. UI actors do not participate in collisions.
-         * @todo Should this be `UIActor` only?
-         */
-        addUIActor(actor: Actor): void;
-        /**
-         * Removes an actor as a piece of UI
-         */
-        removeUIActor(actor: Actor): void;
-        /**
-         * Adds an actor to the scene, once this is done the actor will be drawn and updated.
-         */
-        protected _addChild(actor: Actor): void;
-        /**
-         * Adds a [[TileMap]] to the scene, once this is done the TileMap will be drawn and updated.
-         */
-        addTileMap(tileMap: TileMap): void;
-        /**
-         * Removes a [[TileMap]] from the scene, it will no longer be drawn or updated.
-         */
-        removeTileMap(tileMap: TileMap): void;
-        /**
-         * Removes an actor from the scene, it will no longer be drawn or updated.
-         */
-        protected _removeChild(actor: Actor): void;
-        /**
-         * Adds a [[Timer]] to the scene
-         * @param timer  The timer to add
-         */
-        addTimer(timer: Timer): Timer;
-        /**
-         * Removes a [[Timer]] from the scene.
-         * @warning Can be dangerous, use [[cancelTimer]] instead
-         * @param timer  The timer to remove
-         */
-        removeTimer(timer: Timer): Timer;
-        /**
-         * Cancels a [[Timer]], removing it from the scene nicely
-         * @param timer  The timer to cancel
-         */
-        cancelTimer(timer: Timer): Timer;
-        /**
-         * Tests whether a [[Timer]] is active in the scene
-         */
-        isTimerActive(timer: Timer): boolean;
-        /**
-         * Creates and adds a [[Group]] to the scene with a name
-         */
-        createGroup(name: string): Group;
-        /**
-         * Returns a [[Group]] by name
-         */
-        getGroup(name: string): Group;
-        /**
-         * Removes a [[Group]] by name
-         */
-        removeGroup(name: string): void;
-        /**
-         * Removes a [[Group]] by reference
-         */
-        removeGroup(group: Group): void;
-        /**
-         * Removes the given actor from the sorted drawing tree
-         */
-        cleanupDrawTree(actor: Actor): void;
-        /**
-         * Updates the given actor's position in the sorted drawing tree
-         */
-        updateDrawTree(actor: Actor): void;
-        private _collectActorStats(engine);
-    }
-}
-declare module "Events" {
-    import { Scene } from "Scene";
+declare module "Physics" {
     import { Vector } from "Algebra";
-    import { Actor } from "Actor";
-    import { FrameStats } from "Debug";
-    import { Engine } from "Engine";
-    import { TileMap } from "TileMap";
-    import { Side } from "Collision/Side";
-    import * as Input from "Input/Index";
-    export type kill = 'kill';
-    export type predraw = 'predraw';
-    export type postdraw = 'postdraw';
-    export type predebugdraw = 'predebugdraw';
-    export type postdebugdraw = 'postdebugdraw';
-    export type preupdate = 'preupdate';
-    export type postupdate = 'postupdate';
-    export type preframe = 'preframe';
-    export type postframe = 'postframe';
-    export type collision = 'collision';
-    export type initialize = 'initialize';
-    export type activate = 'activate';
-    export type deactivate = 'deactivate';
-    export type exitviewport = 'exitviewport';
-    export type enterviewport = 'enterviewport';
-    export type connect = 'connect';
-    export type disconnect = 'disconnect';
-    export type button = 'button';
-    export type axis = 'axis';
-    export type subscribe = 'subscribe';
-    export type unsubscribe = 'unsubscribe';
-    export type visible = 'visible';
-    export type hidden = 'hidden';
-    export type start = 'start';
-    export type stop = 'stop';
-    export type pointerup = 'pointerup';
-    export type pointerdown = 'pointerdown';
-    export type pointermove = 'pointermove';
-    export type pointercancel = 'pointercancel';
-    export type up = 'up';
-    export type down = 'down';
-    export type move = 'move';
-    export type cancel = 'cancel';
-    export type press = 'press';
-    export type release = 'release';
-    export type hold = 'hold';
     /**
-     * Base event type in Excalibur that all other event types derive from. Not all event types are thrown on all Excalibur game objects,
-     * some events are unique to a type, others are not.
+     * Possible collision resolution strategies
      *
-     */
-    export class GameEvent<T> {
-        /**
-         * Target object for this event.
-         */
-        target: T;
-    }
-    /**
-     * The 'kill' event is emitted on actors when it is killed. The target is the actor that was killed.
-     */
-    export class KillEvent extends GameEvent<Actor> {
-        target: Actor;
-        constructor(target: Actor);
-    }
-    /**
-     * The 'start' event is emitted on engine when has started and is ready for interaction.
-     */
-    export class GameStartEvent extends GameEvent<Engine> {
-        target: Engine;
-        constructor(target: Engine);
-    }
-    /**
-     * The 'stop' event is emitted on engine when has been stopped and will no longer take input, update or draw.
-     */
-    export class GameStopEvent extends GameEvent<Engine> {
-        target: Engine;
-        constructor(target: Engine);
-    }
-    /**
-     * The 'predraw' event is emitted on actors, scenes, and engine before drawing starts. Actors' predraw happens inside their graphics
-     * transform so that all drawing takes place with the actor as the origin.
+     * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
      *
+     * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
+     * simulated physical interactions.
      */
-    export class PreDrawEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
-        ctx: CanvasRenderingContext2D;
-        delta: number;
-        target: Actor | Scene | Engine | TileMap;
-        constructor(ctx: CanvasRenderingContext2D, delta: number, target: Actor | Scene | Engine | TileMap);
+    export enum CollisionResolutionStrategy {
+        Box = 0,
+        RigidBody = 1,
     }
     /**
-     * The 'postdraw' event is emitted on actors, scenes, and engine after drawing finishes. Actors' postdraw happens inside their graphics
-     * transform so that all drawing takes place with the actor as the origin.
+     * Possible broadphase collision pair identification strategies
      *
+     * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
+     * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
+     * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
      */
-    export class PostDrawEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
-        ctx: CanvasRenderingContext2D;
-        delta: number;
-        target: Actor | Scene | Engine | TileMap;
-        constructor(ctx: CanvasRenderingContext2D, delta: number, target: Actor | Scene | Engine | TileMap);
+    export enum BroadphaseStrategy {
+        Naive = 0,
+        DynamicAABBTree = 1,
     }
     /**
-     * The 'predebugdraw' event is emitted on actors, scenes, and engine before debug drawing starts.
+     * Possible numerical integrators for position and velocity
      */
-    export class PreDebugDrawEvent extends GameEvent<Actor | Scene | Engine> {
-        ctx: CanvasRenderingContext2D;
-        target: Actor | Scene | Engine;
-        constructor(ctx: CanvasRenderingContext2D, target: Actor | Scene | Engine);
+    export enum Integrator {
+        Euler = 0,
     }
     /**
-     * The 'postdebugdraw' event is emitted on actors, scenes, and engine after debug drawing starts.
+     * The [[Physics]] object is the global configuration object for all Excalibur physics.
+     *
+     * [[include:Physics.md]]
      */
-    export class PostDebugDrawEvent extends GameEvent<Actor | Scene | Engine> {
-        ctx: CanvasRenderingContext2D;
-        target: Actor | Scene | Engine;
-        constructor(ctx: CanvasRenderingContext2D, target: Actor | Scene | Engine);
-    }
-    /**
-     * The 'preupdate' event is emitted on actors, scenes, and engine before the update starts.
-     */
-    export class PreUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
-        engine: Engine;
-        delta: number;
-        target: Actor | Scene | Engine | TileMap;
-        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap);
-    }
-    /**
-     * The 'postupdate' event is emitted on actors, scenes, and engine after the update ends. This is equivalent to the obsolete 'update'
-     * event.
-     */
-    export class PostUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
-        engine: Engine;
-        delta: number;
-        target: Actor | Scene | Engine | TileMap;
-        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap);
-    }
-    /**
-     * The 'preframe' event is emitted on the engine, before the frame begins.
-     */
-    export class PreFrameEvent extends GameEvent<Engine> {
-        engine: Engine;
-        prevStats: FrameStats;
-        constructor(engine: Engine, prevStats: FrameStats);
-    }
-    /**
-     * The 'postframe' event is emitted on the engine, after a frame ends.
-     */
-    export class PostFrameEvent extends GameEvent<Engine> {
-        engine: Engine;
-        stats: FrameStats;
-        constructor(engine: Engine, stats: FrameStats);
-    }
-    /**
-     * Event received when a gamepad is connected to Excalibur. [[Gamepads]] receives this event.
-     */
-    export class GamepadConnectEvent extends GameEvent<Input.Gamepad> {
-        index: number;
-        gamepad: Input.Gamepad;
-        constructor(index: number, gamepad: Input.Gamepad);
-    }
-    /**
-     * Event received when a gamepad is disconnected from Excalibur. [[Gamepads]] receives this event.
-     */
-    export class GamepadDisconnectEvent extends GameEvent<Input.Gamepad> {
-        index: number;
-        gamepad: Input.Gamepad;
-        constructor(index: number, gamepad: Input.Gamepad);
-    }
-    /**
-     * Gamepad button event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
-     */
-    export class GamepadButtonEvent extends GameEvent<Input.Gamepad> {
-        button: Input.Buttons;
-        value: number;
-        target: Input.Gamepad;
+    export class Physics {
         /**
-         * @param button  The Gamepad button
-         * @param value   A numeric value between 0 and 1
-         */
-        constructor(button: Input.Buttons, value: number, target: Input.Gamepad);
-    }
-    /**
-     * Gamepad axis event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
-     */
-    export class GamepadAxisEvent extends GameEvent<Input.Gamepad> {
-        axis: Input.Axes;
-        value: number;
-        target: Input.Gamepad;
-        /**
-         * @param axis  The Gamepad axis
-         * @param value A numeric value between -1 and 1
-         */
-        constructor(axis: Input.Axes, value: number, target: Input.Gamepad);
-    }
-    /**
-     * Subscribe event thrown when handlers for events other than subscribe are added. Meta event that is received by
-     * [[EventDispatcher|event dispatchers]].
-     */
-    export class SubscribeEvent<T> extends GameEvent<T> {
-        topic: string;
-        handler: (event?: GameEvent<T>) => void;
-        constructor(topic: string, handler: (event?: GameEvent<T>) => void);
-    }
-    /**
-     * Unsubscribe event thrown when handlers for events other than unsubscribe are removed. Meta event that is received by
-     * [[EventDispatcher|event dispatchers]].
-     */
-    export class UnsubscribeEvent<T> extends GameEvent<T> {
-        topic: string;
-        handler: (event?: GameEvent<T>) => void;
-        constructor(topic: string, handler: (event?: GameEvent<T>) => void);
-    }
-    /**
-     * Event received by the [[Engine]] when the browser window is visible on a screen.
-     */
-    export class VisibleEvent extends GameEvent<Engine> {
-        target: Engine;
-        constructor(target: Engine);
-    }
-    /**
-     * Event received by the [[Engine]] when the browser window is hidden from all screens.
-     */
-    export class HiddenEvent extends GameEvent<Engine> {
-        target: Engine;
-        constructor(target: Engine);
-    }
-    /**
-     * Event thrown on an [[Actor|actor]] when a collision has occurred
-     */
-    export class CollisionEvent extends GameEvent<Actor> {
-        actor: Actor;
-        other: Actor;
-        side: Side;
-        intersection: Vector;
-        /**
-         * @param actor         The actor the event was thrown on
-         * @param other         The actor that was collided with
-         * @param side          The side that was collided with
-         * @param intersection  Intersection vector
-         */
-        constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
-    }
-    /**
-     * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
-     */
-    export class InitializeEvent extends GameEvent<Actor | Scene> {
-        engine: Engine;
-        target: Actor | Scene;
-        /**
-         * @param engine  The reference to the current engine
-         */
-        constructor(engine: Engine, target: Actor | Scene);
-    }
-    /**
-     * Event thrown on a [[Scene]] on activation
-     */
-    export class ActivateEvent extends GameEvent<Scene> {
-        oldScene: Scene;
-        target: Scene;
-        /**
-         * @param oldScene  The reference to the old scene
-         */
-        constructor(oldScene: Scene, target: Scene);
-    }
-    /**
-     * Event thrown on a [[Scene]] on deactivation
-     */
-    export class DeactivateEvent extends GameEvent<Scene> {
-        newScene: Scene;
-        target: Scene;
-        /**
-         * @param newScene  The reference to the new scene
-         */
-        constructor(newScene: Scene, target: Scene);
-    }
-    /**
-     * Event thrown on an [[Actor]] when it completely leaves the screen.
-     */
-    export class ExitViewPortEvent extends GameEvent<Actor> {
-        target: Actor;
-        constructor(target: Actor);
-    }
-    /**
-     * Event thrown on an [[Actor]] when it completely leaves the screen.
-     */
-    export class EnterViewPortEvent extends GameEvent<Actor> {
-        target: Actor;
-        constructor(target: Actor);
-    }
-}
-declare module "Class" {
-    import { GameEvent } from "Events";
-    import { EventDispatcher } from "EventDispatcher";
-    import { IEvented } from "Interfaces/IEvented";
-    /**
-     * Excalibur base class that provides basic functionality such as [[EventDispatcher]]
-     * and extending abilities for vanilla Javascript projects
-     */
-    export class Class implements IEvented {
-        /**
-         * Direct access to the game object event dispatcher.
-         */
-        eventDispatcher: EventDispatcher;
-        constructor();
-        /**
-         * Alias for `addEventListener`. You can listen for a variety of
-         * events off of the engine; see the events section below for a complete list.
-         * @param eventName  Name of the event to listen for
-         * @param handler    Event handler for the thrown event
-         */
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * Alias for `removeEventListener`. If only the eventName is specified
-         * it will remove all handlers registered for that specific event. If the eventName
-         * and the handler instance are specified only that handler will be removed.
+         * Global acceleration that is applied to all vanilla actors that have a [[CollisionType.Active|active]] collision type.
+         * Global acceleration won't effect [[Label|labels]], [[UIActor|ui actors]], or [[Trigger|triggers]] in Excalibur.
          *
-         * @param eventName  Name of the event to listen for
-         * @param handler    Event handler for the thrown event
+         * This is a great way to globally simulate effects like gravity.
          */
-        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        static acc: Vector;
         /**
-         * Emits a new event
-         * @param eventName   Name of the event to emit
-         * @param eventObject Data associated with this event
+         * Globally switches all Excalibur physics behavior on or off.
          */
-        emit(eventName: string, eventObject?: GameEvent<any>): void;
+        static enabled: boolean;
         /**
-         * You may wish to extend native Excalibur functionality in vanilla Javascript.
-         * Any method on a class inheriting [[Class]] may be extended to support
-         * additional functionality. In the example below we create a new type called `MyActor`.
+         * Gets or sets the number of collision passes for Excalibur to perform on physics bodies.
          *
+         * Reducing collision passes may cause things not to collide as expected in your game, but may increase performance.
          *
-         * ```js
-         * var MyActor = Actor.extend({
+         * More passes can improve the visual quality of collisions when many objects are on the screen. This can reduce jitter, improve the
+         * collision resolution of fast move objects, or the stability of large numbers of objects stacked together.
          *
-         *    constructor: function() {
-         *       this.newprop = 'something';
-         *       Actor.apply(this, arguments);
-         *    },
+         * Fewer passes will improve the performance of the game at the cost of collision quality, more passes will improve quality at the
+         * cost of performance.
          *
-         *    update: function(engine, delta) {
-         *       // Implement custom update
-         *       // Call super constructor update
-         *       Actor.prototype.update.call(this, engine, delta);
-         *
-         *       console.log("Something cool!");
-         *    }
-         * });
-         *
-         * var myActor = new MyActor(100, 100, 100, 100, Color.Azure);
-         * ```
-         *
-         * In TypeScript, you only need to use the `extends` syntax, you do not need
-         * to use this method of extension.
-         *
-         * @param methods A JSON object contain any methods/properties you want to extend
+         * The default is set to 5 passes which is a good start.
          */
-        static extend(methods: any): any;
+        static collisionPasses: number;
+        /**
+         * Gets or sets the broadphase pair identification strategy.
+         *
+         * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
+         * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
+         * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
+         */
+        static broadphaseStrategy: BroadphaseStrategy;
+        /**
+         * Globally switches the debug information for the broadphase strategy
+         */
+        static broadphaseDebug: boolean;
+        /**
+         * Show the normals as a result of collision on the screen.
+         */
+        static showCollisionNormals: boolean;
+        /**
+         * Show the position, velocity, and acceleration as graphical vectors.
+         */
+        static showMotionVectors: boolean;
+        /**
+         * Show the axis-aligned bounding boxes of the collision bodies on the screen.
+         */
+        static showBounds: boolean;
+        /**
+         * Show the bounding collision area shapes
+         */
+        static showArea: boolean;
+        /**
+         * Show points of collision interpreted by excalibur as a result of collision.
+         */
+        static showContacts: boolean;
+        /**
+         * Show the surface normals of the collision areas.
+         */
+        static showNormals: boolean;
+        /**
+         * Gets or sets the global collision resolution strategy (narrowphase).
+         *
+         * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
+         *
+         * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
+         * simulated physical interactions.
+         */
+        static collisionResolutionStrategy: CollisionResolutionStrategy;
+        /**
+         * The default mass to use if none is specified
+         */
+        static defaultMass: number;
+        /**
+         * Gets or sets the position and velocity positional integrator, currently only Euler is supported.
+         */
+        static integrator: Integrator;
+        /**
+         * Number of steps to use in integration. A higher number improves the positional accuracy over time. This can be useful to increase
+         * if you have fast moving objects in your simulation or you have a large number of objects and need to increase stability.
+         */
+        static integrationSteps: number;
+        /**
+         * Gets or sets whether rotation is allowed in a RigidBody collision resolution
+         */
+        static allowRigidBodyRotation: boolean;
+        /**
+         * Configures Excalibur to use box physics. Box physics which performs simple axis aligned arcade style physics.
+         */
+        static useBoxPhysics(): void;
+        /**
+         * Configures Excalibur to use rigid body physics. Rigid body physics allows for complicated
+         * simulated physical interactions.
+         */
+        static useRigidBodyPhysics(): void;
+        /**
+         * Small value to help collision passes settle themselves after the narrowphase.
+         */
+        static collisionShift: number;
+        /**
+         * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
+         */
+        static dynamicTreeVelocityMultiplyer: number;
+        /**
+         * Pad RigidBody BoundingBox by a constant amount
+         */
+        static boundsPadding: number;
+        /**
+         * Surface epsilon is used to help deal with surface penatration
+         */
+        static surfaceEpsilon: number;
+        /**
+         * Enable fast moving body checking, this enables checking for collision pairs via raycast for fast moving objects to prevent
+         * bodies from tunneling through one another.
+         */
+        static checkForFastBodies: boolean;
+        /**
+         * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
+         * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
+         * Excalibur will always perform the fast body raycast regardless of speed.
+         */
+        static disableMinimumSpeedForFastBody: boolean;
     }
 }
 declare module "Actor" {
     import { Class } from "Class";
     import { BoundingBox } from "Collision/BoundingBox";
     import { Texture } from "Resources/Texture";
-    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent } from "Events";
+    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent, PostKillEvent, PreKillEvent, GameEvent, ExitTriggerEvent, EnterTriggerEvent } from "Events";
+    import { PointerEvent, WheelEvent, PointerDragEvent } from "Input/Pointer";
     import { Engine } from "Engine";
     import { Color } from "Drawing/Color";
     import { Sprite } from "Drawing/Sprite";
     import { IActorTrait } from "Interfaces/IActorTrait";
     import { IDrawable } from "Interfaces/IDrawable";
+    import { ICanInitialize, ICanUpdate, ICanDraw, ICanBeKilled } from "Interfaces/LifecycleEvents";
     import { Scene } from "Scene";
     import { Logger } from "Util/Log";
     import { ActionContext } from "Actions/ActionContext";
@@ -6434,16 +7526,29 @@ declare module "Actor" {
     import { IActionable } from "Actions/IActionable";
     import * as Traits from "Traits/Index";
     import * as Events from "Events";
+    import { IPointerEvents } from "Interfaces/IPointerEvents";
+    export type PointerEventName = 'pointerdragstart' | 'pointerdragend' | 'pointerdragmove' | 'pointerdragenter' | 'pointerdragleave' | 'pointermove' | 'pointerenter' | 'pointerleave' | 'pointerup' | 'pointerdown';
     /**
-     * The most important primitive in Excalibur is an `Actor`. Anything that
-     * can move on the screen, collide with another `Actor`, respond to events,
-     * or interact with the current scene, must be an actor. An `Actor` **must**
-     * be part of a [[Scene]] for it to be drawn to the screen.
-     *
-     * [[include:Actors.md]]
-     *
+     * [[include:Constructors.md]]
      */
-    export class Actor extends Class implements IActionable, IEvented {
+    export interface IActorArgs extends Partial<ActorImpl> {
+        width?: number;
+        height?: number;
+        pos?: Vector;
+        vel?: Vector;
+        acc?: Vector;
+        rotation?: number;
+        rx?: number;
+        z?: number;
+        color?: Color;
+        visible?: boolean;
+        body?: Body;
+        collisionType?: CollisionType;
+    }
+    /**
+     * @hidden
+     */
+    export class ActorImpl extends Class implements IActionable, IEvented, IPointerEvents, ICanInitialize, ICanUpdate, ICanDraw, ICanBeKilled {
         /**
          * Indicates the next id to be set
          */
@@ -6569,7 +7674,7 @@ declare module "Actor" {
         restitution: number;
         /**
          * The anchor to apply all actor related transformations like rotation,
-         * translation, and rotation. By default the anchor is in the center of
+         * translation, and scaling. By default the anchor is in the center of
          * the actor. By default it is set to the center of the actor (.5, .5)
          *
          * An anchor of (.5, .5) will ensure that drawings are centered.
@@ -6660,6 +7765,7 @@ declare module "Actor" {
          * The default is `null` which prevents a rectangle from being drawn.
          */
         color: Color;
+        private _color;
         /**
          * Whether or not to enable the [[CapturePointer]] trait that propagates
          * pointer events to this actor
@@ -6680,10 +7786,12 @@ declare module "Actor" {
          * @param color   The starting color of the actor. Leave null to draw a transparent actor. The opacity of the color will be used as the
          * initial [[opacity]].
          */
-        constructor(x?: number, y?: number, width?: number, height?: number, color?: Color);
+        constructor(xOrConfig?: number | IActorArgs, y?: number, width?: number, height?: number, color?: Color);
         /**
-         * This is called before the first update of the actor. This method is meant to be
+         * `onInitialize` is called before the first update of the actor. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
+         *
+         * Synonymous with the event handler `.on('initialize', (evt) => {...})`
          */
         onInitialize(_engine: Engine): void;
         /**
@@ -6692,11 +7800,25 @@ declare module "Actor" {
         readonly isInitialized: boolean;
         /**
          * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
+         *
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
          * @internal
          */
         _initialize(engine: Engine): void;
+        private _capturePointerEvents;
+        private _captureMoveEvents;
+        private _captureDragEvents;
         private _checkForPointerOptIn(eventName);
+        on(eventName: Events.exittrigger, handler: (evt: ExitTriggerEvent) => void): void;
+        on(eventName: Events.entertrigger, handler: (evt: EnterTriggerEvent) => void): void;
+        on(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
+        on(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
+        on(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
+        on(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         on(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
+        on(eventName: Events.prekill, handler: (event?: PreKillEvent) => void): void;
+        on(eventName: Events.postkill, handler: (event?: PostKillEvent) => void): void;
         on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
         on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
         on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
@@ -6706,9 +7828,94 @@ declare module "Actor" {
         on(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
         on(eventName: Events.pointerup, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerenter, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerleave, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
+        on(eventName: Events.pointerdragstart, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragend, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragenter, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: Events.exittrigger, handler: (evt: ExitTriggerEvent) => void): void;
+        once(eventName: Events.entertrigger, handler: (evt: EnterTriggerEvent) => void): void;
+        once(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
+        once(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
+        once(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
+        once(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
+        once(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
+        once(eventName: Events.postkill, handler: (event?: PostKillEvent) => void): void;
+        once(eventName: Events.prekill, handler: (event?: PreKillEvent) => void): void;
+        once(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
+        once(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        once(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        once(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        once(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        once(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): void;
+        once(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
+        once(eventName: Events.pointerup, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerenter, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerleave, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
+        once(eventName: Events.pointerdragstart, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragend, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragenter, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: Events.exittrigger, handler?: (evt: ExitTriggerEvent) => void): void;
+        off(eventName: Events.entertrigger, handler?: (evt: EnterTriggerEvent) => void): void;
+        off(eventName: Events.pointerup, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerdown, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerenter, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerleave, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointermove, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointercancel, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerwheel, handler?: (event?: WheelEvent) => void): void;
+        off(eventName: Events.pointerdragstart, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragend, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragenter, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragleave, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragmove, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.prekill, handler?: (event?: PreKillEvent) => void): void;
+        off(eventName: Events.postkill, handler?: (event?: PostKillEvent) => void): void;
+        off(eventName: Events.initialize, handler?: (event?: Events.InitializeEvent) => void): void;
+        off(eventName: Events.postupdate, handler?: (event?: Events.PostUpdateEvent) => void): void;
+        off(eventName: Events.preupdate, handler?: (event?: Events.PreUpdateEvent) => void): void;
+        off(eventName: Events.postdraw, handler?: (event?: Events.PostDrawEvent) => void): void;
+        off(eventName: Events.predraw, handler?: (event?: Events.PreDrawEvent) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _prekill handler for [[onPreKill]] lifecycle event
+         * @internal
+         */
+        _prekill(_scene: Scene): void;
+        /**
+         * Safe to override onPreKill lifecycle event handler. Synonymous with `.on('prekill', (evt) =>{...})`
+         *
+         * `onPreKill` is called directly before an actor is killed and removed from its current [[Scene]].
+         */
+        onPreKill(_scene: Scene): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _prekill handler for [[onPostKill]] lifecycle event
+         * @internal
+         */
+        _postkill(_scene: Scene): void;
+        /**
+         * Safe to override onPostKill lifecycle event handler. Synonymous with `.on('postkill', (evt) => {...})`
+         *
+         * `onPostKill` is called directly after an actor is killed and remove from its current [[Scene]].
+         */
+        onPostKill(_scene: Scene): void;
         /**
          * If the current actor is a member of the scene, this will remove
          * it from the scene graph. It will no longer be drawn or updated.
@@ -6906,16 +8113,85 @@ declare module "Actor" {
          */
         update(engine: Engine, delta: number): void;
         /**
+         * Safe to override onPreUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPreUpdate` is called directly before an actor is updated.
+         */
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('postupdate', (evt) =>{...})`
+         *
+         * `onPostUpdate` is called directly after an actor is updated.
+         */
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
+         * @internal
+         */
+        _preupdate(engine: Engine, delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
+         * @internal
+         */
+        _postupdate(engine: Engine, delta: number): void;
+        /**
          * Called by the Engine, draws the actor to the screen
          * @param ctx   The rendering context
          * @param delta The time since the last draw in milliseconds
          */
         draw(ctx: CanvasRenderingContext2D, delta: number): void;
         /**
+         * Safe to override onPreDraw lifecycle event handler. Synonymous with `.on('predraw', (evt) =>{...})`
+         *
+         * `onPreDraw` is called directly before an actor is drawn, but after local transforms are made.
+         */
+        onPreDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Safe to override onPostDraw lifecycle event handler. Synonymous with `.on('postdraw', (evt) =>{...})`
+         *
+         * `onPostDraw` is called directly after an actor is drawn, and before local transforms are removed.
+         */
+        onPostDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _predraw handler for [[onPreDraw]] lifecycle event
+         * @internal
+         */
+        _predraw(ctx: CanvasRenderingContext2D, delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _postdraw handler for [[onPostDraw]] lifecycle event
+         * @internal
+         */
+        _postdraw(ctx: CanvasRenderingContext2D, delta: number): void;
+        /**
          * Called by the Engine, draws the actors debugging to the screen
          * @param ctx The rendering context
          */
         debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+    /**
+     * The most important primitive in Excalibur is an `Actor`. Anything that
+     * can move on the screen, collide with another `Actor`, respond to events,
+     * or interact with the current scene, must be an actor. An `Actor` **must**
+     * be part of a [[Scene]] for it to be drawn to the screen.
+     *
+     * [[include:Actors.md]]
+     *
+     *
+     * [[include:Constructors.md]]
+     *
+     */
+    export class Actor extends ActorImpl {
+        constructor();
+        constructor(config?: IActorArgs);
+        constructor(x?: number, y?: number, width?: number, height?: number, color?: Color);
     }
     /**
      * An enum that describes the types of collisions actors can participate in
@@ -6938,13 +8214,6 @@ declare module "Actor" {
          */
         Active = 2,
         /**
-         * Actors with the `Elastic` setting will behave the same as `Active`, except that they will
-         * "bounce" in the opposite direction given their velocity dx/dy. This is a naive implementation meant for
-         * prototyping, for a more robust elastic collision listen to the "collision" event and perform your custom logic.
-         * @obsolete This behavior will be handled by a future physics system
-         */
-        Elastic = 3,
-        /**
          * Actors with the `Fixed` setting raise collision events and participate in
          * collisions with other actors. Actors with the `Fixed` setting will not be
          * pushed or moved by other actors sharing the `Fixed`. Think of Fixed
@@ -6952,7 +8221,7 @@ declare module "Actor" {
          * not be pushed or moved by each other, they will not interact except to throw
          * collision events.
          */
-        Fixed = 4,
+        Fixed = 3,
     }
 }
 declare module "Actions/Action" {
@@ -7128,7 +8397,6 @@ declare module "Actions/Action" {
         private _startY;
         private _endX;
         private _endY;
-        private _time;
         private _distanceX;
         private _distanceY;
         private _started;

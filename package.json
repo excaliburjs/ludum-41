@@ -5,10 +5,11 @@
     "scripts": {
         "start": "concurrently \"tsc -p game/tsconfig.json --watch\" serve",
         "build": "tsc -p game/tsconfig.json",
-        "copy": "powershell -noprofile -command \"copy ./lib/excalibur/build/dist/* ./lib/excalibur-dist/\""
+        "copy": "copy lib/excalibur/build/dist/**/* lib/excalibur-dist"
     },
     "devDependencies": {
         "concurrently": "^3.5.1",
+        "copy": "^0.3.1",
         "serve": "^6.5.5",
         "typescript": "2.8.1"
     }
