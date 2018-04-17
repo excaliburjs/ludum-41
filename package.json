@@ -3,11 +3,13 @@
     "private": true,
     "version": "0.0.0",
     "scripts": {
-        "start": "./node_modules/.bin/tsc -p game/tsconfig.json --watch",
-        "build": "./node_modules/.bin/tsc -p game/tsconfig.json",
+        "start": "concurrently \"tsc -p game/tsconfig.json --watch\" serve",
+        "build": "tsc -p game/tsconfig.json",
         "copy": "powershell -noprofile -command \"copy ./lib/excalibur/build/dist/* ./lib/excalibur-dist/\""
     },
     "devDependencies": {
+        "concurrently": "^3.5.1",
+        "serve": "^6.5.5",
         "typescript": "2.8.1"
     }
 }
