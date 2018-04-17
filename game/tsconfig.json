@@ -1,13 +1,9 @@
-
 {
-    "compileOnSave": true,
-    "compilerOptions": {
-        "target": "es5",
-        "outFile": "game.js",
-        "sourceMap": true
-    },
-    "include": [
-       "game.ts",
-       "../lib/excalibur-dist/excalibur.d.ts"
-    ]
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es5",
+    "outFile": "game.js",
+    "sourceMap": true
+  },
+  "include": ["game.ts", "../lib/excalibur-dist/excalibur.d.ts"]
 }
