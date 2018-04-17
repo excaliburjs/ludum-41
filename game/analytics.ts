@@ -1,3 +1,1 @@
-class Analytics {
-   
-}
+class Analytics {}

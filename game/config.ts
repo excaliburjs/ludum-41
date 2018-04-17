@@ -1,3 +1,1 @@
-var Config = {
-   
-}
+var Config = {};

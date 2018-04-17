@@ -1,3 +1,1 @@
-class Stats {
-   
-}
+class Stats {}
