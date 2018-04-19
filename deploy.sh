@@ -18,6 +18,14 @@ npm run build
 
 echo "Copying built files"
 cp -R $(ls | grep -v '^\(out\|lib\|\.vscode\|deploy\.sh\|node_modules\)$') out
+mkdir -p out/lib/excalibur-dist
+
+echo "Copy library files"
+cd lib
+cp -R excalibur-dist/ ../out/lib
+cd ..
+
+
 cd out
 
 echo "Setting commit number ${CURRENT_COMMIT}"
