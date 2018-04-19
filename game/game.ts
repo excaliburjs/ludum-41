@@ -25,4 +25,13 @@ game.addScene("main", scnMain);
 // uncomment loader after adding resources
 game.start(loader).then(() => {
   game.goToScene("main");
+
+  // TODO: Turn on analytics
+
+  //   Analytics.publish({
+  //      commit: 'test',
+  //      seed: -1,
+  //      started: -1,
+  //      date: 'test'
+  //   });
 });
