@@ -2,8 +2,8 @@ import * as ex from "excalibur";
 import { MiniGame } from "./../MiniGame";
 import { CoffeeItem } from "./coffeeItem";
 export class CoffeeGame extends MiniGame {
-    constructor() {
-        super(...arguments);
+    constructor(scene, bottomSubscene) {
+        super(scene, bottomSubscene);
         this._stepCount = 0;
     }
     setup() {

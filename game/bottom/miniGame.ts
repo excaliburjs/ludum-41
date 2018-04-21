@@ -1,17 +1,19 @@
 import { Actor, Scene } from "excalibur";
+import { BottomSubscene } from "./bottom";
 export abstract class MiniGame {
   protected miniGameActors: Array<Actor> = [];
   private _isSetUp: boolean;
+  protected bottomSubscene: BottomSubscene;
   protected scene: Scene;
 
-  constructor(scene: Scene) {
+  constructor(scene: Scene, bottomSubscene: BottomSubscene) {
     this.scene = scene;
+    this.bottomSubscene = bottomSubscene;
   }
 
   protected abstract setup(): void;
-  protected abstract reset(): void;
 
-  public show(): void {
+  public start(): void {
     if (!this._isSetUp) {
       this.setup(); //initialize actors and add them to the miniGameActors collection.
       for (let i = 0; i < this.miniGameActors.length; i++) {
@@ -19,23 +21,23 @@ export abstract class MiniGame {
       }
     }
     this._isSetUp = true;
-    this.reset();
-    for (let i = 0; i < this.miniGameActors.length; i++) {
-      this.miniGameActors[i].visible = true;
-    }
   }
 
-  public hide(): void {
+  public cleanUp(): void {
     for (let i = 0; i < this.miniGameActors.length; i++) {
-      this.miniGameActors[i].visible = false;
+      this.scene.remove(this.miniGameActors[i]);
+      this._isSetUp = false;
     }
+    this.miniGameActors = [];
   }
 
   public onSucceed(): void {
-    this.hide();
+    this.cleanUp();
+    this.bottomSubscene.startRandomMiniGame();
   }
 
   public onFail(): void {
-    this.hide();
+    this.cleanUp();
+    this.bottomSubscene.startRandomMiniGame();
   }
 }

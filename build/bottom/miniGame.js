@@ -1,9 +1,10 @@
 export class MiniGame {
-    constructor(scene) {
+    constructor(scene, bottomSubscene) {
         this.miniGameActors = [];
         this.scene = scene;
+        this.bottomSubscene = bottomSubscene;
     }
-    show() {
+    start() {
         if (!this._isSetUp) {
             this.setup(); //initialize actors and add them to the miniGameActors collection.
             for (let i = 0; i < this.miniGameActors.length; i++) {
@@ -11,21 +12,21 @@ export class MiniGame {
             }
         }
         this._isSetUp = true;
-        this.reset();
-        for (let i = 0; i < this.miniGameActors.length; i++) {
-            this.miniGameActors[i].visible = true;
-        }
     }
-    hide() {
+    cleanUp() {
         for (let i = 0; i < this.miniGameActors.length; i++) {
-            this.miniGameActors[i].visible = false;
+            this.scene.remove(this.miniGameActors[i]);
+            this._isSetUp = false;
         }
+        this.miniGameActors = [];
     }
     onSucceed() {
-        this.hide();
+        this.cleanUp();
+        this.bottomSubscene.startRandomMiniGame();
     }
     onFail() {
-        this.hide();
+        this.cleanUp();
+        this.bottomSubscene.startRandomMiniGame();
     }
 }
 //# sourceMappingURL=miniGame.js.map

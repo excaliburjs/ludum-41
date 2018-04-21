@@ -16,11 +16,12 @@ export class BottomSubscene {
   public setup(scene: ex.Scene) {
     this.collatingGame = new CollatingGame(
       scene,
-      Config.MiniGames.Collating.NumberOfWinsToProceed
+      Config.MiniGames.Collating.NumberOfWinsToProceed,
+      this
     );
     this.miniGames.push(this.collatingGame);
 
-    this.coffeeGame = new CoffeeGame(scene);
+    this.coffeeGame = new CoffeeGame(scene, this);
     this.miniGames.push(this.coffeeGame);
 
     this.printerGame = new PrinterGame(scene);
@@ -35,6 +36,6 @@ export class BottomSubscene {
     let miniGame = this.miniGames[
       ex.Util.randomIntInRange(0, this.miniGames.length - 1)
     ];
-    miniGame.show();
+    miniGame.start();
   }
 }

@@ -3,9 +3,11 @@ import { MiniGame } from "../../bottom/miniGame";
 import { OfficeDocSet } from "./officeDoc";
 import Config from "../../config";
 export class CollatingGame extends MiniGame {
-    constructor(scene, winsRequired) {
-        super(scene);
+    constructor(scene, winsRequired, bottomSubscene) {
+        super(scene, bottomSubscene);
         this._docLabels = [];
+        this._winsRequired = 0;
+        this._currentWins = 0;
         this._winsRequired = winsRequired;
     }
     setup() {
@@ -27,9 +29,8 @@ export class CollatingGame extends MiniGame {
                 text: (this._scrambledOfficeDocs[i].pageNumber + 1).toString()
             });
             docLabel.fontSize = 16;
-            this.scene.add(this._scrambledOfficeDocs[i]);
-            this.scene.add(docLabel);
             this._docLabels.push(docLabel);
+            this.miniGameActors.push(docLabel);
             this.miniGameActors.push(this._scrambledOfficeDocs[i]);
         }
     }
@@ -39,12 +40,15 @@ export class CollatingGame extends MiniGame {
             var clickedDoc = evt.target;
             if (this._docSet.tryAddToSortedStack(clickedDoc)) {
                 //update ui
+                clickedDoc.color = Color.Magenta;
                 if (this._docSet.isComplete()) {
                     //you won
                     console.log("you won the collating game");
                     this._currentWins++;
                     if (this._currentWins >= this._winsRequired) {
                         //move on to the next mini game
+                        this._currentWins = 0;
+                        this.onSucceed();
                     }
                     else {
                         this.resetDocuments();
@@ -59,6 +63,7 @@ export class CollatingGame extends MiniGame {
         this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
         for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
             this._scrambledOfficeDocs[i].x = 100 * i + 200;
+            this._scrambledOfficeDocs[i].color = Color.Green;
             this._docLabels[i].text = (this._scrambledOfficeDocs[i].pageNumber + 1).toString();
         }
     }
