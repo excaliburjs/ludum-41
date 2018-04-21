@@ -3,14 +3,21 @@ import { TopSubscene } from "./top/top";
 import { BottomSubscene } from "./bottom/bottom";
 
 export class ScnMain extends ex.Scene {
-  constructor(engine: ex.Engine) {
-    super(engine);
-    let top = new TopSubscene(engine);
-    let bottom = new BottomSubscene();
+  private _top: TopSubscene;
+  private _bottom: BottomSubscene;
 
-    top.setup(this);
-    bottom.setup(this);
+  onInitialize(engine: ex.Engine) {
+    this._top = new TopSubscene(this.engine);
+    this._bottom = new BottomSubscene();
   }
 
-  public onInitialize(engine: ex.Engine) {}
+  onActivate() {
+    this._top.setup(this);
+    this._bottom.setup(this);
+  }
+
+  onDeactivate() {
+    this._top.teardown(this);
+    this._bottom.teardown(this);
+  }
 }

@@ -1,11 +1,12 @@
-import { Actor } from "excalibur";
+import { Actor, Color, Label } from "excalibur";
 
-class OfficeDoc extends Actor {
+export class OfficeDoc extends Actor {
   private _pageNumber: number;
 
   constructor(pageNumber: number) {
     super();
     this._pageNumber = pageNumber;
+    this.color = Color.Green;
   }
 
   public get pageNumber(): number {
@@ -13,7 +14,7 @@ class OfficeDoc extends Actor {
   }
 }
 
-class OfficeDocSet {
+export class OfficeDocSet {
   private _documents: Array<OfficeDoc> = [];
   private _playerSortedStack: Array<OfficeDoc> = [];
   private _numDocuments: number;

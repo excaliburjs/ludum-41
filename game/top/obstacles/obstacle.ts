@@ -1,36 +1,30 @@
 import * as ex from "excalibur";
-import Config from "../config";
-import { TopSubscene } from "./top";
-import { TopPlayer } from "./top-player";
+import Config from "../../config";
+import Resources from "../../resources";
+import { TopSubscene } from "../top";
+import { TopPlayer } from "../top-player";
 
-interface Props {
-  height: number;
-  x: number;
-  y: number;
+export interface Props {
   speed: number;
-  topSubscene: TopSubscene;
+  onHitPlayer: () => void;
 }
 
-export class Obstacle extends ex.Actor {
-  static minHeight = 10;
-  static maxHeight = 50;
+export abstract class Obstacle extends ex.Actor {
+  private onHitPlayer: () => void;
 
-  private topSubscene: TopSubscene;
   /**
    *
    */
-  constructor({ height, x, y, speed, topSubscene }: Props) {
+  constructor({ x, y, speed, onHitPlayer, ...props }: ex.IActorArgs & Props) {
     super({
       x,
       y,
-      height,
-      width: 10,
-      color: ex.Color.Yellow,
       collisionType: ex.CollisionType.Passive,
-      vel: new ex.Vector(speed, 0)
+      vel: new ex.Vector(speed, 0),
+      ...props
     });
 
-    this.topSubscene = topSubscene;
+    this.onHitPlayer = onHitPlayer;
 
     // Anchor to bottom since
     // we will be placing it on a "floor"
@@ -40,10 +34,11 @@ export class Obstacle extends ex.Actor {
   onInitialize(engine: ex.Engine) {
     this.on("exitviewport", this.onExitViewPort(engine));
     this.on("collisionstart", this.onCollision);
+    this.scene.on("deactivate", () => this.kill());
   }
 
   onExitViewPort = (engine: ex.Engine) => (e: ex.ExitViewPortEvent) => {
-    // When obstacle passes out of view to the left,
+    // When obstacle passes out of view to the left, NOT from the right ;)
     // it should be killed
     if (e.target.x < engine.getWorldBounds().left) {
       ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);
@@ -53,7 +48,7 @@ export class Obstacle extends ex.Actor {
 
   onCollision = (event: ex.CollisionStartEvent) => {
     if (event.other instanceof TopPlayer) {
-      this.topSubscene.healthMeter.health--;
+      this.onHitPlayer();
     }
   };
 }

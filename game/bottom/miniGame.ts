@@ -2,10 +2,10 @@ import { Actor, Scene } from "excalibur";
 export abstract class MiniGame {
   protected miniGameActors: Array<Actor> = [];
   private _isSetUp: boolean;
-  protected _scene: Scene;
+  protected scene: Scene;
 
   constructor(scene: Scene) {
-    this._scene = scene;
+    this.scene = scene;
   }
 
   protected abstract setup(): void;
@@ -15,7 +15,7 @@ export abstract class MiniGame {
     if (!this._isSetUp) {
       this.setup(); //initialize actors and add them to the miniGameActors collection.
       for (let i = 0; i < this.miniGameActors.length; i++) {
-        this._scene.add(this.miniGameActors[i]);
+        this.scene.add(this.miniGameActors[i]);
       }
     }
     this._isSetUp = true;
