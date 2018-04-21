@@ -84,7 +84,12 @@
         spawnObstacle(engine) {
             const x = engine.drawWidth + 200;
             const height = Config.Rand.integer(Obstacle.minHeight, Obstacle.maxHeight);
-            const ob = new Obstacle({ height, x, y: this.getTop(), speed: this.vel.x });
+            const ob = new Obstacle({
+                height,
+                x,
+                y: this.getTop(),
+                speed: Config.Floor.Speed
+            });
             ex.Logger.getInstance().info("Spawned obstacle", ob);
             this.scene.add(ob);
             const newInterval = Config.Rand.integer(Config.ObstacleSpawnMinInterval, Config.ObstacleSpawnMaxInterval);
