@@ -12,8 +12,7 @@ export class Floor extends ex.Actor {
             height: Config.Floor.Height,
             color: ex.Color.Red,
             anchor: new ex.Vector(0, 0.5),
-            collisionType: ex.CollisionType.Fixed,
-            vel: new ex.Vector(Config.Floor.Speed, 0) // speed of the runner
+            collisionType: ex.CollisionType.Fixed
         });
     }
     onPostUpdate(_engine, delta) {
