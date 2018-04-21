@@ -7,6 +7,8 @@ export class Background extends ex.Actor {
   static SliceWidth = 50;
   private drawSlices: ex.Sprite[] = new Array(Background.Slices * 2);
   private slices: ex.Sprite[] = new Array(Background.Slices);
+  private _offscreen: HTMLCanvasElement;
+  private _offscreenCtx: CanvasRenderingContext2D;
 
   /**
    *
@@ -20,6 +22,10 @@ export class Background extends ex.Actor {
       anchor: ex.Vector.Zero,
       vel: new ex.Vector(Config.Floor.Speed * 1.5, 0)
     });
+    this._offscreen = document.createElement("canvas");
+    this._offscreen.width = Background.Slices * Background.SliceWidth * 2;
+    this._offscreen.height = engine.drawHeight;
+    this._offscreenCtx = this._offscreen.getContext("2d");
   }
 
   onInitialize() {
@@ -38,6 +44,7 @@ export class Background extends ex.Actor {
     }
 
     this.fillSlices(0, Background.Slices * 2);
+    this.drawToOffscreen(0, Background.Slices * 2);
   }
 
   onPostUpdate(engine: ex.Engine, delta: number) {
@@ -45,16 +52,13 @@ export class Background extends ex.Actor {
       ex.Logger.getInstance().info("Reset background");
       this.x = 0;
       this.drawSlices = this.drawSlices.slice(16);
+      this.drawToOffscreen(0, 16);
       this.fillSlices(16, Background.Slices * 2);
     }
   }
 
   onPostDraw(ctx: CanvasRenderingContext2D, delta: number) {
-    for (let i = 0; i < this.drawSlices.length; i++) {
-      const slice = this.drawSlices[i];
-      const x = Math.floor(this.x + i * Background.SliceWidth);
-      slice && slice.draw(ctx, x, this.y);
-    }
+    ctx.drawImage(this._offscreen, this.x, this.y);
   }
 
   fillSlices(start, to) {
@@ -63,6 +67,15 @@ export class Background extends ex.Actor {
         Config.Rand.integer(0, this.slices.length - 1)
       ];
     }
+    this.drawToOffscreen(start, to);
     ex.Logger.getInstance().info("Picked bg slices", this.drawSlices.length);
+  }
+
+  drawToOffscreen(start, to) {
+    for (let i = start; i < to; i++) {
+      const slice = this.drawSlices[i];
+      const x = i * Background.SliceWidth;
+      slice && slice.draw(this._offscreenCtx, x, 0);
+    }
   }
 }
