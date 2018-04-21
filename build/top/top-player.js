@@ -18,6 +18,7 @@ export class TopPlayer extends ex.Actor {
         this.on("precollision", this.handleCollision.bind(this));
     }
     onInitialize() {
+        this.z = 5;
         this.addDrawing(Resources.txBike);
     }
     // le-sigh workaround for odd collision tunneling issue

@@ -5,6 +5,7 @@ import { Floor } from "./floor";
 import { TopPlayer } from "./top-player";
 import { TopHealth } from "./health";
 import { Platform } from "./platform";
+import { Background } from "./background";
 export class TopSubscene {
     constructor(_engine) {
         this._engine = _engine;
@@ -16,6 +17,7 @@ export class TopSubscene {
         this.floor = new Floor(this._engine);
         this.player = new TopPlayer(this._engine);
         this.healthMeter = new TopHealth(this._engine);
+        this.background = new Background(this._engine);
         this.spawnTimer = new ex.Timer(() => {
             this.spawnObstacle(this._engine, scene);
             this.spawnPlatform(this._engine, scene);
@@ -24,12 +26,14 @@ export class TopSubscene {
         scene.add(this.floor);
         scene.add(this.player);
         scene.add(this.healthMeter);
+        scene.add(this.background);
     }
     teardown(scene) {
         scene.remove(this.floor);
         scene.remove(this.player);
         scene.remove(this.healthMeter);
         scene.remove(this.spawnTimer);
+        scene.remove(this.background);
     }
     spawnObstacle(engine, scene) {
         const x = engine.drawWidth + 200;

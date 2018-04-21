@@ -21,6 +21,7 @@ export class TopPlayer extends ex.Actor {
   }
 
   onInitialize() {
+    this.z = 5;
     this.addDrawing(Resources.txBike);
   }
 

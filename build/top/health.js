@@ -13,6 +13,9 @@ export class TopHealth extends ex.Label {
         });
         this.health = Config.Health.Default;
     }
+    onInitialize() {
+        this.z = 4;
+    }
     onPostUpdate(engine, delta) {
         if (this.health < 1) {
             engine.goToScene("end");
