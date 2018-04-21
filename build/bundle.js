@@ -1,6 +1,7 @@
 (function (ex) {
     'use strict';
 
+    const rand = new ex.Random(12345678910);
     var Config = {
         AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
         GameWidth: 800,
@@ -14,8 +15,46 @@
         TopPlayer: {
             Width: 30,
             Height: 50
-        }
+        },
+        /**
+         * Obstacles spawn interval
+         */
+        ObstacleSpawnMinInterval: 1000,
+        ObstacleSpawnMaxInterval: 3000,
+        Rand: rand
     };
+
+    class Obstacle extends ex.Actor {
+        /**
+         *
+         */
+        constructor({ height, x, y, speed }) {
+            super({
+                x,
+                y,
+                height,
+                width: 10,
+                color: ex.Color.Yellow,
+                vel: new ex.Vector(speed, 0)
+            });
+            this.onExitViewPort = (engine) => (e) => {
+                // When obstacle passes out of view to the left,
+                // it should be killed
+                if (e.target.x < engine.getWorldBounds().left) {
+                    ex.Logger.getInstance().info("Obstacle exited stage left", e.target);
+                    e.target.kill();
+                }
+            };
+            // Anchor to bottom since
+            // we will be placing it on a "floor"
+            this.anchor.setTo(0.5, 1);
+        }
+        onInitialize(engine) {
+            this.on("exitviewport", this.onExitViewPort(engine));
+        }
+    }
+    Obstacle.minHeight = 10;
+    Obstacle.maxHeight = 50;
 
     class Floor extends ex.Actor {
         /**
@@ -32,11 +71,24 @@
                 collisionType: ex.CollisionType.Fixed
             });
         }
+        onInitialize(engine) {
+            this._spawnTimer = new ex.Timer(() => this.spawnObstacle(engine), 1000, true);
+            this.scene.add(this._spawnTimer);
+        }
         onPostUpdate(_engine, delta) {
             if (this.x < -this.getWidth() / 2) {
-                console.log("floor reset!");
+                ex.Logger.getInstance().info("floor reset!");
                 this.x = 0;
             }
+        }
+        spawnObstacle(engine) {
+            const x = engine.drawWidth + 200;
+            const height = Config.Rand.integer(Obstacle.minHeight, Obstacle.maxHeight);
+            const ob = new Obstacle({ height, x, y: this.getTop(), speed: this.vel.x });
+            ex.Logger.getInstance().info("Spawned obstacle", ob);
+            this.scene.add(ob);
+            const newInterval = Config.Rand.integer(Config.ObstacleSpawnMinInterval, Config.ObstacleSpawnMaxInterval);
+            this._spawnTimer.reset(newInterval);
         }
     }
 
