@@ -53,7 +53,7 @@ export class Background extends ex.Actor {
             this.drawSlices[i] = this.slices[Config.Rand.integer(0, this.slices.length - 1)];
         }
         this.drawToOffscreen(start, to);
-        ex.Logger.getInstance().info("Picked bg slices", this.drawSlices.length);
+        ex.Logger.getInstance().debug("Picked bg slices", this.drawSlices.length);
     }
     drawToOffscreen(start, to) {
         for (let i = start; i < to; i++) {
