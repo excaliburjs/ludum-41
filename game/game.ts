@@ -35,3 +35,24 @@ game.start(loader).then(() => {
   //      date: 'test'
   //   });
 });
+
+// TODO remove /////////////////////////////////////////////////////
+var gamePaused = false;
+game.input.keyboard.on("down", (keyDown?: ex.Input.KeyEvent) => {
+  switch (keyDown.key) {
+    case ex.Input.Keys.P:
+      if (gamePaused) {
+        game.start();
+        ex.Logger.getInstance().info("game resumed");
+      } else {
+        game.stop();
+        ex.Logger.getInstance().info("game paused");
+      }
+      gamePaused = !gamePaused;
+      break;
+    case ex.Input.Keys.Semicolon:
+      game.isDebug = !game.isDebug;
+      break;
+  }
+});
+////////////////////////////////////////////////////////////////////
