@@ -4,7 +4,7 @@ import Resources from "../resources";
 export class TopPlayer extends ex.Actor {
     constructor(engine) {
         super({
-            x: engine.drawWidth / 4,
+            x: engine.drawWidth * Config.TopPlayer.StartingXPercent,
             y: engine.drawHeight / 4,
             acc: new ex.Vector(0, 800),
             width: Config.TopPlayer.Width,
@@ -14,6 +14,7 @@ export class TopPlayer extends ex.Actor {
         });
         this.engine = engine;
         this.canJump = false;
+        this.correcting = false;
         engine.input.pointers.primary.on("down", this.handleInput.bind(this));
         this.on("precollision", this.handleCollision.bind(this));
     }
@@ -46,9 +47,16 @@ export class TopPlayer extends ex.Actor {
             this.rotation = virtualVel.toAngle();
         }
         else {
+            if (this.x < engine.drawWidth * Config.TopPlayer.StartingXPercent) {
+                this.vel.x =
+                    (engine.drawWidth * Config.TopPlayer.StartingXPercent - this.x) / 2;
+            }
+            else if (this.x >
+                engine.drawWidth * Config.TopPlayer.StartingXPercent) {
+                this.x = engine.drawWidth * Config.TopPlayer.StartingXPercent;
+            }
             this.rotation = 0;
         }
-        this.vel.x = 0;
     }
 }
 //# sourceMappingURL=top-player.js.map
