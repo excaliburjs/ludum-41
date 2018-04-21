@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
 
-export class Bottom {
+export class BottomSubscene {
   constructor() {}
   public setup(scene: ex.Scene) {}
 
