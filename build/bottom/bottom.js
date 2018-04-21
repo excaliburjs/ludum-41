@@ -1,4 +1,4 @@
-export class Bottom {
+export class BottomSubscene {
     constructor() { }
     setup(scene) { }
     startPaperCollating() {

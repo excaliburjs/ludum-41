@@ -5,7 +5,7 @@ export class Floor extends ex.Actor {
     /**
      *
      */
-    constructor(engine) {
+    constructor(engine, topSubscene) {
         super({
             x: 0,
             y: engine.drawHeight / 2,
@@ -15,6 +15,7 @@ export class Floor extends ex.Actor {
             anchor: new ex.Vector(0, 0.5),
             collisionType: ex.CollisionType.Fixed
         });
+        this.topSubscene = topSubscene;
     }
     onInitialize(engine) {
         this._spawnTimer = new ex.Timer(() => this.spawnObstacle(engine), 1000, true);
@@ -27,7 +28,8 @@ export class Floor extends ex.Actor {
             height,
             x,
             y: this.getTop(),
-            speed: Config.Floor.Speed
+            speed: Config.Floor.Speed,
+            topSubscene: this.topSubscene
         });
         ex.Logger.getInstance().debug("Spawned obstacle", ob);
         this.scene.add(ob);

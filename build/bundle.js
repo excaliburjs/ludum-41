@@ -29,73 +29,6 @@
         Rand: rand
     };
 
-    class Obstacle extends ex.Actor {
-        /**
-         *
-         */
-        constructor({ height, x, y, speed }) {
-            super({
-                x,
-                y,
-                height,
-                width: 10,
-                color: ex.Color.Yellow,
-                vel: new ex.Vector(speed, 0)
-            });
-            this.onExitViewPort = (engine) => (e) => {
-                // When obstacle passes out of view to the left,
-                // it should be killed
-                if (e.target.x < engine.getWorldBounds().left) {
-                    ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);
-                    e.target.kill();
-                }
-            };
-            // Anchor to bottom since
-            // we will be placing it on a "floor"
-            this.anchor.setTo(0.5, 1);
-        }
-        onInitialize(engine) {
-            this.on("exitviewport", this.onExitViewPort(engine));
-        }
-    }
-    Obstacle.minHeight = 10;
-    Obstacle.maxHeight = 50;
-
-    class Floor extends ex.Actor {
-        /**
-         *
-         */
-        constructor(engine) {
-            super({
-                x: 0,
-                y: engine.drawHeight / 2,
-                width: engine.drawWidth * 2,
-                height: Config.Floor.Height,
-                color: ex.Color.Black,
-                anchor: new ex.Vector(0, 0.5),
-                collisionType: ex.CollisionType.Fixed
-            });
-        }
-        onInitialize(engine) {
-            this._spawnTimer = new ex.Timer(() => this.spawnObstacle(engine), 1000, true);
-            this.scene.add(this._spawnTimer);
-        }
-        spawnObstacle(engine) {
-            const x = engine.drawWidth + 200;
-            const height = Config.Rand.integer(Obstacle.minHeight, Obstacle.maxHeight);
-            const ob = new Obstacle({
-                height,
-                x,
-                y: this.getTop(),
-                speed: Config.Floor.Speed
-            });
-            ex.Logger.getInstance().debug("Spawned obstacle", ob);
-            this.scene.add(ob);
-            const newInterval = Config.Rand.integer(Config.ObstacleSpawnMinInterval, Config.ObstacleSpawnMaxInterval);
-            this._spawnTimer.reset(newInterval);
-        }
-    }
-
     var Resources = {
         sampleImg: new ex.Texture("game/assets/img/sample-image.png"),
         txBike: new ex.Texture("game/assets/img/bike.png"),
@@ -154,6 +87,83 @@
         }
     }
 
+    class Obstacle extends ex.Actor {
+        /**
+         *
+         */
+        constructor({ height, x, y, speed, topSubscene }) {
+            super({
+                x,
+                y,
+                height,
+                width: 10,
+                color: ex.Color.Yellow,
+                collisionType: ex.CollisionType.Passive,
+                vel: new ex.Vector(speed, 0)
+            });
+            this.onExitViewPort = (engine) => (e) => {
+                // When obstacle passes out of view to the left,
+                // it should be killed
+                if (e.target.x < engine.getWorldBounds().left) {
+                    ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);
+                    e.target.kill();
+                }
+            };
+            this.onCollision = (event) => {
+                if (event.other instanceof TopPlayer) {
+                    this.topSubscene.healthMeter.health--;
+                }
+            };
+            this.topSubscene = topSubscene;
+            // Anchor to bottom since
+            // we will be placing it on a "floor"
+            this.anchor.setTo(0.5, 1);
+        }
+        onInitialize(engine) {
+            this.on("exitviewport", this.onExitViewPort(engine));
+            this.on("collisionstart", this.onCollision);
+        }
+    }
+    Obstacle.minHeight = 10;
+    Obstacle.maxHeight = 50;
+
+    class Floor extends ex.Actor {
+        /**
+         *
+         */
+        constructor(engine, topSubscene) {
+            super({
+                x: 0,
+                y: engine.drawHeight / 2,
+                width: engine.drawWidth * 2,
+                height: Config.Floor.Height,
+                color: ex.Color.Black,
+                anchor: new ex.Vector(0, 0.5),
+                collisionType: ex.CollisionType.Fixed
+            });
+            this.topSubscene = topSubscene;
+        }
+        onInitialize(engine) {
+            this._spawnTimer = new ex.Timer(() => this.spawnObstacle(engine), 1000, true);
+            this.scene.add(this._spawnTimer);
+        }
+        spawnObstacle(engine) {
+            const x = engine.drawWidth + 200;
+            const height = Config.Rand.integer(Obstacle.minHeight, Obstacle.maxHeight);
+            const ob = new Obstacle({
+                height,
+                x,
+                y: this.getTop(),
+                speed: Config.Floor.Speed,
+                topSubscene: this.topSubscene
+            });
+            ex.Logger.getInstance().debug("Spawned obstacle", ob);
+            this.scene.add(ob);
+            const newInterval = Config.Rand.integer(Config.ObstacleSpawnMinInterval, Config.ObstacleSpawnMaxInterval);
+            this._spawnTimer.reset(newInterval);
+        }
+    }
+
     class TopHealth extends ex.Label {
         constructor(engine) {
             super({
@@ -168,25 +178,28 @@
             this.health = Config.Health.Default;
         }
         onPostUpdate(engine, delta) {
+            if (this.health < 1) {
+                // todo trigger endgame
+            }
             this.text = this.health.toString();
         }
     }
 
-    class Top {
+    class TopSubscene {
         constructor(_engine) {
             this._engine = _engine;
-            this.floor = new Floor(_engine);
+            this.floor = new Floor(_engine, this);
             this.player = new TopPlayer(_engine);
-            this.health = new TopHealth(_engine);
+            this.healthMeter = new TopHealth(_engine);
         }
         setup(scene) {
             scene.add(this.floor);
             scene.add(this.player);
-            scene.add(this.health);
+            scene.add(this.healthMeter);
         }
     }
 
-    class Bottom {
+    class BottomSubscene {
         constructor() { }
         setup(scene) { }
         startPaperCollating() {
@@ -203,8 +216,8 @@
     class ScnMain extends ex.Scene {
         constructor(engine) {
             super(engine);
-            let top = new Top(engine);
-            let bottom = new Bottom();
+            let top = new TopSubscene(engine);
+            let bottom = new BottomSubscene();
             top.setup(this);
             bottom.setup(this);
         }

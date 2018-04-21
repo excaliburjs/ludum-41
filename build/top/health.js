@@ -14,6 +14,9 @@ export class TopHealth extends ex.Label {
         this.health = Config.Health.Default;
     }
     onPostUpdate(engine, delta) {
+        if (this.health < 1) {
+            // todo trigger endgame
+        }
         this.text = this.health.toString();
     }
 }
