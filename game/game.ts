@@ -1,4 +1,4 @@
-import { Engine, Loader, Logger, Input } from "excalibur";
+import { Engine, Loader, Logger, Input, Physics } from "excalibur";
 import { ScnMain } from "./scnMain";
 import Resources from "./resources";
 
@@ -6,6 +6,11 @@ var game = new Engine({
   width: 800,
   height: 600
 });
+
+// Physics
+// ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.RigidBody
+// ex.Physics.allowRigidBodyRotation = false;
+Physics.checkForFastBodies = true;
 
 // create an asset loader
 var loader = new Loader();
