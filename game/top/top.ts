@@ -48,7 +48,7 @@ export class TopSubscene {
       3000,
       true
     );
-    
+
     scene.add(this.spawnTimer);
     scene.add(this.platformTimer);
     scene.add(this.platformTimer2);
@@ -106,7 +106,7 @@ export class TopSubscene {
     this.platformTimer.reset(newInterval);
   }
 
-  spawnPlatform2(engine: ex.Engine, scene: ex.Scene, ) {
+  spawnPlatform2(engine: ex.Engine, scene: ex.Scene) {
     const x = engine.drawWidth + 100;
     const platform = new Platform({
       x,

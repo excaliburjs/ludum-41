@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
+import Config from "../config";
 import { MiniGame } from "./miniGame";
 
 export class BottomSubscene {
@@ -11,7 +12,10 @@ export class BottomSubscene {
   constructor() {}
 
   public setup(scene: ex.Scene) {
-    this.collatingGame = new CollatingGame(scene);
+    this.collatingGame = new CollatingGame(
+      scene,
+      Config.MiniGames.Collating.NumberOfWinsToProceed
+    );
     this.miniGames.push(this.collatingGame);
 
     this.coffeeGame = new CoffeeGame(scene);
