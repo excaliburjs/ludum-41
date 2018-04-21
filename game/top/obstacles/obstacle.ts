@@ -49,6 +49,7 @@ export abstract class Obstacle extends ex.Actor {
   onCollision = (event: ex.CollisionStartEvent) => {
     if (event.other instanceof TopPlayer) {
       this.onHitPlayer();
+      this.kill();
     }
   };
 }

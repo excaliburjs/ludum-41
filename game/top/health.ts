@@ -15,6 +15,10 @@ export class TopHealth extends ex.Label {
     });
   }
 
+  onInitialize() {
+    this.z = 4;
+  }
+
   onPostUpdate(engine: ex.Engine, delta: number) {
     if (this.health < 1) {
       engine.goToScene("end");

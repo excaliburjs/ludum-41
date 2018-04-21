@@ -7,16 +7,17 @@ export default {
     "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
 
   GameWidth: 800, // pixels
-  GameHeight: 600, // pixels
+  GameHeight: 800, // pixels
 
   // Top Floor config
   Floor: {
-    Speed: -100,
+    Speed: -200,
     Height: 5
   },
 
   // Top Player config
   TopPlayer: {
+    StartingXPercent: 0.25,
     Width: 30,
     Height: 50
   },
@@ -35,8 +36,11 @@ export default {
   },
 
   Platform: {
-    Width: 40,
-    Height: 40
+    Width: 100,
+    Height: 10,
+    HeightAboveFloor: 60,
+    MinSpawnInterval: 2000,
+    MaxSpawnInterval: 3000
   },
 
   /**
