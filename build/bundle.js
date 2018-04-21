@@ -21,6 +21,11 @@
             Default: 10,
             FontSize: 50
         },
+        MiniGames: {
+            Collating: {
+                NumberOfDocuments: 5
+            }
+        },
         /**
          * Obstacles spawn interval
          */
@@ -234,11 +239,108 @@
         }
     }
 
+    class MiniGame {
+        constructor(scene) {
+            this.miniGameActors = [];
+            this.scene = scene;
+        }
+        show() {
+            if (!this._isSetUp) {
+                this.setup(); //initialize actors and add them to the scene and miniGameActors collection.
+            }
+            this._isSetUp = true;
+            this.reset();
+            for (let i = 0; i < this.miniGameActors.length; i++) {
+                this.miniGameActors[i].visible = true;
+            }
+        }
+        hide() {
+            for (let i = 0; i < this.miniGameActors.length; i++) {
+                this.miniGameActors[i].visible = false;
+            }
+        }
+        onSucceed() {
+            this.hide();
+        }
+        onFail() {
+            this.hide();
+        }
+    }
+
+    class OfficeDoc extends ex.Actor {
+        constructor(pageNumber) {
+            super({ x: 100 * pageNumber + 200, width: 50, height: 50, y: 500 });
+            this._pageNumber = pageNumber;
+            this.color = ex.Color.Green;
+        }
+        get pageNumber() {
+            return this._pageNumber;
+        }
+    }
+    class OfficeDocSet {
+        constructor(numDocuments) {
+            this._documents = [];
+            this._playerSortedStack = [];
+            this._numDocuments = numDocuments;
+            for (var i = 0; i < this._numDocuments; i++) {
+                this._documents.push(new OfficeDoc(i));
+            }
+        }
+        //attempt to add this document to the sorted stack
+        tryAddToSortedStack(documentIn) {
+            if (documentIn.pageNumber === this._playerSortedStack.length) {
+                this._playerSortedStack.push(documentIn);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        isComplete() {
+            return this._playerSortedStack.length === this._numDocuments;
+        }
+        getScrambledDocumentSet() {
+            var docsArr = this._documents;
+            var currentIndex = docsArr.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = docsArr[currentIndex];
+                docsArr[currentIndex] = docsArr[randomIndex];
+                docsArr[randomIndex] = temporaryValue;
+            }
+            return docsArr;
+        }
+    }
+
+    class CollatingGame extends MiniGame {
+        constructor(scene) {
+            super(scene);
+        }
+        setup() {
+            var numDocs = Config.MiniGames.Collating.NumberOfDocuments;
+            var docSet = new OfficeDocSet(numDocs);
+            this._scrambledOfficeDocs = docSet.getScrambledDocumentSet();
+            for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
+                //add to the scene here
+                this.scene.add(this._scrambledOfficeDocs[i]);
+                this.miniGameActors.push(this._scrambledOfficeDocs[i]);
+            }
+        }
+        reset() { }
+        start() { }
+        finish() { }
+    }
+
     class BottomSubscene {
         constructor() { }
-        setup(scene) { }
-        startPaperCollating() {
+        setup(scene) {
+            this.startPaperCollating(scene);
+        }
+        startPaperCollating(scene) {
             // TODO load the paper collating mini-game
+            var collatingGame = new CollatingGame(scene);
+            collatingGame.show();
         }
         startTalkToCoworker() {
             // TODO load the coworker conversation mini-game

@@ -1,6 +1,7 @@
 export class MiniGame {
     constructor(scene) {
-        this._scene = scene;
+        this.miniGameActors = [];
+        this.scene = scene;
     }
     show() {
         if (!this._isSetUp) {

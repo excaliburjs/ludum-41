@@ -1,14 +1,15 @@
-import { Actor } from "excalibur";
-class OfficeDoc extends Actor {
+import { Actor, Color } from "excalibur";
+export class OfficeDoc extends Actor {
     constructor(pageNumber) {
-        super();
+        super({ x: 100 * pageNumber + 200, width: 50, height: 50, y: 500 });
         this._pageNumber = pageNumber;
+        this.color = Color.Green;
     }
     get pageNumber() {
         return this._pageNumber;
     }
 }
-class OfficeDocSet {
+export class OfficeDocSet {
     constructor(numDocuments) {
         this._documents = [];
         this._playerSortedStack = [];
@@ -43,4 +44,4 @@ class OfficeDocSet {
         return docsArr;
     }
 }
-//# sourceMappingURL=document.js.map
+//# sourceMappingURL=officeDoc.js.map
