@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import { MiniGame } from "./../MiniGame";
+import { MiniGame } from "../miniGame";
 import { CoffeeItem } from "./coffeeItem";
 export class CoffeeGame extends MiniGame {
     constructor(scene, bottomSubscene) {
