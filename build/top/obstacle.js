@@ -16,7 +16,7 @@ export class Obstacle extends ex.Actor {
             // When obstacle passes out of view to the left,
             // it should be killed
             if (e.target.x < engine.getWorldBounds().left) {
-                ex.Logger.getInstance().info("Obstacle exited stage left", e.target);
+                ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);
                 e.target.kill();
             }
         };

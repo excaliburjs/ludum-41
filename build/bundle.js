@@ -9,7 +9,7 @@
         // Top Floor config
         Floor: {
             Speed: -100,
-            Height: 20
+            Height: 5
         },
         // Top Player config
         TopPlayer: {
@@ -41,7 +41,7 @@
                 // When obstacle passes out of view to the left,
                 // it should be killed
                 if (e.target.x < engine.getWorldBounds().left) {
-                    ex.Logger.getInstance().info("Obstacle exited stage left", e.target);
+                    ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);
                     e.target.kill();
                 }
             };
@@ -66,7 +66,7 @@
                 y: engine.drawHeight / 2,
                 width: engine.drawWidth * 2,
                 height: Config.Floor.Height,
-                color: ex.Color.Red,
+                color: ex.Color.Black,
                 anchor: new ex.Vector(0, 0.5),
                 collisionType: ex.CollisionType.Fixed
             });
@@ -74,12 +74,6 @@
         onInitialize(engine) {
             this._spawnTimer = new ex.Timer(() => this.spawnObstacle(engine), 1000, true);
             this.scene.add(this._spawnTimer);
-        }
-        onPostUpdate(_engine, delta) {
-            if (this.x < -this.getWidth() / 2) {
-                ex.Logger.getInstance().info("floor reset!");
-                this.x = 0;
-            }
         }
         spawnObstacle(engine) {
             const x = engine.drawWidth + 200;
@@ -90,7 +84,7 @@
                 y: this.getTop(),
                 speed: Config.Floor.Speed
             });
-            ex.Logger.getInstance().info("Spawned obstacle", ob);
+            ex.Logger.getInstance().debug("Spawned obstacle", ob);
             this.scene.add(ob);
             const newInterval = Config.Rand.integer(Config.ObstacleSpawnMinInterval, Config.ObstacleSpawnMaxInterval);
             this._spawnTimer.reset(newInterval);
