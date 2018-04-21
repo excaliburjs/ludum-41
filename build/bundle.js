@@ -85,32 +85,17 @@
         }
     }
 
-    class BottomPlayer extends ex.Actor {
-        onInitialize() {
-            this._setUpDrawing();
-            // TODO set up player movement (moves to mouse-click location)
-        }
-        _setUpDrawing() {
-            // TODO set up player sprites, randomly pick one if there are multiple spritesheets
-        }
-    }
-
     class Bottom {
-        constructor() {
-            this.bottomPlayer = new BottomPlayer({
-                x: 400,
-                y: 400,
-                width: 50,
-                height: 50,
-                color: ex.Color.Blue
-            });
-        }
-        setup(scene) {
-            // TODO add the bottom player
-            scene.add(this.bottomPlayer);
-        }
+        constructor() { }
+        setup(scene) { }
         startPaperCollating() {
-            // TODO open the paper collating window
+            // TODO load the paper collating mini-game
+        }
+        startTalkToCoworker() {
+            // TODO load the coworker conversation mini-game
+        }
+        startPrinter() {
+            // TODO start the printer mini-game
         }
     }
 
