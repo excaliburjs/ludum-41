@@ -1,7 +1,6 @@
 import * as ex from "excalibur";
 import { Top } from "./top/top";
 import { Bottom } from "./bottom/bottom";
-import { BottomPlayer } from "./bottom/bottomPlayer";
 
 export class ScnMain extends ex.Scene {
   constructor(engine: ex.Engine) {
