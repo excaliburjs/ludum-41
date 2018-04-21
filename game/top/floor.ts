@@ -14,7 +14,7 @@ export class Floor extends ex.Actor {
       y: engine.drawHeight / 2, // position half down the screen
       width: engine.drawWidth * 2, // twice as wide as the screen
       height: Config.Floor.Height,
-      color: ex.Color.Red,
+      color: ex.Color.Black,
       anchor: new ex.Vector(0, 0.5),
       collisionType: ex.CollisionType.Fixed
     });
@@ -29,19 +29,17 @@ export class Floor extends ex.Actor {
     this.scene.add(this._spawnTimer);
   }
 
-  onPostUpdate(_engine: ex.Engine, delta: number) {
-    if (this.x < -this.getWidth() / 2) {
-      ex.Logger.getInstance().info("floor reset!");
-      this.x = 0;
-    }
-  }
-
   spawnObstacle(engine: ex.Engine) {
     const x = engine.drawWidth + 200;
     const height = Config.Rand.integer(Obstacle.minHeight, Obstacle.maxHeight);
-    const ob = new Obstacle({ height, x, y: this.getTop(), speed: this.vel.x });
+    const ob = new Obstacle({
+      height,
+      x,
+      y: this.getTop(),
+      speed: Config.Floor.Speed
+    });
 
-    ex.Logger.getInstance().info("Spawned obstacle", ob);
+    ex.Logger.getInstance().debug("Spawned obstacle", ob);
 
     this.scene.add(ob);
 
