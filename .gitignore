@@ -1,3 +1,2 @@
-/game/game.js
-/game/game.js.map
-/node_modules/
+build/
+node_modules/

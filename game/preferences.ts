@@ -1,1 +1,1 @@
-class Preferences {}
+export default class {}

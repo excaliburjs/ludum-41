@@ -1,5 +1,7 @@
-var Resources = {
-  sampleImg: new ex.Texture("game/assets/img/sample-image.png"),
+import { Texture, Sound } from "excalibur";
 
-  sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
+export default {
+  sampleImg: new Texture("game/assets/img/sample-image.png"),
+
+  sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };

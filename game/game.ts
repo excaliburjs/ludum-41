@@ -1,18 +1,14 @@
-/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
-/// <reference path="analytics.ts" />
-/// <reference path="config.ts" />
-/// <reference path="preferences.ts" />
-/// <reference path="resources.ts" />
-/// <reference path="scnMain.ts" />
-/// <reference path="stats.ts" />
+import { Engine, Loader, Logger, Input } from "excalibur";
+import { ScnMain } from "./scnMain";
+import Resources from "./resources";
 
-var game = new ex.Engine({
+var game = new Engine({
   width: 800,
   height: 600
 });
 
 // create an asset loader
-var loader = new ex.Loader();
+var loader = new Loader();
 
 // queue resources for loading
 for (var r in Resources) {
@@ -38,19 +34,19 @@ game.start(loader).then(() => {
 
 // TODO remove /////////////////////////////////////////////////////
 var gamePaused = false;
-game.input.keyboard.on("down", (keyDown?: ex.Input.KeyEvent) => {
+game.input.keyboard.on("down", (keyDown?: Input.KeyEvent) => {
   switch (keyDown.key) {
-    case ex.Input.Keys.P:
+    case Input.Keys.P:
       if (gamePaused) {
         game.start();
-        ex.Logger.getInstance().info("game resumed");
+        Logger.getInstance().info("game resumed");
       } else {
         game.stop();
-        ex.Logger.getInstance().info("game paused");
+        Logger.getInstance().info("game paused");
       }
       gamePaused = !gamePaused;
       break;
-    case ex.Input.Keys.Semicolon:
+    case Input.Keys.Semicolon:
       game.isDebug = !game.isDebug;
       break;
   }

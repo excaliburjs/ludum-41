@@ -4,8 +4,6 @@ echo "Running deployment script..."
 
 CURRENT_COMMIT=`git rev-parse HEAD`
 
-npm install typescript@2.8.1 -g
-
 echo "Cloning master branch..."
 
 git clone -b gh-pages "https://${GH_TOKEN}@${GH_REF}" out > /dev/null 2>&1 || exit 1
@@ -15,6 +13,7 @@ rm -r out/*
 echo "Compiling TSC"
 
 npm run build
+npm run bundle
 
 echo "Copying built files"
 cp -R $(ls | grep -v '^\(out\|lib\|\.vscode\|deploy\.sh\|node_modules\)$') out

@@ -1,7 +1,8 @@
-/// <reference path="top/top.ts" />
+import { Engine, Scene } from "excalibur";
+import { Top } from "./top";
 
-class ScnMain extends ex.Scene {
-  constructor(engine: ex.Engine) {
+export class ScnMain extends Scene {
+  constructor(engine: Engine) {
     super(engine);
     let top = new Top(engine);
 

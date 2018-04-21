@@ -1,6 +1,7 @@
-/// <reference path="../../lib/excalibur-dist/excalibur.d.ts" />
+import { Actor, Color, Vector } from "excalibur";
+import Config from "../config";
 
-class Floor extends ex.Actor {
+export class Floor extends Actor {
   /**
    *
    */
@@ -10,9 +11,9 @@ class Floor extends ex.Actor {
       y: engine.drawHeight / 2, // position half down the screen
       width: engine.drawWidth * 2, // twice as wide as the screen
       height: 20,
-      color: ex.Color.Red,
-      anchor: new ex.Vector(0, 0.5),
-      vel: new ex.Vector(Config.FloorSpeed, 0) // speed of the runner
+      color: Color.Red,
+      anchor: new Vector(0, 0.5),
+      vel: new Vector(Config.FloorSpeed, 0) // speed of the runner
     });
   }
 
