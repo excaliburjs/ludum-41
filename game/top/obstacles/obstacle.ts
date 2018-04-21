@@ -15,11 +15,13 @@ export abstract class Obstacle extends ex.Actor {
   /**
    *
    */
-  constructor({ x, y, speed, topSubscene }: ex.IActorArgs & Props) {
+  constructor({ x, y, speed, topSubscene, ...props }: ex.IActorArgs & Props) {
     super({
       x,
       y,
-      vel: new ex.Vector(speed, 0)
+      collisionType: ex.CollisionType.Passive,
+      vel: new ex.Vector(speed, 0),
+      ...props
     });
 
     this.topSubscene = topSubscene;

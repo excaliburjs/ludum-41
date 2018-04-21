@@ -88,16 +88,23 @@
         }
     }
 
+    var __rest = (window && window.__rest) || function (s, e) {
+        var t = {};
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
+        if (s != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+                t[p[i]] = s[p[i]];
+        return t;
+    };
     class Obstacle extends ex.Actor {
         /**
          *
          */
-        constructor({ x, y, speed, topSubscene }) {
-            super({
-                x,
-                y,
-                vel: new ex.Vector(speed, 0)
-            });
+        constructor(_a) {
+            var { x, y, speed, topSubscene } = _a, props = __rest(_a, ["x", "y", "speed", "topSubscene"]);
+            super(Object.assign({ x,
+                y, collisionType: ex.CollisionType.Passive, vel: new ex.Vector(speed, 0) }, props));
             this.onExitViewPort = (engine) => (e) => {
                 // When obstacle passes out of view to the left,
                 // it should be killed
