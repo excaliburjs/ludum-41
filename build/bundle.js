@@ -151,7 +151,7 @@
          *
          */
         constructor(_a) {
-            var { x, y, speed, topSubscene } = _a, props = __rest(_a, ["x", "y", "speed", "topSubscene"]);
+            var { x, y, speed, onHitPlayer } = _a, props = __rest(_a, ["x", "y", "speed", "onHitPlayer"]);
             super(Object.assign({ x,
                 y, collisionType: ex.CollisionType.Passive, vel: new ex.Vector(speed, 0) }, props));
             this.onExitViewPort = (engine) => (e) => {
@@ -164,10 +164,10 @@
             };
             this.onCollision = (event) => {
                 if (event.other instanceof TopPlayer) {
-                    this.topSubscene.healthMeter.health--;
+                    this.onHitPlayer();
                 }
             };
-            this.topSubscene = topSubscene;
+            this.onHitPlayer = onHitPlayer;
             // Anchor to bottom since
             // we will be placing it on a "floor"
             this.anchor.setTo(0.5, 1);
@@ -175,6 +175,7 @@
         onInitialize(engine) {
             this.on("exitviewport", this.onExitViewPort(engine));
             this.on("collisionstart", this.onCollision);
+            this.scene.on("deactivate", () => this.kill());
         }
     }
 
@@ -212,49 +213,11 @@
 
     const obstacles = [Crate, Crates];
 
-    var __rest$1 = (window && window.__rest) || function (s, e) {
-        var t = {};
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-            t[p] = s[p];
-        if (s != null && typeof Object.getOwnPropertySymbols === "function")
-            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-                t[p[i]] = s[p[i]];
-        return t;
-    };
-    class Platform extends ex.Actor {
-        constructor(_a) {
-            var { x, y, speed, topSubscene } = _a, props = __rest$1(_a, ["x", "y", "speed", "topSubscene"]);
-            super({
-                x,
-                y,
-                height: Config.Platform.Height,
-                width: Config.Platform.Width,
-                color: ex.Color.Green,
-                collisionType: ex.CollisionType.Fixed,
-                vel: new ex.Vector(speed, 0)
-                // Anchor to bottom since
-                // we will be placing it on a "floor"
-            });
-            this.onExitViewPort = (engine) => (e) => {
-                // When obstacle passes out of view to the left, NOT from the right ;)
-                // it should be killed
-                if (e.target.x < engine.getWorldBounds().left) {
-                    ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);
-                    e.target.kill();
-                }
-            };
-            this.topSubscene = topSubscene;
-        }
-        onInitialize(engine) {
-            this.on("exitviewport", this.onExitViewPort(engine));
-        }
-    }
-
     class Floor extends ex.Actor {
         /**
          *
          */
-        constructor(engine, topSubscene) {
+        constructor(engine) {
             super({
                 x: 0,
                 y: engine.drawHeight / 2,
@@ -264,39 +227,6 @@
                 anchor: new ex.Vector(0, 0.5),
                 collisionType: ex.CollisionType.Fixed
             });
-            this.topSubscene = topSubscene;
-        }
-        onInitialize(engine) {
-            this._spawnTimer = new ex.Timer(() => {
-                this.spawnObstacle(engine);
-                this.spawnPlatform(engine);
-            }, 1000, true);
-            this.scene.add(this._spawnTimer);
-        }
-        spawnObstacle(engine) {
-            const x = engine.drawWidth + 200;
-            const ObstacleDef = obstacles[Config.Rand.integer(0, obstacles.length - 1)];
-            const ob = new ObstacleDef({
-                x,
-                y: this.getTop(),
-                speed: Config.Floor.Speed,
-                topSubscene: this.topSubscene
-            });
-            ex.Logger.getInstance().debug("Spawned obstacle", ob);
-            this.scene.add(ob);
-            const newInterval = Config.Rand.integer(Config.ObstacleSpawnMinInterval, Config.ObstacleSpawnMaxInterval);
-            this._spawnTimer.reset(newInterval);
-        }
-        spawnPlatform(engine) {
-            const x = engine.drawWidth + 100;
-            const platform = new Platform({
-                x,
-                y: this.getTop() - Config.Platform.Height / 2,
-                speed: Config.Floor.Speed,
-                topSubscene: this.topSubscene
-            });
-            ex.Logger.getInstance().debug("Spawned platform", platform);
-            this.scene.add(platform);
         }
     }
 
@@ -322,14 +252,60 @@
         }
     }
 
+    var __rest$1 = (window && window.__rest) || function (s, e) {
+        var t = {};
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
+        if (s != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+                t[p[i]] = s[p[i]];
+        return t;
+    };
+    class Platform extends ex.Actor {
+        constructor(_a) {
+            var { x, y, speed } = _a, props = __rest$1(_a, ["x", "y", "speed"]);
+            super({
+                x,
+                y,
+                height: Config.Platform.Height,
+                width: Config.Platform.Width,
+                color: ex.Color.Green,
+                collisionType: ex.CollisionType.Fixed,
+                vel: new ex.Vector(speed, 0)
+                // Anchor to bottom since
+                // we will be placing it on a "floor"
+            });
+            this.onExitViewPort = (engine) => (e) => {
+                // When obstacle passes out of view to the left, NOT from the right ;)
+                // it should be killed
+                if (e.target.x < engine.getWorldBounds().left) {
+                    ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);
+                    e.target.kill();
+                }
+            };
+        }
+        onInitialize(engine) {
+            this.on("exitviewport", this.onExitViewPort(engine));
+            this.scene.on("deactivate", () => this.kill());
+        }
+    }
+
     class TopSubscene {
         constructor(_engine) {
             this._engine = _engine;
+            this.onPlayerHitObstacle = () => {
+                this.healthMeter.health--;
+            };
         }
         setup(scene) {
-            this.floor = new Floor(this._engine, this);
+            this.floor = new Floor(this._engine);
             this.player = new TopPlayer(this._engine);
             this.healthMeter = new TopHealth(this._engine);
+            this.spawnTimer = new ex.Timer(() => {
+                this.spawnObstacle(this._engine, scene);
+                this.spawnPlatform(this._engine, scene);
+            }, 1000, true);
+            scene.add(this.spawnTimer);
             scene.add(this.floor);
             scene.add(this.player);
             scene.add(this.healthMeter);
@@ -338,6 +314,31 @@
             scene.remove(this.floor);
             scene.remove(this.player);
             scene.remove(this.healthMeter);
+            scene.remove(this.spawnTimer);
+        }
+        spawnObstacle(engine, scene) {
+            const x = engine.drawWidth + 200;
+            const ObstacleDef = obstacles[Config.Rand.integer(0, obstacles.length - 1)];
+            const ob = new ObstacleDef({
+                x,
+                y: this.floor.getTop(),
+                speed: Config.Floor.Speed,
+                onHitPlayer: this.onPlayerHitObstacle
+            });
+            ex.Logger.getInstance().debug("Spawned obstacle", ob);
+            scene.add(ob);
+            const newInterval = Config.Rand.integer(Config.ObstacleSpawnMinInterval, Config.ObstacleSpawnMaxInterval);
+            this.spawnTimer.reset(newInterval);
+        }
+        spawnPlatform(engine, scene) {
+            const x = engine.drawWidth + 100;
+            const platform = new Platform({
+                x,
+                y: this.floor.getTop() - Config.Platform.Height / 2,
+                speed: Config.Floor.Speed
+            });
+            ex.Logger.getInstance().debug("Spawned platform", platform);
+            scene.add(platform);
         }
     }
 

@@ -1,12 +1,15 @@
 import * as ex from "excalibur";
-import { Props } from "./obstacles/obstacle";
 import { TopSubscene } from "./top";
-import Config from '../config';
+import Config from "../config";
+
+interface Props {
+  x: number;
+  y: number;
+  speed: number;
+}
 
 export class Platform extends ex.Actor {
-  private topSubscene: TopSubscene;
-
-  constructor({ x, y, speed, topSubscene, ...props }: ex.IActorArgs & Props) {
+  constructor({ x, y, speed, ...props }: ex.IActorArgs & Props) {
     super({
       x,
       y,
@@ -18,12 +21,11 @@ export class Platform extends ex.Actor {
       // Anchor to bottom since
       // we will be placing it on a "floor"
     });
-
-    this.topSubscene = topSubscene;
   }
 
   onInitialize(engine: ex.Engine) {
     this.on("exitviewport", this.onExitViewPort(engine));
+    this.scene.on("deactivate", () => this.kill());
   }
 
   onExitViewPort = (engine: ex.Engine) => (e: ex.ExitViewPortEvent) => {

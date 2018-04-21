@@ -14,7 +14,7 @@ export class Obstacle extends ex.Actor {
      *
      */
     constructor(_a) {
-        var { x, y, speed, topSubscene } = _a, props = __rest(_a, ["x", "y", "speed", "topSubscene"]);
+        var { x, y, speed, onHitPlayer } = _a, props = __rest(_a, ["x", "y", "speed", "onHitPlayer"]);
         super(Object.assign({ x,
             y, collisionType: ex.CollisionType.Passive, vel: new ex.Vector(speed, 0) }, props));
         this.onExitViewPort = (engine) => (e) => {
@@ -27,10 +27,10 @@ export class Obstacle extends ex.Actor {
         };
         this.onCollision = (event) => {
             if (event.other instanceof TopPlayer) {
-                this.topSubscene.healthMeter.health--;
+                this.onHitPlayer();
             }
         };
-        this.topSubscene = topSubscene;
+        this.onHitPlayer = onHitPlayer;
         // Anchor to bottom since
         // we will be placing it on a "floor"
         this.anchor.setTo(0.5, 1);
@@ -38,6 +38,7 @@ export class Obstacle extends ex.Actor {
     onInitialize(engine) {
         this.on("exitviewport", this.onExitViewPort(engine));
         this.on("collisionstart", this.onCollision);
+        this.scene.on("deactivate", () => this.kill());
     }
 }
 //# sourceMappingURL=obstacle.js.map

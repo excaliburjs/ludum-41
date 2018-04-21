@@ -8,10 +8,10 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import * as ex from "excalibur";
-import Config from '../config';
+import Config from "../config";
 export class Platform extends ex.Actor {
     constructor(_a) {
-        var { x, y, speed, topSubscene } = _a, props = __rest(_a, ["x", "y", "speed", "topSubscene"]);
+        var { x, y, speed } = _a, props = __rest(_a, ["x", "y", "speed"]);
         super({
             x,
             y,
@@ -31,10 +31,10 @@ export class Platform extends ex.Actor {
                 e.target.kill();
             }
         };
-        this.topSubscene = topSubscene;
     }
     onInitialize(engine) {
         this.on("exitviewport", this.onExitViewPort(engine));
+        this.scene.on("deactivate", () => this.kill());
     }
 }
 //# sourceMappingURL=platform.js.map

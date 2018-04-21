@@ -6,16 +6,16 @@ import { TopPlayer } from "../top-player";
 
 export interface Props {
   speed: number;
-  topSubscene: TopSubscene;
+  onHitPlayer: () => void;
 }
 
 export abstract class Obstacle extends ex.Actor {
-  private topSubscene: TopSubscene;
+  private onHitPlayer: () => void;
 
   /**
    *
    */
-  constructor({ x, y, speed, topSubscene, ...props }: ex.IActorArgs & Props) {
+  constructor({ x, y, speed, onHitPlayer, ...props }: ex.IActorArgs & Props) {
     super({
       x,
       y,
@@ -24,7 +24,7 @@ export abstract class Obstacle extends ex.Actor {
       ...props
     });
 
-    this.topSubscene = topSubscene;
+    this.onHitPlayer = onHitPlayer;
 
     // Anchor to bottom since
     // we will be placing it on a "floor"
@@ -34,6 +34,7 @@ export abstract class Obstacle extends ex.Actor {
   onInitialize(engine: ex.Engine) {
     this.on("exitviewport", this.onExitViewPort(engine));
     this.on("collisionstart", this.onCollision);
+    this.scene.on("deactivate", () => this.kill());
   }
 
   onExitViewPort = (engine: ex.Engine) => (e: ex.ExitViewPortEvent) => {
@@ -47,7 +48,7 @@ export abstract class Obstacle extends ex.Actor {
 
   onCollision = (event: ex.CollisionStartEvent) => {
     if (event.other instanceof TopPlayer) {
-      this.topSubscene.healthMeter.health--;
+      this.onHitPlayer();
     }
   };
 }
