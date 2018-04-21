@@ -5,6 +5,15 @@ export default {
   GameWidth: 800, // pixels
   GameHeight: 600, // pixels
 
-  // Floor config
-  FloorSpeed: -100
+  // Top Floor config
+  Floor: {
+    Speed: -100,
+    Height: 20
+  },
+
+  // Top Player config
+  TopPlayer: {
+    Width: 30,
+    Height: 50
+  }
 };
