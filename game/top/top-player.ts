@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import Config from "../config";
+import Resources from "../resources";
 
 export class TopPlayer extends ex.Actor {
   constructor(engine: ex.Engine) {
@@ -19,6 +20,10 @@ export class TopPlayer extends ex.Actor {
     this.on("precollision", this.handleCollision.bind(this));
   }
 
+  onInitialize() {
+    this.addDrawing(Resources.txBike);
+  }
+
   // le-sigh workaround for odd collision tunneling issue
   handleCollision(event: ex.PreCollisionEvent) {
     this.vel.y = 0;
@@ -26,7 +31,7 @@ export class TopPlayer extends ex.Actor {
   }
 
   handleInput(event: ex.Input.PointerEvent | ex.Input.KeyEvent) {
-    console.log("event:", event);
+    ex.Logger.getInstance().debug("event:", event);
     this.jump();
   }
 

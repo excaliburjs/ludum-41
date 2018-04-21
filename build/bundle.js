@@ -91,6 +91,12 @@
         }
     }
 
+    var Resources = {
+        sampleImg: new ex.Texture("game/assets/img/sample-image.png"),
+        txBike: new ex.Texture("game/assets/img/bike.png"),
+        sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
+    };
+
     class TopPlayer extends ex.Actor {
         constructor(engine) {
             super({
@@ -106,13 +112,16 @@
             engine.input.keyboard.on("press", this.handleInput.bind(this));
             this.on("precollision", this.handleCollision.bind(this));
         }
+        onInitialize() {
+            this.addDrawing(Resources.txBike);
+        }
         // le-sigh workaround for odd collision tunneling issue
         handleCollision(event) {
             this.vel.y = 0;
             this.acc = ex.Vector.Zero.clone();
         }
         handleInput(event) {
-            console.log("event:", event);
+            ex.Logger.getInstance().debug("event:", event);
             this.jump();
         }
         jump() {
@@ -160,11 +169,6 @@
         }
         onInitialize(engine) { }
     }
-
-    var Resources = {
-        sampleImg: new ex.Texture("game/assets/img/sample-image.png"),
-        sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
-    };
 
     var game = new ex.Engine({
         width: Config.GameWidth,
