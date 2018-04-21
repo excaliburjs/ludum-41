@@ -1,4 +1,5 @@
 import { CollatingGame } from "./collating-game/collatingGame";
+import { CoffeeGame } from "./coffee-game/coffeeGame";
 export class BottomSubscene {
     constructor() { }
     setup(scene) {
@@ -10,11 +11,9 @@ export class BottomSubscene {
         var collatingGame = new CollatingGame(scene);
         collatingGame.show();
     }
-    startTalkToCoworker() {
-        // TODO load the coworker conversation mini-game
-    }
-    startPrinter() {
-        // TODO start the printer mini-game
+    startCoffeeGame(scene) {
+        let coffeeGame = new CoffeeGame(scene);
+        coffeeGame.show();
     }
 }
 //# sourceMappingURL=bottom.js.map
