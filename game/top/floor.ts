@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import Config from "../config";
 import { Obstacle } from "./obstacle";
+import { TopSubscene } from "./top";
 
 export class Floor extends ex.Actor {
   protected _spawnTimer: ex.Timer;
@@ -8,7 +9,7 @@ export class Floor extends ex.Actor {
   /**
    *
    */
-  constructor(engine: ex.Engine) {
+  constructor(engine: ex.Engine, private topSubscene: TopSubscene) {
     super({
       x: 0,
       y: engine.drawHeight / 2, // position half down the screen
@@ -36,7 +37,8 @@ export class Floor extends ex.Actor {
       height,
       x,
       y: this.getTop(),
-      speed: Config.Floor.Speed
+      speed: Config.Floor.Speed,
+      topSubscene: this.topSubscene
     });
 
     ex.Logger.getInstance().debug("Spawned obstacle", ob);
