@@ -27,6 +27,12 @@ export default {
     FontSize: 50
   },
 
+  MiniGames: {
+    Collating: {
+      NumberOfDocuments: 5
+    }
+  },
+
   /**
    * Obstacles spawn interval
    */

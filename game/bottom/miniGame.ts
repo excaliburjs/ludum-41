@@ -1,11 +1,11 @@
 import { Actor, Scene } from "excalibur";
 export abstract class MiniGame {
-  protected miniGameActors: Array<Actor>;
+  protected miniGameActors: Array<Actor> = [];
   private _isSetUp: boolean;
-  private _scene: Scene;
+  protected scene: Scene;
 
   constructor(scene: Scene) {
-    this._scene = scene;
+    this.scene = scene;
   }
 
   protected abstract setup(): void;
