@@ -1,0 +1,35 @@
+import * as ex from "excalibur";
+import Config from "../config";
+export class TopPlayer extends ex.Actor {
+    constructor(engine) {
+        super({
+            x: engine.drawWidth / 4,
+            y: engine.drawHeight / 4,
+            acc: new ex.Vector(0, 800),
+            width: Config.TopPlayer.Width,
+            height: Config.TopPlayer.Height,
+            color: ex.Color.Blue,
+            collisionType: ex.CollisionType.Active
+        });
+        engine.input.pointers.primary.on("down", this.handleInput.bind(this));
+        engine.input.keyboard.on("press", this.handleInput.bind(this));
+        this.on("precollision", this.handleCollision.bind(this));
+    }
+    // le-sigh workaround for odd collision tunneling issue
+    handleCollision(event) {
+        this.vel.y = 0;
+        this.acc = ex.Vector.Zero.clone();
+    }
+    handleInput(event) {
+        console.log("event:", event);
+        this.jump();
+    }
+    jump() {
+        this.vel = this.vel.add(new ex.Vector(0, -400));
+        this.acc = new ex.Vector(0, 800);
+    }
+    onPostUpdate(engine, delta) {
+        // todo postupdate
+    }
+}
+//# sourceMappingURL=top-player.js.map

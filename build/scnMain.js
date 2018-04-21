@@ -1,6 +1,6 @@
-import { Scene } from "excalibur";
-import { Top } from "./top";
-export class ScnMain extends Scene {
+import * as ex from "excalibur";
+import { Top } from "./top/top";
+export class ScnMain extends ex.Scene {
     constructor(engine) {
         super(engine);
         let top = new Top(engine);
