@@ -1,10 +1,11 @@
-import { Actor, Color, Vector } from "excalibur";
+import { Actor, Color, Label } from "excalibur";
 
 export class OfficeDoc extends Actor {
   private _pageNumber: number;
+  private _officeDocSet: OfficeDocSet;
 
   constructor(pageNumber: number) {
-    super({ x: 100 * pageNumber + 200, width: 50, height: 50, y: 500 });
+    super();
     this._pageNumber = pageNumber;
     this.color = Color.Green;
   }
@@ -35,6 +36,10 @@ export class OfficeDocSet {
     } else {
       return false;
     }
+  }
+
+  public clear(): void {
+    this._playerSortedStack = [];
   }
 
   public isComplete(): boolean {
