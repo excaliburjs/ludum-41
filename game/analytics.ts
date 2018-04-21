@@ -1,3 +1,5 @@
+import Config from "./config";
+
 interface IPayload {
   date: string; // date
   commit: string;
@@ -5,7 +7,7 @@ interface IPayload {
   started: number; // time
 }
 
-class Analytics {
+export class Analytics {
   public static publish(payload: IPayload) {
     return fetch(Config.AnalyticsEndpoint, {
       method: "POST",

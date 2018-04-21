@@ -1,0 +1,48 @@
+import { Engine, Loader, Logger, Input } from "excalibur";
+import { ScnMain } from "./scnMain";
+import Resources from "./resources";
+var game = new Engine({
+    width: 800,
+    height: 600
+});
+// create an asset loader
+var loader = new Loader();
+// queue resources for loading
+for (var r in Resources) {
+    loader.addResource(Resources[r]);
+}
+var scnMain = new ScnMain(game);
+game.addScene("main", scnMain);
+// uncomment loader after adding resources
+game.start(loader).then(() => {
+    game.goToScene("main");
+    // TODO: Turn on analytics
+    //   Analytics.publish({
+    //      commit: 'test',
+    //      seed: -1,
+    //      started: -1,
+    //      date: 'test'
+    //   });
+});
+// TODO remove /////////////////////////////////////////////////////
+var gamePaused = false;
+game.input.keyboard.on("down", (keyDown) => {
+    switch (keyDown.key) {
+        case Input.Keys.P:
+            if (gamePaused) {
+                game.start();
+                Logger.getInstance().info("game resumed");
+            }
+            else {
+                game.stop();
+                Logger.getInstance().info("game paused");
+            }
+            gamePaused = !gamePaused;
+            break;
+        case Input.Keys.Semicolon:
+            game.isDebug = !game.isDebug;
+            break;
+    }
+});
+////////////////////////////////////////////////////////////////////
+//# sourceMappingURL=game.js.map

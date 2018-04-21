@@ -1,10 +1,13 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es5",
-    "outFile": "game.js",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "target": "es6",
+    "outDir": "../build",
     "sourceMap": true,
-    "baseUrl": ".."
+    "typeRoots": ["../lib/excalibur-dist"],
+    "rootDirs": ["../lib/excalibur-dist"]
   },
-  "include": ["game.ts", "../lib/excalibur-dist/excalibur.d.ts"]
+  "include": ["**/*.ts", "../lib/excalibur-dist/excalibur.d.ts"]
 }

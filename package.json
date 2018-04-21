@@ -3,18 +3,22 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "start": "concurrently \"tsc -p game/tsconfig.json --watch\" serve",
+    "start": "concurrently \"npm run build -- --watch\" \"npm run bundle -- -w\" serve",
     "build": "tsc -p game/tsconfig.json",
+    "bundle": "rollup -c",
     "copy": "copy lib/excalibur/build/dist/**/* lib/excalibur-dist",
     "pretty": "prettier --write game/**",
     "precommit": "pretty-quick --staged"
   },
   "devDependencies": {
+    "chokidar": "^2.0.3",
     "concurrently": "^3.5.1",
     "copy": "^0.3.1",
     "husky": "^0.14.3",
     "prettier": "^1.12.1",
     "pretty-quick": "^1.4.1",
+    "rollup": "^0.58.1",
+    "rollup-plugin-node-resolve": "^3.3.0",
     "serve": "^6.5.5",
     "typescript": "2.8.1"
   }
