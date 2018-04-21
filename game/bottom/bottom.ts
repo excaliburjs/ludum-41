@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import { CollatingGame } from "./collating-game/collatingGame";
+import { CoffeeGame } from "./coffee-game/coffeeGame";
 
 export class BottomSubscene {
   constructor() {}
@@ -16,11 +17,8 @@ export class BottomSubscene {
     collatingGame.show();
   }
 
-  public startTalkToCoworker() {
-    // TODO load the coworker conversation mini-game
-  }
-
-  public startPrinter() {
-    // TODO start the printer mini-game
+  public startCoffeeGame(scene) {
+    let coffeeGame = new CoffeeGame(scene);
+    coffeeGame.show();
   }
 }

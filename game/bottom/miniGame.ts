@@ -13,7 +13,10 @@ export abstract class MiniGame {
 
   public show(): void {
     if (!this._isSetUp) {
-      this.setup(); //initialize actors and add them to the scene and miniGameActors collection.
+      this.setup(); //initialize actors and add them to the miniGameActors collection.
+      for (let i = 0; i < this.miniGameActors.length; i++) {
+        this.scene.add(this.miniGameActors[i]);
+      }
     }
     this._isSetUp = true;
     this.reset();
