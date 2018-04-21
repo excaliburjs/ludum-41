@@ -16,6 +16,11 @@
             Width: 30,
             Height: 50
         },
+        Health: {
+            Pos: new ex.Vector(10, 10),
+            Default: 10,
+            FontSize: 50
+        },
         /**
          * Obstacles spawn interval
          */
@@ -108,6 +113,8 @@
                 color: ex.Color.Blue,
                 collisionType: ex.CollisionType.Active
             });
+            this.engine = engine;
+            this.canJump = true;
             engine.input.pointers.primary.on("down", this.handleInput.bind(this));
             engine.input.keyboard.on("press", this.handleInput.bind(this));
             this.on("precollision", this.handleCollision.bind(this));
@@ -119,17 +126,49 @@
         handleCollision(event) {
             this.vel.y = 0;
             this.acc = ex.Vector.Zero.clone();
+            if (event.side === ex.Side.Bottom) {
+                this.canJump = true;
+            }
         }
         handleInput(event) {
             ex.Logger.getInstance().debug("event:", event);
-            this.jump();
+            if (event instanceof ex.Input.PointerEvent) {
+                if (event.worldY < this.engine.halfDrawHeight) {
+                    this.jump();
+                }
+            }
+            if (event instanceof ex.Input.KeyEvent &&
+                event.key === ex.Input.Keys.Space) {
+                this.jump();
+            }
         }
         jump() {
-            this.vel = this.vel.add(new ex.Vector(0, -400));
-            this.acc = new ex.Vector(0, 800);
+            if (this.canJump) {
+                this.vel = this.vel.add(new ex.Vector(0, -400));
+                this.acc = new ex.Vector(0, 800);
+                this.canJump = false;
+            }
         }
         onPostUpdate(engine, delta) {
             // todo postupdate
+        }
+    }
+
+    class TopHealth extends ex.Label {
+        constructor(engine) {
+            super({
+                x: Config.Health.Pos.x,
+                y: Config.Health.Pos.y + Config.Health.FontSize,
+                fontSize: Config.Health.FontSize,
+                fontUnit: ex.FontUnit.Px,
+                anchor: ex.Vector.Zero.clone(),
+                color: ex.Color.Red,
+                text: Config.Health.Default.toString()
+            });
+            this.health = Config.Health.Default;
+        }
+        onPostUpdate(engine, delta) {
+            this.text = this.health.toString();
         }
     }
 
@@ -138,10 +177,12 @@
             this._engine = _engine;
             this.floor = new Floor(_engine);
             this.player = new TopPlayer(_engine);
+            this.health = new TopHealth(_engine);
         }
         setup(scene) {
             scene.add(this.floor);
             scene.add(this.player);
+            scene.add(this.health);
         }
     }
 

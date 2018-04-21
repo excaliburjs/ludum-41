@@ -3,7 +3,8 @@ import Config from "../config";
 import Resources from "../resources";
 
 export class TopPlayer extends ex.Actor {
-  constructor(engine: ex.Engine) {
+  public canJump: boolean = true;
+  constructor(private engine: ex.Engine) {
     super({
       x: engine.drawWidth / 4,
       y: engine.drawHeight / 4,
@@ -28,16 +29,33 @@ export class TopPlayer extends ex.Actor {
   handleCollision(event: ex.PreCollisionEvent) {
     this.vel.y = 0;
     this.acc = ex.Vector.Zero.clone();
+    if (event.side === ex.Side.Bottom) {
+      this.canJump = true;
+    }
   }
 
   handleInput(event: ex.Input.PointerEvent | ex.Input.KeyEvent) {
     ex.Logger.getInstance().debug("event:", event);
-    this.jump();
+    if (event instanceof ex.Input.PointerEvent) {
+      if (event.worldY < this.engine.halfDrawHeight) {
+        this.jump();
+      }
+    }
+
+    if (
+      event instanceof ex.Input.KeyEvent &&
+      event.key === ex.Input.Keys.Space
+    ) {
+      this.jump();
+    }
   }
 
   jump() {
-    this.vel = this.vel.add(new ex.Vector(0, -400));
-    this.acc = new ex.Vector(0, 800);
+    if (this.canJump) {
+      this.vel = this.vel.add(new ex.Vector(0, -400));
+      this.acc = new ex.Vector(0, 800);
+      this.canJump = false;
+    }
   }
 
   onPostUpdate(engine: ex.Engine, delta: number) {
