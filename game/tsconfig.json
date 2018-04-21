@@ -9,5 +9,9 @@
     "typeRoots": ["../lib/excalibur-dist"],
     "rootDirs": ["../lib/excalibur-dist"]
   },
-  "include": ["**/*.ts", "../lib/excalibur-dist/excalibur.d.ts"]
+  "include": [
+    "game.ts",
+    "excalibur.d.ts",
+    "../lib/excalibur-dist/excalibur.d.ts"
+  ]
 }
