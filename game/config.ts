@@ -29,7 +29,8 @@ export default {
 
   MiniGames: {
     Collating: {
-      NumberOfDocuments: 5
+      NumberOfDocuments: 5,
+      NumberOfWinsToProceed: 3
     }
   },
 

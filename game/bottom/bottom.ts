@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
+import Config from "../config";
 
 export class BottomSubscene {
   constructor() {}
@@ -13,7 +14,10 @@ export class BottomSubscene {
 
   public startPaperCollating(scene) {
     // TODO load the paper collating mini-game
-    var collatingGame = new CollatingGame(scene);
+    var collatingGame = new CollatingGame(
+      scene,
+      Config.MiniGames.Collating.NumberOfWinsToProceed
+    );
     collatingGame.show();
   }
 
