@@ -12,7 +12,7 @@ export class BottomSubscene {
         this.miniGames.push(this.collatingGame);
         this.coffeeGame = new CoffeeGame(scene, this);
         this.miniGames.push(this.coffeeGame);
-        this.printerGame = new PrinterGame(scene);
+        this.printerGame = new PrinterGame(scene, this);
         this.miniGames.push(this.printerGame);
         this.startRandomMiniGame();
     }

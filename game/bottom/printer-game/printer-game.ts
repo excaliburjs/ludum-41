@@ -2,13 +2,14 @@ import * as ex from "excalibur";
 import { MiniGame } from "../miniGame";
 import { Light } from "./light";
 import Config from "../../config";
+import { BottomSubscene } from "../bottom";
 
 export class PrinterGame extends MiniGame {
   protected miniGameActors: ex.Actor[] = [];
 
   private _lights: Light[] = [];
-  constructor(scene: ex.Scene) {
-    super(scene);
+  constructor(scene: ex.Scene, bottomSubscene: BottomSubscene) {
+    super(scene, bottomSubscene);
 
     let startX = scene.engine.halfDrawWidth;
     let startY = scene.engine.halfDrawHeight + 100;

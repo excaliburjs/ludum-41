@@ -3,8 +3,8 @@ import { MiniGame } from "../miniGame";
 import { Light } from "./light";
 import Config from "../../config";
 export class PrinterGame extends MiniGame {
-    constructor(scene) {
-        super(scene);
+    constructor(scene, bottomSubscene) {
+        super(scene, bottomSubscene);
         this.miniGameActors = [];
         this._lights = [];
         let startX = scene.engine.halfDrawWidth;
