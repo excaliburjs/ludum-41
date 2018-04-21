@@ -15,7 +15,7 @@ export class Platform extends ex.Actor {
       y,
       height: Config.Platform.Height,
       width: Config.Platform.Width,
-      color: ex.Color.Green,
+      color: ex.Color.Gray,
       collisionType: ex.CollisionType.Fixed,
       vel: new ex.Vector(speed, 0)
       // Anchor to bottom since
