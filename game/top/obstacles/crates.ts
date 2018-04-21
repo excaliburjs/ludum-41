@@ -11,13 +11,14 @@ export class Crates extends Obstacle {
     super.onInitialize(engine);
 
     const crateArgs = {
+      anchor: ex.Vector.Zero,
       width: 16,
       height: 16
     };
 
-    const crate1 = new ex.Actor({ ...crateArgs, y: 0 });
-    const crate2 = new ex.Actor({ ...crateArgs, y: -16 });
-    const crate3 = new ex.Actor({ ...crateArgs, y: -32 });
+    const crate1 = new ex.Actor({ ...crateArgs, y: -16 });
+    const crate2 = new ex.Actor({ ...crateArgs, y: -32 });
+    const crate3 = new ex.Actor({ ...crateArgs, y: -48 });
     crate1.addDrawing(Resources.txCrate);
     crate2.addDrawing(Resources.txCrate);
     crate3.addDrawing(Resources.txCrate);

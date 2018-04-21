@@ -18,7 +18,7 @@ export class Background extends ex.Actor {
       width: engine.canvasWidth * 2,
       height: Config.Floor.Height,
       anchor: ex.Vector.Zero,
-      vel: new ex.Vector(Config.Floor.Speed, 0)
+      vel: new ex.Vector(Config.Floor.Speed * 1.5, 0)
     });
   }
 
