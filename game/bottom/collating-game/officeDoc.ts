@@ -2,6 +2,7 @@ import { Actor, Color, Label } from "excalibur";
 
 export class OfficeDoc extends Actor {
   private _pageNumber: number;
+  private _officeDocSet: OfficeDocSet;
 
   constructor(pageNumber: number) {
     super();
@@ -35,6 +36,10 @@ export class OfficeDocSet {
     } else {
       return false;
     }
+  }
+
+  public clear(): void {
+    this._playerSortedStack = [];
   }
 
   public isComplete(): boolean {

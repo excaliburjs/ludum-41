@@ -28,6 +28,9 @@ export class OfficeDocSet {
             return false;
         }
     }
+    clear() {
+        this._playerSortedStack = [];
+    }
     isComplete() {
         return this._playerSortedStack.length === this._numDocuments;
     }
