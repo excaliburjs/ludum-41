@@ -1,4 +1,4 @@
-import * as ex from "excalibur";
+import * as ex from 'excalibur';
 import Config from "../config";
 export class TopPlayer extends ex.Actor {
     constructor(engine) {
@@ -29,7 +29,7 @@ export class TopPlayer extends ex.Actor {
         this.acc = new ex.Vector(0, 800);
     }
     onPostUpdate(engine, delta) {
-        // todo postupdate
+        console.log(this.vel);
     }
 }
 //# sourceMappingURL=top-player.js.map

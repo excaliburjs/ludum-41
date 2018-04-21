@@ -1,4 +1,5 @@
-import * as ex from "excalibur";
+
+import * as ex from 'excalibur';
 import Config from "../config";
 
 export class TopPlayer extends ex.Actor {
@@ -36,6 +37,6 @@ export class TopPlayer extends ex.Actor {
   }
 
   onPostUpdate(engine: ex.Engine, delta: number) {
-    // todo postupdate
+    console.log(this.vel);
   }
 }

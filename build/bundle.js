@@ -68,7 +68,7 @@
             this.acc = new ex.Vector(0, 800);
         }
         onPostUpdate(engine, delta) {
-            // todo postupdate
+            console.log(this.vel);
         }
     }
 
