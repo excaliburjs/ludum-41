@@ -68,7 +68,7 @@ export class Background extends ex.Actor {
       ];
     }
     this.drawToOffscreen(start, to);
-    ex.Logger.getInstance().info("Picked bg slices", this.drawSlices.length);
+    ex.Logger.getInstance().debug("Picked bg slices", this.drawSlices.length);
   }
 
   drawToOffscreen(start, to) {
