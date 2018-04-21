@@ -15,7 +15,8 @@ export class TopHealth extends ex.Label {
     }
     onPostUpdate(engine, delta) {
         if (this.health < 1) {
-            // todo trigger endgame
+            engine.goToScene("end");
+            return;
         }
         this.text = this.health.toString();
     }

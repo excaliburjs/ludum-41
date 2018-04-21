@@ -1,6 +1,48 @@
 (function (ex) {
     'use strict';
 
+    class ScnEnd extends ex.Scene {
+        onInitialize(engine) {
+            const gameOverLabel = new ex.Label({
+                x: this.engine.drawWidth / 2,
+                y: this.engine.drawHeight / 2,
+                text: "Your boss caught you daydreaming. Game over.",
+                textAlign: ex.TextAlign.Center,
+                fontSize: 36,
+                fontFamily: "Arial"
+            });
+            this.add(gameOverLabel);
+            const resetButton = new ResetButton({
+                x: engine.drawWidth / 2,
+                y: engine.drawHeight / 2 + 100
+            });
+            this.add(resetButton);
+        }
+    }
+    class ResetButton extends ex.Actor {
+        /**
+         *
+         */
+        constructor({ x, y }) {
+            super({ x, y, width: 100, height: 50, color: ex.Color.Blue });
+        }
+        onInitialize(engine) {
+            this.on("pointerup", () => this.reset(engine));
+            const resetLabel = new ex.Label({
+                x: 0,
+                y: 15,
+                text: "Restart",
+                textAlign: ex.TextAlign.Center,
+                fontSize: 24,
+                color: ex.Color.White
+            });
+            this.add(resetLabel);
+        }
+        reset(engine) {
+            engine.goToScene("main");
+        }
+    }
+
     const rand = new ex.Random(12345678910);
     var Config = {
         AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
@@ -219,7 +261,8 @@
         }
         onPostUpdate(engine, delta) {
             if (this.health < 1) {
-                // todo trigger endgame
+                engine.goToScene("end");
+                return;
             }
             this.text = this.health.toString();
         }
@@ -228,14 +271,19 @@
     class TopSubscene {
         constructor(_engine) {
             this._engine = _engine;
-            this.floor = new Floor(_engine, this);
-            this.player = new TopPlayer(_engine);
-            this.healthMeter = new TopHealth(_engine);
         }
         setup(scene) {
+            this.floor = new Floor(this._engine, this);
+            this.player = new TopPlayer(this._engine);
+            this.healthMeter = new TopHealth(this._engine);
             scene.add(this.floor);
             scene.add(this.player);
             scene.add(this.healthMeter);
+        }
+        teardown(scene) {
+            scene.remove(this.floor);
+            scene.remove(this.player);
+            scene.remove(this.healthMeter);
         }
     }
 
@@ -337,6 +385,7 @@
         setup(scene) {
             this.startPaperCollating(scene);
         }
+        teardown(scene) { }
         startPaperCollating(scene) {
             // TODO load the paper collating mini-game
             var collatingGame = new CollatingGame(scene);
@@ -351,14 +400,18 @@
     }
 
     class ScnMain extends ex.Scene {
-        constructor(engine) {
-            super(engine);
-            let top = new TopSubscene(engine);
-            let bottom = new BottomSubscene();
-            top.setup(this);
-            bottom.setup(this);
+        onInitialize(engine) {
+            this._top = new TopSubscene(this.engine);
+            this._bottom = new BottomSubscene();
         }
-        onInitialize(engine) { }
+        onActivate() {
+            this._top.setup(this);
+            this._bottom.setup(this);
+        }
+        onDeactivate() {
+            this._top.teardown(this);
+            this._bottom.teardown(this);
+        }
     }
 
     var game = new ex.Engine({
@@ -375,8 +428,8 @@
     for (var r in Resources) {
         loader.addResource(Resources[r]);
     }
-    var scnMain = new ScnMain(game);
-    game.addScene("main", scnMain);
+    game.addScene("main", new ScnMain(game));
+    game.addScene("end", new ScnEnd(game));
     // uncomment loader after adding resources
     game.start(loader).then(() => {
         game.goToScene("main");
@@ -405,6 +458,9 @@
                 break;
             case ex.Input.Keys.Semicolon:
                 game.isDebug = !game.isDebug;
+                break;
+            case ex.Input.Keys.Esc:
+                game.goToScene("end");
                 break;
         }
     });

@@ -4,6 +4,7 @@ export class BottomSubscene {
     setup(scene) {
         this.startPaperCollating(scene);
     }
+    teardown(scene) { }
     startPaperCollating(scene) {
         // TODO load the paper collating mini-game
         var collatingGame = new CollatingGame(scene);

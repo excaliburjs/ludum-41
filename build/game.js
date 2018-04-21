@@ -1,4 +1,5 @@
 import { Engine, Loader, Logger, Input, Physics } from "excalibur";
+import { ScnEnd } from "./scnEnd";
 import { ScnMain } from "./scnMain";
 import Resources from "./resources";
 import Config from "./config";
@@ -16,8 +17,8 @@ var loader = new Loader();
 for (var r in Resources) {
     loader.addResource(Resources[r]);
 }
-var scnMain = new ScnMain(game);
-game.addScene("main", scnMain);
+game.addScene("main", new ScnMain(game));
+game.addScene("end", new ScnEnd(game));
 // uncomment loader after adding resources
 game.start(loader).then(() => {
     game.goToScene("main");
@@ -46,6 +47,9 @@ game.input.keyboard.on("down", (keyDown) => {
             break;
         case Input.Keys.Semicolon:
             game.isDebug = !game.isDebug;
+            break;
+        case Input.Keys.Esc:
+            game.goToScene("end");
             break;
     }
 });
