@@ -1,9 +1,10 @@
 import { Engine, Loader, Logger, Input, Physics } from "excalibur";
 import { ScnMain } from "./scnMain";
 import Resources from "./resources";
+import Config from "./config";
 var game = new Engine({
-    width: 800,
-    height: 600
+    width: Config.GameWidth,
+    height: Config.GameHeight
 });
 // Physics
 // ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.RigidBody

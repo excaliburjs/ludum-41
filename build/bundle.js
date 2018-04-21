@@ -3,6 +3,8 @@
 
     var Config = {
         AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
+        GameWidth: 800,
+        GameHeight: 600,
         // Top Floor config
         Floor: {
             Speed: -100,
@@ -68,7 +70,7 @@
             this.acc = new ex.Vector(0, 800);
         }
         onPostUpdate(engine, delta) {
-            console.log(this.vel);
+            // todo postupdate
         }
     }
 
@@ -84,11 +86,42 @@
         }
     }
 
+    class BottomPlayer extends ex.Actor {
+        onInitialize() {
+            this._setUpDrawing();
+            // TODO set up player movement (moves to mouse-click location)
+        }
+        _setUpDrawing() {
+            // TODO set up player sprites, randomly pick one if there are multiple spritesheets
+        }
+    }
+
+    class Bottom {
+        constructor() {
+            this.bottomPlayer = new BottomPlayer({
+                x: 400,
+                y: 400,
+                width: 50,
+                height: 50,
+                color: ex.Color.Blue
+            });
+        }
+        setup(scene) {
+            // TODO add the bottom player
+            scene.add(this.bottomPlayer);
+        }
+        startPaperCollating() {
+            // TODO open the paper collating window
+        }
+    }
+
     class ScnMain extends ex.Scene {
         constructor(engine) {
             super(engine);
             let top = new Top(engine);
+            let bottom = new Bottom();
             top.setup(this);
+            bottom.setup(this);
         }
         onInitialize(engine) { }
     }
@@ -99,8 +132,8 @@
     };
 
     var game = new ex.Engine({
-        width: 800,
-        height: 600
+        width: Config.GameWidth,
+        height: Config.GameHeight
     });
     // Physics
     // ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.RigidBody

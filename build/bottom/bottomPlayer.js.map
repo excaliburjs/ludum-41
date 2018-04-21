@@ -1,0 +1,1 @@
+{"version":3,"file":"bottomPlayer.js","sourceRoot":"","sources":["../../game/bottom/bottomPlayer.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,KAAK,EAAE,MAAM,WAAW,CAAC;AAElC,MAAM,mBAAoB,SAAQ,KAAK;IAC9B,YAAY;QACjB,IAAI,CAAC,aAAa,EAAE,CAAC;QAErB,8DAA8D;IAChE,CAAC;IAEO,aAAa;QACnB,mFAAmF;IACrF,CAAC;CACF"}

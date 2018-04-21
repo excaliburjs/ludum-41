@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
 import { Floor } from "./floor";
-import { TopPlayer} from "./top-player";
+import { TopPlayer } from "./top-player";
 
 export class Top {
   floor: Floor;
