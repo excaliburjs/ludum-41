@@ -3,11 +3,13 @@ import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
 import { MiniGame } from "./miniGame";
+import { PrinterGame } from "./printer-game/printer-game";
 
 export class BottomSubscene {
   private miniGames: MiniGame[] = [];
   private collatingGame: CollatingGame;
   private coffeeGame: CoffeeGame;
+  private printerGame: PrinterGame;
 
   constructor() {}
 
@@ -20,6 +22,9 @@ export class BottomSubscene {
 
     this.coffeeGame = new CoffeeGame(scene);
     this.miniGames.push(this.coffeeGame);
+
+    this.printerGame = new PrinterGame(scene);
+    this.miniGames.push(this.printerGame);
 
     this.startRandomMiniGame();
   }

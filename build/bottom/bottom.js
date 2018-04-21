@@ -2,6 +2,7 @@ import * as ex from "excalibur";
 import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
+import { PrinterGame } from "./printer-game/printer-game";
 export class BottomSubscene {
     constructor() {
         this.miniGames = [];
@@ -11,6 +12,8 @@ export class BottomSubscene {
         this.miniGames.push(this.collatingGame);
         this.coffeeGame = new CoffeeGame(scene);
         this.miniGames.push(this.coffeeGame);
+        this.printerGame = new PrinterGame(scene);
+        this.miniGames.push(this.printerGame);
         this.startRandomMiniGame();
     }
     teardown(scene) { }
