@@ -3,7 +3,7 @@ import Config from "../config";
 import Resources from "../resources";
 
 export class TopPlayer extends ex.Actor {
-  public canJump: boolean = true;
+  public canJump: boolean = false;
   constructor(private engine: ex.Engine) {
     super({
       x: engine.drawWidth / 4,
@@ -16,7 +16,6 @@ export class TopPlayer extends ex.Actor {
     });
 
     engine.input.pointers.primary.on("down", this.handleInput.bind(this));
-    engine.input.keyboard.on("press", this.handleInput.bind(this));
 
     this.on("precollision", this.handleCollision.bind(this));
   }
@@ -27,25 +26,14 @@ export class TopPlayer extends ex.Actor {
 
   // le-sigh workaround for odd collision tunneling issue
   handleCollision(event: ex.PreCollisionEvent) {
-    this.vel.y = 0;
-    this.acc = ex.Vector.Zero.clone();
     if (event.side === ex.Side.Bottom) {
       this.canJump = true;
     }
   }
 
-  handleInput(event: ex.Input.PointerEvent | ex.Input.KeyEvent) {
+  handleInput(event: ex.Input.PointerEvent) {
     ex.Logger.getInstance().debug("event:", event);
-    if (event instanceof ex.Input.PointerEvent) {
-      if (event.worldY < this.engine.halfDrawHeight) {
-        this.jump();
-      }
-    }
-
-    if (
-      event instanceof ex.Input.KeyEvent &&
-      event.key === ex.Input.Keys.Space
-    ) {
+    if (event.worldPos.y < this.engine.halfDrawHeight) {
       this.jump();
     }
   }
@@ -59,6 +47,16 @@ export class TopPlayer extends ex.Actor {
   }
 
   onPostUpdate(engine: ex.Engine, delta: number) {
-    // todo postupdate
+    if (!this.canJump) {
+      let virtualVel = new ex.Vector(
+        -Config.Floor.Speed,
+        ex.Util.clamp(this.vel.y, -50, 50)
+      );
+      this.rotation = virtualVel.toAngle();
+    } else {
+      this.rotation = 0;
+    }
+
+    this.vel.x = 0;
   }
 }
