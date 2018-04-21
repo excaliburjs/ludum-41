@@ -1,19 +1,21 @@
+import * as ex from "excalibur";
 import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
 export class BottomSubscene {
-    constructor() { }
+    constructor() {
+        this.miniGames = [];
+    }
     setup(scene) {
-        this.startPaperCollating(scene);
+        this.collatingGame = new CollatingGame(scene);
+        this.miniGames.push(this.collatingGame);
+        this.coffeeGame = new CoffeeGame(scene);
+        this.miniGames.push(this.coffeeGame);
+        this.startRandomMiniGame();
     }
     teardown(scene) { }
-    startPaperCollating(scene) {
-        // TODO load the paper collating mini-game
-        var collatingGame = new CollatingGame(scene);
-        collatingGame.show();
-    }
-    startCoffeeGame(scene) {
-        let coffeeGame = new CoffeeGame(scene);
-        coffeeGame.show();
+    startRandomMiniGame() {
+        let miniGame = this.miniGames[ex.Util.randomIntInRange(0, this.miniGames.length - 1)];
+        miniGame.show();
     }
 }
 //# sourceMappingURL=bottom.js.map

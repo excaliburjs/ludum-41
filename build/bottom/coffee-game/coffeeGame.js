@@ -5,8 +5,6 @@ export class CoffeeGame extends MiniGame {
     constructor() {
         super(...arguments);
         this._stepCount = 0;
-        // constructor(scene: ex.Scene){
-        // }
     }
     setup() {
         let coffeeFilter = new CoffeeItem({
@@ -50,7 +48,7 @@ export class CoffeeGame extends MiniGame {
             color: ex.Color.Orange
         });
         this.miniGameActors.push(coffeeCup);
-        this._scene.on("coffeeClick", () => {
+        this.scene.on("coffeeClick", () => {
             console.log("coffee click");
             this._stepCount++;
             if (this._stepCount >= this.miniGameActors.length) {

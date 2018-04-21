@@ -52,7 +52,7 @@ export class CoffeeGame extends MiniGame {
     });
     this.miniGameActors.push(coffeeCup);
 
-    this._scene.on("coffeeClick", () => {
+    this.scene.on("coffeeClick", () => {
       console.log("coffee click");
       this._stepCount++;
       if (this._stepCount >= this.miniGameActors.length) {
@@ -71,8 +71,4 @@ export class CoffeeGame extends MiniGame {
   public reset() {
     this._stepCount = 0;
   }
-
-  // constructor(scene: ex.Scene){
-
-  // }
 }
