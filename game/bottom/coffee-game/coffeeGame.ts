@@ -1,9 +1,14 @@
 import * as ex from "excalibur";
 import { MiniGame } from "./../MiniGame";
 import { CoffeeItem } from "./coffeeItem";
+import { BottomSubscene } from "../bottom";
 
 export class CoffeeGame extends MiniGame {
   private _stepCount = 0;
+
+  constructor(scene: ex.Scene, bottomSubscene: BottomSubscene) {
+    super(scene, bottomSubscene);
+  }
 
   public setup() {
     let coffeeFilter = new CoffeeItem({

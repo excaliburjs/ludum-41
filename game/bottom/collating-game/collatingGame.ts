@@ -2,15 +2,21 @@ import { Scene, Label, Color } from "excalibur";
 import { MiniGame } from "../../bottom/miniGame";
 import { OfficeDocSet, OfficeDoc } from "./officeDoc";
 import Config from "../../config";
+import { BottomSubscene } from "../bottom";
+
 export class CollatingGame extends MiniGame {
   private _scrambledOfficeDocs: Array<OfficeDoc>;
   private _docLabels: Array<Label> = [];
   private _docSet: OfficeDocSet;
-  private _winsRequired: number;
-  private _currentWins: number;
+  private _winsRequired: number = 0;
+  private _currentWins: number = 0;
 
-  constructor(scene: Scene, winsRequired: number) {
-    super(scene);
+  constructor(
+    scene: Scene,
+    winsRequired: number,
+    bottomSubscene: BottomSubscene
+  ) {
+    super(scene, bottomSubscene);
     this._winsRequired = winsRequired;
   }
 
@@ -36,9 +42,8 @@ export class CollatingGame extends MiniGame {
       });
 
       docLabel.fontSize = 16;
-      this.scene.add(this._scrambledOfficeDocs[i]);
-      this.scene.add(docLabel);
       this._docLabels.push(docLabel);
+      this.miniGameActors.push(docLabel);
       this.miniGameActors.push(this._scrambledOfficeDocs[i]);
     }
   }
@@ -50,12 +55,15 @@ export class CollatingGame extends MiniGame {
       var clickedDoc = <OfficeDoc>evt.target;
       if (this._docSet.tryAddToSortedStack(clickedDoc)) {
         //update ui
+        clickedDoc.color = Color.Magenta;
         if (this._docSet.isComplete()) {
           //you won
           console.log("you won the collating game");
           this._currentWins++;
           if (this._currentWins >= this._winsRequired) {
             //move on to the next mini game
+            this._currentWins = 0;
+            this.onSucceed();
           } else {
             this.resetDocuments();
           }
@@ -70,6 +78,7 @@ export class CollatingGame extends MiniGame {
     this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
     for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
       this._scrambledOfficeDocs[i].x = 100 * i + 200;
+      this._scrambledOfficeDocs[i].color = Color.Green;
       this._docLabels[i].text = (
         this._scrambledOfficeDocs[i].pageNumber + 1
       ).toString();
