@@ -23,7 +23,10 @@ var Analytics = /** @class */ (function () {
     return Analytics;
 }());
 var Config = {
-    AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw=="
+    // Analytics config
+    AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
+    // Floor config
+    FloorSpeed: -100
 };
 var Preferences = /** @class */ (function () {
     function Preferences() {
@@ -34,10 +37,51 @@ var Resources = {
     sampleImg: new ex.Texture("game/assets/img/sample-image.png"),
     sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
 };
+/// <reference path="../../lib/excalibur-dist/excalibur.d.ts" />
+var Floor = /** @class */ (function (_super) {
+    __extends(Floor, _super);
+    /**
+     *
+     */
+    function Floor(engine) {
+        return _super.call(this, {
+            x: 0,
+            y: engine.drawHeight / 2,
+            width: engine.drawWidth * 2,
+            height: 20,
+            color: ex.Color.Red,
+            anchor: new ex.Vector(0, 0.5),
+            vel: new ex.Vector(Config.FloorSpeed, 0) // speed of the runner
+        }) || this;
+    }
+    Floor.prototype.onPostUpdate = function (_engine, delta) {
+        if (this.x < -this.getWidth() / 2) {
+            console.log("floor reset!");
+            this.x = 0;
+        }
+    };
+    return Floor;
+}(ex.Actor));
+/// <reference path="../../lib/excalibur-dist/excalibur.d.ts" />
+/// <reference path="floor.ts" />
+var Top = /** @class */ (function () {
+    function Top(_engine) {
+        this._engine = _engine;
+        this.floor = new Floor(_engine);
+    }
+    Top.prototype.setup = function (scene) {
+        scene.add(this.floor);
+    };
+    return Top;
+}());
+/// <reference path="top/top.ts" />
 var ScnMain = /** @class */ (function (_super) {
     __extends(ScnMain, _super);
-    function ScnMain() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function ScnMain(engine) {
+        var _this = _super.call(this, engine) || this;
+        var top = new Top(engine);
+        top.setup(_this);
+        return _this;
     }
     ScnMain.prototype.onInitialize = function (engine) { };
     return ScnMain;

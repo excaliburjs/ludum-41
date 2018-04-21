@@ -3,7 +3,8 @@
   "compilerOptions": {
     "target": "es5",
     "outFile": "game.js",
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".."
   },
   "include": ["game.ts", "../lib/excalibur-dist/excalibur.d.ts"]
 }
