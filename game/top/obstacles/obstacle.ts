@@ -1,27 +1,19 @@
 import * as ex from "excalibur";
-import Config from "../config";
+import Config from "../../config";
+import Resources from "../../resources";
 
-interface Props {
-  height: number;
-  x: number;
-  y: number;
+export interface Props {
   speed: number;
 }
 
-export class Obstacle extends ex.Actor {
-  static minHeight = 10;
-  static maxHeight = 50;
-
+export abstract class Obstacle extends ex.Actor {
   /**
    *
    */
-  constructor({ height, x, y, speed }: Props) {
+  constructor({ x, y, speed }: ex.IActorArgs & Props) {
     super({
       x,
       y,
-      height,
-      width: 10,
-      color: ex.Color.Yellow,
       vel: new ex.Vector(speed, 0)
     });
 
