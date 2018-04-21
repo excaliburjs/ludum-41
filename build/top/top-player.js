@@ -21,6 +21,28 @@ export class TopPlayer extends ex.Actor {
     onInitialize() {
         this.z = 5;
         this.addDrawing(Resources.txBike);
+        // dust
+        const dustEmitter = new ex.ParticleEmitter(-(this.getWidth() / 2) - 8, Config.TopPlayer.Height / 2 - 2, 5, 2);
+        dustEmitter.isEmitting = false;
+        dustEmitter.emitterType = ex.EmitterType.Rectangle;
+        dustEmitter.radius = 5;
+        dustEmitter.minVel = 327;
+        dustEmitter.maxVel = 296;
+        dustEmitter.minAngle = 3.5;
+        dustEmitter.maxAngle = 3.4;
+        dustEmitter.emitRate = 118;
+        dustEmitter.opacity = 0.5;
+        dustEmitter.fadeFlag = true;
+        dustEmitter.particleLife = 200;
+        dustEmitter.maxSize = 1;
+        dustEmitter.minSize = 1;
+        dustEmitter.startSize = 0;
+        dustEmitter.endSize = 0;
+        dustEmitter.acceleration = new ex.Vector(-69, 484);
+        dustEmitter.beginColor = ex.Color.Transparent;
+        dustEmitter.endColor = ex.Color.Black;
+        this.add(dustEmitter);
+        this.dustEmitter = dustEmitter;
     }
     // le-sigh workaround for odd collision tunneling issue
     handleCollision(event) {
@@ -45,8 +67,10 @@ export class TopPlayer extends ex.Actor {
         if (!this.canJump) {
             let virtualVel = new ex.Vector(-Config.Floor.Speed, ex.Util.clamp(this.vel.y, -50, 50));
             this.rotation = virtualVel.toAngle();
+            this.dustEmitter.isEmitting = false;
         }
         else {
+            this.dustEmitter.isEmitting = true;
             if (this.x < engine.drawWidth * Config.TopPlayer.StartingXPercent) {
                 this.vel.x =
                     (engine.drawWidth * Config.TopPlayer.StartingXPercent - this.x) / 2;
