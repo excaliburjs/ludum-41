@@ -1,10 +1,10 @@
-import { Actor, Color, Vector } from "excalibur";
+import { Actor, Color, Label } from "excalibur";
 
 export class OfficeDoc extends Actor {
   private _pageNumber: number;
 
   constructor(pageNumber: number) {
-    super({ x: 100 * pageNumber + 200, width: 50, height: 50, y: 500 });
+    super();
     this._pageNumber = pageNumber;
     this.color = Color.Green;
   }
