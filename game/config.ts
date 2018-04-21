@@ -34,8 +34,11 @@ export default {
   },
 
   Platform: {
-    Width: 40,
-    Height: 40
+    Width: 100,
+    Height: 10,
+    HeightAboveFloor: 60,
+    MinSpawnInterval: 2000,
+    MaxSpawnInterval: 3000
   },
 
   /**
