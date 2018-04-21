@@ -372,7 +372,7 @@
 
     class OfficeDoc extends ex.Actor {
         constructor(pageNumber) {
-            super({ x: 100 * pageNumber + 200, width: 50, height: 50, y: 500 });
+            super();
             this._pageNumber = pageNumber;
             this.color = ex.Color.Green;
         }
@@ -419,6 +419,7 @@
     class CollatingGame extends MiniGame {
         constructor(scene) {
             super(scene);
+            this._docLabels = [];
         }
         setup() {
             var numDocs = Config.MiniGames.Collating.NumberOfDocuments;
@@ -426,13 +427,33 @@
             this._scrambledOfficeDocs = docSet.getScrambledDocumentSet();
             for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
                 //add to the scene here
+                this._scrambledOfficeDocs[i].x = 100 * i + 200;
+                this._scrambledOfficeDocs[i].setWidth(50);
+                this._scrambledOfficeDocs[i].setHeight(50);
+                this._scrambledOfficeDocs[i].y = 500;
+                var docLabel = new ex.Label({
+                    x: this._scrambledOfficeDocs[i].x,
+                    y: this._scrambledOfficeDocs[i].y + 15,
+                    color: ex.Color.Red,
+                    text: this._scrambledOfficeDocs[i].pageNumber.toString()
+                });
+                docLabel.fontSize = 16;
                 this.scene.add(this._scrambledOfficeDocs[i]);
+                this.scene.add(docLabel);
+                this._docLabels.push(docLabel);
                 this.miniGameActors.push(this._scrambledOfficeDocs[i]);
             }
         }
-        reset() { }
-        start() { }
-        finish() { }
+        //shuffle the pages around visually
+        reset() {
+            for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
+                if (this._scrambledOfficeDocs[i] instanceof OfficeDoc) {
+                    this._scrambledOfficeDocs[i].x = 100 * i + 200;
+                    var label = this._scrambledOfficeDocs[i].pageNumber + 1;
+                    this._docLabels[i].text = label.toString();
+                }
+            }
+        }
     }
 
     class BottomSubscene {

@@ -1,7 +1,7 @@
 import { Actor, Color } from "excalibur";
 export class OfficeDoc extends Actor {
     constructor(pageNumber) {
-        super({ x: 100 * pageNumber + 200, width: 50, height: 50, y: 500 });
+        super();
         this._pageNumber = pageNumber;
         this.color = Color.Green;
     }
