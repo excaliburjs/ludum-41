@@ -11,7 +11,7 @@ export default {
 
   // Top Floor config
   Floor: {
-    Speed: -100,
+    Speed: -200,
     Height: 5
   },
 

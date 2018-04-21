@@ -6,7 +6,7 @@ export default {
     GameHeight: 800,
     // Top Floor config
     Floor: {
-        Speed: -100,
+        Speed: -200,
         Height: 5
     },
     // Top Player config
