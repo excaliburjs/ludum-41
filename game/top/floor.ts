@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import Config from "../config";
 import Obstacles from "./obstacles";
+import { Platform } from "./platform";
 import { TopSubscene } from "./top";
 
 export class Floor extends ex.Actor {

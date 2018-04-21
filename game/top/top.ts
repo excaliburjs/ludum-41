@@ -4,6 +4,7 @@ import Obstacles from "./obstacles";
 import { Floor } from "./floor";
 import { TopPlayer } from "./top-player";
 import { TopHealth } from "./health";
+import { Platform } from "./platform";
 
 export class TopSubscene {
   floor: Floor;
@@ -18,7 +19,10 @@ export class TopSubscene {
     this.player = new TopPlayer(this._engine);
     this.healthMeter = new TopHealth(this._engine);
     this.spawnTimer = new ex.Timer(
-      () => this.spawnObstacle(this._engine, scene),
+      () => {
+        this.spawnObstacle(this._engine, scene);
+        this.spawnPlatform(this._engine, scene);
+      },
       1000,
       true
     );
@@ -55,6 +59,19 @@ export class TopSubscene {
       Config.ObstacleSpawnMaxInterval
     );
     this.spawnTimer.reset(newInterval);
+  }
+
+  spawnPlatform(engine: ex.Engine, scene: ex.Scene) {
+    const x = engine.drawWidth + 100;
+    const platform = new Platform({
+      x,
+      y: this.floor.getTop() - Config.Platform.Height / 2,
+      speed: Config.Floor.Speed
+    });
+
+    ex.Logger.getInstance().debug("Spawned platform", platform);
+
+    scene.add(platform);
   }
 
   onPlayerHitObstacle = () => {
