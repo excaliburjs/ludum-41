@@ -32,6 +32,7 @@
     var Resources = {
         sampleImg: new ex.Texture("game/assets/img/sample-image.png"),
         txBike: new ex.Texture("game/assets/img/bike.png"),
+        txCrate: new ex.Texture("game/assets/img/crate.png"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -91,14 +92,10 @@
         /**
          *
          */
-        constructor({ height, x, y, speed, topSubscene }) {
+        constructor({ x, y, speed, topSubscene }) {
             super({
                 x,
                 y,
-                height,
-                width: 10,
-                color: ex.Color.Yellow,
-                collisionType: ex.CollisionType.Passive,
                 vel: new ex.Vector(speed, 0)
             });
             this.onExitViewPort = (engine) => (e) => {
@@ -124,8 +121,40 @@
             this.on("collisionstart", this.onCollision);
         }
     }
-    Obstacle.minHeight = 10;
-    Obstacle.maxHeight = 50;
+
+    class Crate extends Obstacle {
+        constructor(props) {
+            super(Object.assign({}, props, { width: 16, height: 16 }));
+        }
+        onInitialize(engine) {
+            super.onInitialize(engine);
+            this.addDrawing(Resources.txCrate);
+        }
+    }
+
+    class Crates extends Obstacle {
+        constructor(props) {
+            super(Object.assign({}, props, { width: 16, height: 16 * 3 }));
+        }
+        onInitialize(engine) {
+            super.onInitialize(engine);
+            const crateArgs = {
+                width: 16,
+                height: 16
+            };
+            const crate1 = new ex.Actor(Object.assign({}, crateArgs, { y: 0 }));
+            const crate2 = new ex.Actor(Object.assign({}, crateArgs, { y: -16 }));
+            const crate3 = new ex.Actor(Object.assign({}, crateArgs, { y: -32 }));
+            crate1.addDrawing(Resources.txCrate);
+            crate2.addDrawing(Resources.txCrate);
+            crate3.addDrawing(Resources.txCrate);
+            this.add(crate1);
+            this.add(crate2);
+            this.add(crate3);
+        }
+    }
+
+    const obstacles = [Crate, Crates];
 
     class Floor extends ex.Actor {
         /**
@@ -149,9 +178,8 @@
         }
         spawnObstacle(engine) {
             const x = engine.drawWidth + 200;
-            const height = Config.Rand.integer(Obstacle.minHeight, Obstacle.maxHeight);
-            const ob = new Obstacle({
-                height,
+            const ObstacleDef = obstacles[Config.Rand.integer(0, obstacles.length - 1)];
+            const ob = new ObstacleDef({
                 x,
                 y: this.getTop(),
                 speed: Config.Floor.Speed,

@@ -1,32 +1,24 @@
 import * as ex from "excalibur";
-import Config from "../config";
-import { TopSubscene } from "./top";
-import { TopPlayer } from "./top-player";
+import Config from "../../config";
+import Resources from "../../resources";
+import { TopSubscene } from "../top";
+import { TopPlayer } from "../top-player";
 
-interface Props {
-  height: number;
-  x: number;
-  y: number;
+export interface Props {
   speed: number;
   topSubscene: TopSubscene;
 }
 
-export class Obstacle extends ex.Actor {
-  static minHeight = 10;
-  static maxHeight = 50;
-
+export abstract class Obstacle extends ex.Actor {
   private topSubscene: TopSubscene;
+
   /**
    *
    */
-  constructor({ height, x, y, speed, topSubscene }: Props) {
+  constructor({ x, y, speed, topSubscene }: ex.IActorArgs & Props) {
     super({
       x,
       y,
-      height,
-      width: 10,
-      color: ex.Color.Yellow,
-      collisionType: ex.CollisionType.Passive,
       vel: new ex.Vector(speed, 0)
     });
 

@@ -1,17 +1,13 @@
 import * as ex from "excalibur";
-import { TopPlayer } from "./top-player";
+import { TopPlayer } from "../top-player";
 export class Obstacle extends ex.Actor {
     /**
      *
      */
-    constructor({ height, x, y, speed, topSubscene }) {
+    constructor({ x, y, speed, topSubscene }) {
         super({
             x,
             y,
-            height,
-            width: 10,
-            color: ex.Color.Yellow,
-            collisionType: ex.CollisionType.Passive,
             vel: new ex.Vector(speed, 0)
         });
         this.onExitViewPort = (engine) => (e) => {
@@ -37,6 +33,4 @@ export class Obstacle extends ex.Actor {
         this.on("collisionstart", this.onCollision);
     }
 }
-Obstacle.minHeight = 10;
-Obstacle.maxHeight = 50;
 //# sourceMappingURL=obstacle.js.map

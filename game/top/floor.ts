@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
 import Config from "../config";
-import { Obstacle } from "./obstacle";
+import Obstacles from "./obstacles";
 import { TopSubscene } from "./top";
 
 export class Floor extends ex.Actor {
@@ -32,9 +32,8 @@ export class Floor extends ex.Actor {
 
   spawnObstacle(engine: ex.Engine) {
     const x = engine.drawWidth + 200;
-    const height = Config.Rand.integer(Obstacle.minHeight, Obstacle.maxHeight);
-    const ob = new Obstacle({
-      height,
+    const ObstacleDef = Obstacles[Config.Rand.integer(0, Obstacles.length - 1)];
+    const ob = new ObstacleDef({
       x,
       y: this.getTop(),
       speed: Config.Floor.Speed,
