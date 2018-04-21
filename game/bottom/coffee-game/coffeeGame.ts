@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import { MiniGame } from "./../MiniGame";
+import { MiniGame } from "../miniGame";
 import { CoffeeItem } from "./coffeeItem";
 import { BottomSubscene } from "../bottom";
 
