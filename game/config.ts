@@ -33,6 +33,11 @@ export default {
     }
   },
 
+  Platform: {
+    Width: 40,
+    Height: 40
+  },
+
   /**
    * Obstacles spawn interval
    */

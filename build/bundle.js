@@ -68,6 +68,10 @@
                 NumberOfDocuments: 5
             }
         },
+        Platform: {
+            Width: 40,
+            Height: 40
+        },
         /**
          * Obstacles spawn interval
          */
@@ -95,9 +99,8 @@
                 collisionType: ex.CollisionType.Active
             });
             this.engine = engine;
-            this.canJump = true;
+            this.canJump = false;
             engine.input.pointers.primary.on("down", this.handleInput.bind(this));
-            engine.input.keyboard.on("press", this.handleInput.bind(this));
             this.on("precollision", this.handleCollision.bind(this));
         }
         onInitialize() {
@@ -105,21 +108,13 @@
         }
         // le-sigh workaround for odd collision tunneling issue
         handleCollision(event) {
-            this.vel.y = 0;
-            this.acc = ex.Vector.Zero.clone();
             if (event.side === ex.Side.Bottom) {
                 this.canJump = true;
             }
         }
         handleInput(event) {
             ex.Logger.getInstance().debug("event:", event);
-            if (event instanceof ex.Input.PointerEvent) {
-                if (event.worldY < this.engine.halfDrawHeight) {
-                    this.jump();
-                }
-            }
-            if (event instanceof ex.Input.KeyEvent &&
-                event.key === ex.Input.Keys.Space) {
+            if (event.worldPos.y < this.engine.halfDrawHeight) {
                 this.jump();
             }
         }
@@ -131,7 +126,14 @@
             }
         }
         onPostUpdate(engine, delta) {
-            // todo postupdate
+            if (!this.canJump) {
+                let virtualVel = new ex.Vector(-Config.Floor.Speed, ex.Util.clamp(this.vel.y, -50, 50));
+                this.rotation = virtualVel.toAngle();
+            }
+            else {
+                this.rotation = 0;
+            }
+            this.vel.x = 0;
         }
     }
 
@@ -153,7 +155,7 @@
             super(Object.assign({ x,
                 y, collisionType: ex.CollisionType.Passive, vel: new ex.Vector(speed, 0) }, props));
             this.onExitViewPort = (engine) => (e) => {
-                // When obstacle passes out of view to the left,
+                // When obstacle passes out of view to the left, NOT from the right ;)
                 // it should be killed
                 if (e.target.x < engine.getWorldBounds().left) {
                     ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);
@@ -210,6 +212,44 @@
 
     const obstacles = [Crate, Crates];
 
+    var __rest$1 = (window && window.__rest) || function (s, e) {
+        var t = {};
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
+        if (s != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+                t[p[i]] = s[p[i]];
+        return t;
+    };
+    class Platform extends ex.Actor {
+        constructor(_a) {
+            var { x, y, speed, topSubscene } = _a, props = __rest$1(_a, ["x", "y", "speed", "topSubscene"]);
+            super({
+                x,
+                y,
+                height: Config.Platform.Height,
+                width: Config.Platform.Width,
+                color: ex.Color.Green,
+                collisionType: ex.CollisionType.Fixed,
+                vel: new ex.Vector(speed, 0)
+                // Anchor to bottom since
+                // we will be placing it on a "floor"
+            });
+            this.onExitViewPort = (engine) => (e) => {
+                // When obstacle passes out of view to the left, NOT from the right ;)
+                // it should be killed
+                if (e.target.x < engine.getWorldBounds().left) {
+                    ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);
+                    e.target.kill();
+                }
+            };
+            this.topSubscene = topSubscene;
+        }
+        onInitialize(engine) {
+            this.on("exitviewport", this.onExitViewPort(engine));
+        }
+    }
+
     class Floor extends ex.Actor {
         /**
          *
@@ -227,7 +267,10 @@
             this.topSubscene = topSubscene;
         }
         onInitialize(engine) {
-            this._spawnTimer = new ex.Timer(() => this.spawnObstacle(engine), 1000, true);
+            this._spawnTimer = new ex.Timer(() => {
+                this.spawnObstacle(engine);
+                this.spawnPlatform(engine);
+            }, 1000, true);
             this.scene.add(this._spawnTimer);
         }
         spawnObstacle(engine) {
@@ -243,6 +286,17 @@
             this.scene.add(ob);
             const newInterval = Config.Rand.integer(Config.ObstacleSpawnMinInterval, Config.ObstacleSpawnMaxInterval);
             this._spawnTimer.reset(newInterval);
+        }
+        spawnPlatform(engine) {
+            const x = engine.drawWidth + 100;
+            const platform = new Platform({
+                x,
+                y: this.getTop() - Config.Platform.Height / 2,
+                speed: Config.Floor.Speed,
+                topSubscene: this.topSubscene
+            });
+            ex.Logger.getInstance().debug("Spawned platform", platform);
+            this.scene.add(platform);
         }
     }
 

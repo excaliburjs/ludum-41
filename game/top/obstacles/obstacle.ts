@@ -37,7 +37,7 @@ export abstract class Obstacle extends ex.Actor {
   }
 
   onExitViewPort = (engine: ex.Engine) => (e: ex.ExitViewPortEvent) => {
-    // When obstacle passes out of view to the left,
+    // When obstacle passes out of view to the left, NOT from the right ;)
     // it should be killed
     if (e.target.x < engine.getWorldBounds().left) {
       ex.Logger.getInstance().debug("Obstacle exited stage left", e.target);

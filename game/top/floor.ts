@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import Config from "../config";
 import Obstacles from "./obstacles";
+import { Platform } from "./platform";
 import { TopSubscene } from "./top";
 
 export class Floor extends ex.Actor {
@@ -23,7 +24,10 @@ export class Floor extends ex.Actor {
 
   onInitialize(engine: ex.Engine) {
     this._spawnTimer = new ex.Timer(
-      () => this.spawnObstacle(engine),
+      () => {
+        this.spawnObstacle(engine);
+        this.spawnPlatform(engine);
+      },
       1000,
       true
     );
@@ -49,5 +53,19 @@ export class Floor extends ex.Actor {
       Config.ObstacleSpawnMaxInterval
     );
     this._spawnTimer.reset(newInterval);
+  }
+
+  spawnPlatform(engine: ex.Engine) {
+    const x = engine.drawWidth + 100;
+    const platform = new Platform({
+      x,
+      y: this.getTop() - Config.Platform.Height / 2,
+      speed: Config.Floor.Speed,
+      topSubscene: this.topSubscene
+    });
+
+    ex.Logger.getInstance().debug("Spawned platform", platform);
+
+    this.scene.add(platform);
   }
 }

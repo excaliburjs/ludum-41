@@ -13,9 +13,8 @@ export class TopPlayer extends ex.Actor {
             collisionType: ex.CollisionType.Active
         });
         this.engine = engine;
-        this.canJump = true;
+        this.canJump = false;
         engine.input.pointers.primary.on("down", this.handleInput.bind(this));
-        engine.input.keyboard.on("press", this.handleInput.bind(this));
         this.on("precollision", this.handleCollision.bind(this));
     }
     onInitialize() {
@@ -23,21 +22,13 @@ export class TopPlayer extends ex.Actor {
     }
     // le-sigh workaround for odd collision tunneling issue
     handleCollision(event) {
-        this.vel.y = 0;
-        this.acc = ex.Vector.Zero.clone();
         if (event.side === ex.Side.Bottom) {
             this.canJump = true;
         }
     }
     handleInput(event) {
         ex.Logger.getInstance().debug("event:", event);
-        if (event instanceof ex.Input.PointerEvent) {
-            if (event.worldY < this.engine.halfDrawHeight) {
-                this.jump();
-            }
-        }
-        if (event instanceof ex.Input.KeyEvent &&
-            event.key === ex.Input.Keys.Space) {
+        if (event.worldPos.y < this.engine.halfDrawHeight) {
             this.jump();
         }
     }
@@ -49,7 +40,14 @@ export class TopPlayer extends ex.Actor {
         }
     }
     onPostUpdate(engine, delta) {
-        // todo postupdate
+        if (!this.canJump) {
+            let virtualVel = new ex.Vector(-Config.Floor.Speed, ex.Util.clamp(this.vel.y, -50, 50));
+            this.rotation = virtualVel.toAngle();
+        }
+        else {
+            this.rotation = 0;
+        }
+        this.vel.x = 0;
     }
 }
 //# sourceMappingURL=top-player.js.map

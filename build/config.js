@@ -24,6 +24,10 @@ export default {
             NumberOfDocuments: 5
         }
     },
+    Platform: {
+        Width: 40,
+        Height: 40
+    },
     /**
      * Obstacles spawn interval
      */
