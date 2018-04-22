@@ -39,6 +39,5 @@ export abstract class MiniGame {
 
   public onFail(): void {
     this.cleanUp();
-    //lose the game
   }
 }
