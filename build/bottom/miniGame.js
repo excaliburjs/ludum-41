@@ -5,6 +5,7 @@ export class MiniGame {
         this.bottomSubscene = bottomSubscene;
     }
     start() {
+        this.miniGameActors = [];
         if (!this._isSetUp) {
             this.setup(); //initialize actors and add them to the miniGameActors collection.
             for (let i = 0; i < this.miniGameActors.length; i++) {

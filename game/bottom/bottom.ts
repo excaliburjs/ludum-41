@@ -17,6 +17,8 @@ export class BottomSubscene {
   private cursor: Cursor;
   private _countdownLabel: Label;
   private _miniGameTimer: Timer;
+  private _secondsRemaining: number;
+  private _gameOver: boolean = false;
 
   constructor() {}
 
@@ -37,21 +39,40 @@ export class BottomSubscene {
     this.printerGame = new PrinterGame(scene, this);
     this.miniGames.push(this.printerGame);
 
-    this.startRandomMiniGame();
-
     this._countdownLabel = new ex.Label({
       color: ex.Color.White,
-      text: "60",
       fontSize: 25,
       x: 700,
       y: 650
     });
     scene.add(this._countdownLabel);
     this._countdownLabel.setZIndex(300);
+
+    this._miniGameTimer = new Timer(
+      () => {
+        this._secondsRemaining--;
+        this._countdownLabel.text = this._secondsRemaining.toString();
+        if (this._secondsRemaining <= 0) {
+          if (!this._gameOver) {
+            this._gameOver = true;
+            //game over logic
+          }
+        }
+      },
+      1000,
+      true
+    );
+
+    scene.add(this._miniGameTimer);
+
+    this.startRandomMiniGame();
   }
 
   public teardown(scene: ex.Scene) {
     this.currentMiniGame.cleanUp();
+    scene.remove(this._countdownLabel);
+    this._miniGameTimer.cancel();
+    scene.remove(this._miniGameTimer);
   }
 
   public startRandomMiniGame() {
@@ -64,5 +85,7 @@ export class BottomSubscene {
     ];
     this.miniGameCount++;
     this.currentMiniGame.start();
+    this._secondsRemaining = 60;
+    this._miniGameTimer.reset(1000, 60);
   }
 }

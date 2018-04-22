@@ -541,6 +541,7 @@ var game = (function (exports,ex) {
             this.bottomSubscene = bottomSubscene;
         }
         start() {
+            this.miniGameActors = [];
             if (!this._isSetUp) {
                 this.setup(); //initialize actors and add them to the miniGameActors collection.
                 for (let i = 0; i < this.miniGameActors.length; i++) {
@@ -936,6 +937,7 @@ var game = (function (exports,ex) {
         constructor() {
             this.miniGameCount = 0;
             this.miniGames = [];
+            this._gameOver = false;
         }
         setup(scene) {
             this.cursor = new Cursor();
@@ -946,19 +948,32 @@ var game = (function (exports,ex) {
             this.miniGames.push(this.coffeeGame);
             this.printerGame = new PrinterGame(scene, this);
             this.miniGames.push(this.printerGame);
-            this.startRandomMiniGame();
             this._countdownLabel = new ex.Label({
                 color: ex.Color.White,
-                text: "60",
                 fontSize: 25,
                 x: 700,
                 y: 650
             });
             scene.add(this._countdownLabel);
             this._countdownLabel.setZIndex(300);
+            this._miniGameTimer = new ex.Timer(() => {
+                this._secondsRemaining--;
+                this._countdownLabel.text = this._secondsRemaining.toString();
+                if (this._secondsRemaining <= 0) {
+                    if (!this._gameOver) {
+                        this._gameOver = true;
+                        //game over logic
+                    }
+                }
+            }, 1000, true);
+            scene.add(this._miniGameTimer);
+            this.startRandomMiniGame();
         }
         teardown(scene) {
             this.currentMiniGame.cleanUp();
+            scene.remove(this._countdownLabel);
+            this._miniGameTimer.cancel();
+            scene.remove(this._miniGameTimer);
         }
         startRandomMiniGame() {
             if (this.miniGameCount % this.miniGames.length === 0) {
@@ -967,6 +982,8 @@ var game = (function (exports,ex) {
             this.currentMiniGame = this.miniGames[this.miniGameCount % this.miniGames.length];
             this.miniGameCount++;
             this.currentMiniGame.start();
+            this._secondsRemaining = 60;
+            this._miniGameTimer.reset(1000, 60);
         }
     }
 
