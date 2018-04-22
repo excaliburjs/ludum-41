@@ -81,7 +81,7 @@ export class TopPlayer extends ex.Actor {
 
   jump() {
     if (this.canJump) {
-      this.vel = this.vel.add(new ex.Vector(0, -400));
+      this.vel = new ex.Vector(this.vel.x, -400);
       this.acc = new ex.Vector(0, 800);
       this.canJump = false;
     }
@@ -99,7 +99,7 @@ export class TopPlayer extends ex.Actor {
       this.dustEmitter.isEmitting = true;
       if (this.x < engine.drawWidth * Config.TopPlayer.StartingXPercent) {
         this.vel.x =
-          (engine.drawWidth * Config.TopPlayer.StartingXPercent - this.x) / 2;
+          engine.drawWidth * Config.TopPlayer.StartingXPercent - this.x;
       } else if (
         this.x >
         engine.drawWidth * Config.TopPlayer.StartingXPercent

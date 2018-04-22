@@ -4,14 +4,17 @@ import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
 import { MiniGame } from "./miniGame";
 import { PrinterGame } from "./printer-game/printer-game";
+import { Cursor } from "./cursor";
 import { Scene, Label, Timer } from "excalibur";
 
 export class BottomSubscene {
+  public miniGameCount: number = 0;
   private miniGames: MiniGame[] = [];
   private currentMiniGame: MiniGame;
   private collatingGame: CollatingGame;
   private coffeeGame: CoffeeGame;
   private printerGame: PrinterGame;
+  private cursor: Cursor;
   private _countdownLabel: Label;
   private _miniGameTimer: Timer;
   private _secondsRemaining: number;
@@ -20,6 +23,9 @@ export class BottomSubscene {
   constructor() {}
 
   public setup(scene: ex.Scene) {
+    this.cursor = new Cursor();
+    scene.add(this.cursor);
+
     this.collatingGame = new CollatingGame(
       scene,
       Config.MiniGames.Collating.NumberOfWinsToProceed,
@@ -70,9 +76,14 @@ export class BottomSubscene {
   }
 
   public startRandomMiniGame() {
+    if (this.miniGameCount % this.miniGames.length === 0) {
+      this.miniGames = Config.Rand.shuffle(this.miniGames);
+    }
+
     this.currentMiniGame = this.miniGames[
-      Config.Rand.integer(0, this.miniGames.length - 1)
+      this.miniGameCount % this.miniGames.length
     ];
+    this.miniGameCount++;
     this.currentMiniGame.start();
     this._secondsRemaining = 60;
     this._miniGameTimer.reset(1000, 60);
