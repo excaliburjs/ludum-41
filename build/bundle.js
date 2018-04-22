@@ -95,6 +95,7 @@
         txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
         txCoffeeMaker: new ex.Texture("game/assets/img/coffee-maker.png"),
         txCoffeeGrounds: new ex.Texture("game/assets/img/coffee-grounds.png"),
+        txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -837,10 +838,26 @@
         }
     }
 
+    class Overlay extends ex.Actor {
+        constructor(engine, scene) {
+            super({
+                x: 0,
+                y: 0,
+                width: engine.drawWidth,
+                height: engine.drawHeight,
+                anchor: ex.Vector.Zero.clone()
+            });
+            scene.add(this);
+            this.z = 99;
+            this.addDrawing(Resources.txOverlay);
+        }
+    }
+
     class ScnMain extends ex.Scene {
         onInitialize(engine) {
             this._top = new TopSubscene(this.engine);
             this._bottom = new BottomSubscene();
+            this._overlay = new Overlay(this.engine, this);
         }
         onActivate() {
             this._top.setup(this);

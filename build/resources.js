@@ -6,6 +6,7 @@ export default {
     txCollateBackground: new Texture("game/assets/img/collate-bg.png"),
     txCoffeeMaker: new Texture("game/assets/img/coffee-maker.png"),
     txCoffeeGrounds: new Texture("game/assets/img/coffee-grounds.png"),
+    txOverlay: new Texture("game/assets/img/office-overlay.png"),
     sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };
 //# sourceMappingURL=resources.js.map
