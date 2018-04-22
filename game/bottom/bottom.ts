@@ -41,6 +41,8 @@ export class BottomSubscene {
     //this.printerGame = new PrinterGame(scene, this);
     //this.miniGames.push(this.printerGame);
 
+    this.miniGames = Config.Rand.shuffle(this.miniGames);
+
     this._countdownLabel = new ex.Label({
       color: ex.Color.White,
       fontSize: 25,
