@@ -60,8 +60,9 @@ export class BottomSubscene {
     }
 
     this.currentMiniGame = this.miniGames[
-      (this.miniGameCount + 1) % this.miniGames.length
+      this.miniGameCount % this.miniGames.length
     ];
+    this.miniGameCount++;
     this.currentMiniGame.start();
   }
 }
