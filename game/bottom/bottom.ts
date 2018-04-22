@@ -28,6 +28,14 @@ export class BottomSubscene {
     this.cursor = new Cursor();
     scene.add(this.cursor);
 
+    if (Config.CheatCode) {
+      scene.engine.input.keyboard.on("down", (evt: ex.Input.KeyEvent) => {
+        if (evt.key === ex.Input.Keys.W) {
+          this.startRandomMiniGame();
+        }
+      });
+    }
+
     // this.collatingGame = new CollatingGame(
     //   scene,
     //   Config.MiniGames.Collating.NumberOfWinsToProceed,
