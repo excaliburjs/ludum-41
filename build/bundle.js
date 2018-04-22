@@ -687,7 +687,7 @@ var game = (function (exports,ex) {
             this._coffeeCup.unHighlight();
             this._coffeeGrounds.unHighlight();
             this._coffeeMaker.unHighlight();
-            this._stepCount = 0;
+            this._stepCount = 1;
         }
     }
 
