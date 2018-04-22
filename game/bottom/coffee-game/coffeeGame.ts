@@ -41,9 +41,9 @@ export class CoffeeGame extends MiniGame {
 
     let coffeeMaker = new CoffeeItem({
       x: 400,
-      y: 500,
-      width: 100,
-      height: 200,
+      y: 600,
+      width: 150,
+      height: 250,
       color: ex.Color.Black
     });
     this.miniGameActors.push(coffeeMaker);
