@@ -543,20 +543,15 @@ var game = (function (exports,ex) {
             this.bottomSubscene = bottomSubscene;
         }
         start() {
-            if (!this._isSetUp) {
-                this.setup(); //initialize actors and add them to the miniGameActors collection.
-                for (let i = 0; i < this.miniGameActors.length; i++) {
-                    this.scene.add(this.miniGameActors[i]);
-                }
+            this.setup(); //initialize actors and add them to the miniGameActors collection.
+            for (let i = 0; i < this.miniGameActors.length; i++) {
+                this.scene.add(this.miniGameActors[i]);
             }
-            this._isSetUp = true;
         }
         cleanUp() {
             for (let i = 0; i < this.miniGameActors.length; i++) {
                 this.scene.remove(this.miniGameActors[i]);
-                this._isSetUp = false;
             }
-            console.log("Actors:", this.scene.actors.length);
         }
         onSucceed() {
             this.cleanUp();
@@ -564,130 +559,6 @@ var game = (function (exports,ex) {
         }
         onFail() {
             this.cleanUp();
-        }
-    }
-
-    class OfficeDoc extends ex.Actor {
-        constructor(pageNumber) {
-            super();
-            this._pageNumber = pageNumber;
-            this.color = ex.Color.Green;
-        }
-        get pageNumber() {
-            return this._pageNumber;
-        }
-    }
-    class OfficeDocSet {
-        constructor(numDocuments) {
-            this._documents = [];
-            this._playerSortedStack = [];
-            this._numDocuments = numDocuments;
-            for (var i = 0; i < this._numDocuments; i++) {
-                this._documents.push(new OfficeDoc(i));
-            }
-        }
-        //attempt to add this document to the sorted stack
-        tryAddToSortedStack(documentIn) {
-            if (documentIn.pageNumber === this._playerSortedStack.length) {
-                this._playerSortedStack.push(documentIn);
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        clear() {
-            this._playerSortedStack = [];
-        }
-        isComplete() {
-            return this._playerSortedStack.length === this._numDocuments;
-        }
-        getScrambledDocumentSet() {
-            var docsArr = this._documents;
-            var currentIndex = docsArr.length, temporaryValue, randomIndex;
-            while (0 !== currentIndex) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex -= 1;
-                temporaryValue = docsArr[currentIndex];
-                docsArr[currentIndex] = docsArr[randomIndex];
-                docsArr[randomIndex] = temporaryValue;
-            }
-            return docsArr;
-        }
-    }
-
-    class CollatingGame extends MiniGame {
-        constructor(scene, winsRequired, bottomSubscene) {
-            super(scene, bottomSubscene);
-            this._docLabels = [];
-            this._winsRequired = 0;
-            this._currentWins = 0;
-            this._winsRequired = winsRequired;
-        }
-        setup() {
-            var numDocs = Config.MiniGames.Collating.NumberOfDocuments;
-            // background
-            const bg = new ex.Actor({
-                x: 0,
-                y: this.scene.engine.drawHeight / 2,
-                anchor: ex.Vector.Zero
-            });
-            bg.addDrawing(Resources.txCollateBackground);
-            this.miniGameActors.push(bg);
-            this._docSet = new OfficeDocSet(numDocs);
-            this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
-            //this.reset();
-            for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
-                //add to the scene here
-                this._scrambledOfficeDocs[i].x = 100 * i + 200;
-                this._scrambledOfficeDocs[i].setWidth(50);
-                this._scrambledOfficeDocs[i].setHeight(50);
-                this._scrambledOfficeDocs[i].y = 600;
-                this.wireUpClickEvent(this._scrambledOfficeDocs[i]);
-                var docLabel = new ex.Label({
-                    x: this._scrambledOfficeDocs[i].x,
-                    y: this._scrambledOfficeDocs[i].y + 50,
-                    color: ex.Color.Red,
-                    text: (this._scrambledOfficeDocs[i].pageNumber + 1).toString()
-                });
-                docLabel.fontSize = 16;
-                this._docLabels.push(docLabel);
-                this.miniGameActors.push(docLabel);
-                this.miniGameActors.push(this._scrambledOfficeDocs[i]);
-            }
-        }
-        reset() { }
-        wireUpClickEvent(officeDoc) {
-            officeDoc.on("pointerup", evt => {
-                var clickedDoc = evt.target;
-                if (this._docSet.tryAddToSortedStack(clickedDoc)) {
-                    //update ui
-                    clickedDoc.color = ex.Color.Magenta;
-                    if (this._docSet.isComplete()) {
-                        //you won
-                        console.log("you won the collating game");
-                        this._currentWins++;
-                        if (this._currentWins >= this._winsRequired) {
-                            //move on to the next mini game
-                            this._currentWins = 0;
-                            this.onSucceed();
-                        }
-                        else {
-                            this.resetDocuments();
-                        }
-                    }
-                }
-            });
-        }
-        //shuffle the pages around visually
-        resetDocuments() {
-            this._docSet.clear();
-            this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
-            for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
-                this._scrambledOfficeDocs[i].x = 100 * i + 200;
-                this._scrambledOfficeDocs[i].color = ex.Color.Green;
-                this._docLabels[i].text = (this._scrambledOfficeDocs[i].pageNumber + 1).toString();
-            }
         }
     }
 
@@ -716,9 +587,11 @@ var game = (function (exports,ex) {
             this._isHighlighted = true;
         }
         unHighlight() {
-            this.color = this._originalColor;
-            this.setDrawing("default");
-            this._isHighlighted = false;
+            if (this._isHighlighted) {
+                this.color = this._originalColor;
+                this.setDrawing("default");
+                this._isHighlighted = false;
+            }
         }
     }
 
@@ -726,19 +599,20 @@ var game = (function (exports,ex) {
         constructor(scene, bottomSubscene) {
             super(scene, bottomSubscene);
             this._stepCount = 0;
-        }
-        setup() {
+            this._coffeeFilter = new CoffeeItem({
+                x: 200,
+                y: 500
+            });
             this._stepCount = 1; // set to 1 to avoid the first element of the array, which is the background
-            let background = new ex.Actor({
+            this._background = new ex.Actor({
                 x: 400,
                 y: 600,
                 width: 1,
                 height: 1
             });
             let bgSpriteSheet = new ex.SpriteSheet(Resources.txCoffeeBackground, 1, 1, 800, 400);
-            background.addDrawing(bgSpriteSheet.getSprite(0));
-            this.miniGameActors.push(background);
-            let coffeeFilter = new CoffeeItem({
+            this._background.addDrawing(bgSpriteSheet.getSprite(0));
+            this._coffeeFilter = new CoffeeItem({
                 x: 600,
                 y: 510,
                 width: 140,
@@ -746,29 +620,18 @@ var game = (function (exports,ex) {
                 color: ex.Color.White
             });
             let coffeeFilterSpriteSheet = new ex.SpriteSheet(Resources.txCoffeeFilter, 2, 1, 120, 120);
-            this.miniGameActors.push(coffeeFilter);
-            coffeeFilter.addDrawing("default", coffeeFilterSpriteSheet.getSprite(0));
-            coffeeFilter.addDrawing("highlight", coffeeFilterSpriteSheet.getSprite(1));
-            coffeeFilter.highlight();
-            let coffeeGrounds = new CoffeeItem({
-                x: 200,
+            this._coffeeFilter.addDrawing("default", coffeeFilterSpriteSheet.getSprite(0));
+            this._coffeeFilter.addDrawing("highlight", coffeeFilterSpriteSheet.getSprite(1));
+            this._coffeeGrounds = new CoffeeItem({
+                x: 300,
                 y: 500,
                 width: 150,
                 height: 160,
                 color: ex.Color.Red
             });
             let coffeeGroundsSpritesheet = new ex.SpriteSheet(Resources.txCoffeeGrounds, 2, 1, 150, 160);
-            coffeeGrounds.addDrawing("default", coffeeGroundsSpritesheet.getSprite(0));
-            coffeeGrounds.addDrawing("highlight", coffeeGroundsSpritesheet.getSprite(1));
-            this.miniGameActors.push(coffeeGrounds);
-            // let waterPitcher = new CoffeeItem({
-            //   x: 100,
-            //   y: 500,
-            //   width: 100,
-            //   height: 150,
-            //   color: ex.Color.Cyan
-            // });
-            // this.miniGameActors.push(waterPitcher);
+            this._coffeeGrounds.addDrawing("default", coffeeGroundsSpritesheet.getSprite(0));
+            this._coffeeGrounds.addDrawing("highlight", coffeeGroundsSpritesheet.getSprite(1));
             this._coffeeMaker = new CoffeeItem({
                 x: 400,
                 y: 600,
@@ -779,8 +642,7 @@ var game = (function (exports,ex) {
             let coffeeMakerSpritesheet = new ex.SpriteSheet(Resources.txCoffeeMaker, 2, 1, 160, 260);
             this._coffeeMaker.addDrawing("default", coffeeMakerSpritesheet.getSprite(0));
             this._coffeeMaker.addDrawing("highlight", coffeeMakerSpritesheet.getSprite(1));
-            this.miniGameActors.push(this._coffeeMaker);
-            let coffeeCup = new CoffeeItem({
+            this._coffeeCup = new CoffeeItem({
                 x: 650,
                 y: 675,
                 width: 100,
@@ -788,9 +650,13 @@ var game = (function (exports,ex) {
                 color: ex.Color.Orange
             });
             let coffeeCupSpritesheet = new ex.SpriteSheet(Resources.txCoffeeCup, 2, 1, 100, 100);
-            coffeeCup.addDrawing("default", coffeeCupSpritesheet.getSprite(0));
-            coffeeCup.addDrawing("highlight", coffeeCupSpritesheet.getSprite(1));
-            this.miniGameActors.push(coffeeCup);
+            this._coffeeCup.addDrawing("default", coffeeCupSpritesheet.getSprite(0));
+            this._coffeeCup.addDrawing("highlight", coffeeCupSpritesheet.getSprite(1));
+            this.miniGameActors.push(this._background);
+            this.miniGameActors.push(this._coffeeFilter);
+            this.miniGameActors.push(this._coffeeGrounds);
+            this.miniGameActors.push(this._coffeeMaker);
+            this.miniGameActors.push(this._coffeeCup);
             this.scene.on("coffeeClick", () => {
                 this._stepCount++;
                 if (this.miniGameActors[this._stepCount - 1] == this._coffeeMaker) {
@@ -816,134 +682,12 @@ var game = (function (exports,ex) {
                 }
             });
         }
-    }
-
-    class Light extends ex.Actor {
-        constructor(args, printer) {
-            super(args);
-            this.printer = printer;
-            this.lit = false;
-            this.boardX = 0;
-            this.boardY = 0;
-        }
-        onInitialize() {
-            this.on("pointerup", (evt) => {
-                if (this.up)
-                    this.up.lit = !this.up.lit;
-                if (this.down)
-                    this.down.lit = !this.down.lit;
-                if (this.left)
-                    this.left.lit = !this.left.lit;
-                if (this.right)
-                    this.right.lit = !this.right.lit;
-                this.lit = !this.lit;
-            });
-        }
-        onPostKill() {
-            this.off("pointerup");
-        }
-        onPostUpdate() {
-            if (this.lit) {
-                this.color = ex.Color.Yellow.clone();
-            }
-            else {
-                this.color = ex.Color.Violet.clone();
-            }
-            if (this.printer.isAllLit() || this.printer.isAllDark()) {
-                console.log("win");
-                this.printer.onSucceed();
-            }
-        }
-    }
-
-    class PrinterGame extends MiniGame {
-        constructor(scene, bottomSubscene) {
-            super(scene, bottomSubscene);
-            this.miniGameActors = [];
-            this._lights = [];
-            let copier = new ex.Actor({
-                x: 0,
-                y: scene.engine.halfDrawHeight,
-                anchor: ex.Vector.Zero.clone()
-            });
-            copier.addDrawing(Resources.txCopier);
-            this._background = new ex.Actor({
-                x: 400,
-                y: 600,
-                width: 1,
-                height: 1
-            });
-            this._background.addDrawing(Resources.txCopierBackground);
-            this.scene = scene;
-            this._copier = copier;
-            for (let i = 0; i <
-                Config.PrinterMiniGame.GridDimension *
-                    Config.PrinterMiniGame.GridDimension; i++) {
-                let x = i % Config.PrinterMiniGame.GridDimension;
-                let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
-                this._lights[i] = new Light({
-                    x: x * Config.PrinterMiniGame.PrinterSpacing +
-                        Config.PrinterMiniGame.PrinterStartX,
-                    y: y * Config.PrinterMiniGame.PrinterSpacing +
-                        Config.PrinterMiniGame.PrinterStartY,
-                    width: 20,
-                    height: 20,
-                    color: ex.Color.Violet.clone()
-                }, this);
-                this._lights[i].boardX = x;
-                this._lights[i].boardY = y;
-            }
-            for (let i = 0; i < this._lights.length; i++) {
-                let light = this._lights[i];
-                let x = i % Config.PrinterMiniGame.GridDimension;
-                let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
-                light.up = this.getLight(x, y - 1);
-                light.down = this.getLight(x, y + 1);
-                light.left = this.getLight(x - 1, y);
-                light.right = this.getLight(x + 1, y);
-            }
-            this.miniGameActors.push(this._background);
-            this.miniGameActors.push(this._copier);
-            this._lights.forEach(l => this.miniGameActors.push(l));
-        }
-        getLight(x, y) {
-            let index = x + y * Config.PrinterMiniGame.GridDimension;
-            if (index < 0 || index > this._lights.length - 1) {
-                return null;
-            }
-            if (x >= Config.PrinterMiniGame.GridDimension ||
-                y >= Config.PrinterMiniGame.GridDimension) {
-                return null;
-            }
-            if (x < 0 || y < 0) {
-                return null;
-            }
-            return this._lights[index];
-        }
-        isAllLit() {
-            return this._lights.reduce((prev, curr) => prev && curr.lit, true);
-        }
-        isAllDark() {
-            return this._lights.reduce((prev, curr) => prev && !curr.lit, true);
-        }
         setup() {
-            this.miniGameActors.push(this._background);
-            this._lights.forEach(l => (l.lit = false));
-            let litLight = Config.Rand.pickOne(this._lights);
-            this.createSolution(litLight);
-        }
-        createSolution(light) {
-            let x = light.boardX;
-            let y = light.boardY;
-            light.lit = true;
-            if (light.up)
-                light.up.lit = true;
-            if (light.down)
-                light.down.lit = true;
-            if (light.left)
-                light.left.lit = true;
-            if (light.right)
-                light.right.lit = true;
+            this._coffeeFilter.highlight();
+            this._coffeeCup.unHighlight();
+            this._coffeeGrounds.unHighlight();
+            this._coffeeMaker.unHighlight();
+            this._stepCount = 0;
         }
     }
 
@@ -983,17 +727,16 @@ var game = (function (exports,ex) {
         setup(scene) {
             this.cursor = new Cursor();
             scene.add(this.cursor);
-            scene.engine.input.keyboard.on("down", (evt) => {
-                if (evt.key === ex.Input.Keys.W) {
-                    this.currentMiniGame.onSucceed();
-                }
-            });
-            this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
-            this.miniGames.push(this.collatingGame);
+            // this.collatingGame = new CollatingGame(
+            //   scene,
+            //   Config.MiniGames.Collating.NumberOfWinsToProceed,
+            //   this
+            // );
+            //this.miniGames.push(this.collatingGame);
             this.coffeeGame = new CoffeeGame(scene, this);
             this.miniGames.push(this.coffeeGame);
-            this.printerGame = new PrinterGame(scene, this);
-            this.miniGames.push(this.printerGame);
+            //this.printerGame = new PrinterGame(scene, this);
+            //this.miniGames.push(this.printerGame);
             this.miniGames = Config.Rand.shuffle(this.miniGames);
             this._countdownLabel = new ex.Label({
                 color: ex.Color.White,
@@ -1024,12 +767,15 @@ var game = (function (exports,ex) {
             scene.remove(this._miniGameTimer);
         }
         startRandomMiniGame() {
-            this.currentMiniGame = this.miniGames[this.miniGameCount];
+            // if (this.miniGameCount % this.miniGames.length === 0) {
+            //   this.miniGames = Config.Rand.shuffle(this.miniGames);
+            // }
+            this.currentMiniGame = this.coffeeGame; //this.miniGames[this.miniGameCount];
             console.log("current game:", this.miniGameCount, this.currentMiniGame);
             this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
             this.currentMiniGame.start();
-            this._secondsRemaining = 20;
-            this._miniGameTimer.reset(1000, 20);
+            this._secondsRemaining = 60;
+            this._miniGameTimer.reset(1000, 60);
         }
     }
 

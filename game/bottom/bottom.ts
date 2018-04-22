@@ -28,24 +28,18 @@ export class BottomSubscene {
     this.cursor = new Cursor();
     scene.add(this.cursor);
 
-    scene.engine.input.keyboard.on("down", (evt: ex.Input.KeyEvent) => {
-      if (evt.key === ex.Input.Keys.W) {
-        this.currentMiniGame.onSucceed();
-      }
-    });
-
-    this.collatingGame = new CollatingGame(
-      scene,
-      Config.MiniGames.Collating.NumberOfWinsToProceed,
-      this
-    );
-    this.miniGames.push(this.collatingGame);
+    // this.collatingGame = new CollatingGame(
+    //   scene,
+    //   Config.MiniGames.Collating.NumberOfWinsToProceed,
+    //   this
+    // );
+    //this.miniGames.push(this.collatingGame);
 
     this.coffeeGame = new CoffeeGame(scene, this);
     this.miniGames.push(this.coffeeGame);
 
-    this.printerGame = new PrinterGame(scene, this);
-    this.miniGames.push(this.printerGame);
+    //this.printerGame = new PrinterGame(scene, this);
+    //this.miniGames.push(this.printerGame);
 
     this.miniGames = Config.Rand.shuffle(this.miniGames);
 
@@ -87,12 +81,16 @@ export class BottomSubscene {
   }
 
   public startRandomMiniGame() {
-    this.currentMiniGame = this.miniGames[this.miniGameCount];
+    // if (this.miniGameCount % this.miniGames.length === 0) {
+    //   this.miniGames = Config.Rand.shuffle(this.miniGames);
+    // }
+
+    this.currentMiniGame = this.coffeeGame; //this.miniGames[this.miniGameCount];
     console.log("current game:", this.miniGameCount, this.currentMiniGame);
 
     this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
     this.currentMiniGame.start();
-    this._secondsRemaining = 20;
-    this._miniGameTimer.reset(1000, 20);
+    this._secondsRemaining = 60;
+    this._miniGameTimer.reset(1000, 60);
   }
 }

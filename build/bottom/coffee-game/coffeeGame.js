@@ -7,19 +7,20 @@ export class CoffeeGame extends MiniGame {
     constructor(scene, bottomSubscene) {
         super(scene, bottomSubscene);
         this._stepCount = 0;
-    }
-    setup() {
+        this._coffeeFilter = new CoffeeItem({
+            x: 200,
+            y: 500
+        });
         this._stepCount = 1; // set to 1 to avoid the first element of the array, which is the background
-        let background = new ex.Actor({
+        this._background = new ex.Actor({
             x: 400,
             y: 600,
             width: 1,
             height: 1
         });
         let bgSpriteSheet = new ex.SpriteSheet(Resources.txCoffeeBackground, 1, 1, 800, 400);
-        background.addDrawing(bgSpriteSheet.getSprite(0));
-        this.miniGameActors.push(background);
-        let coffeeFilter = new CoffeeItem({
+        this._background.addDrawing(bgSpriteSheet.getSprite(0));
+        this._coffeeFilter = new CoffeeItem({
             x: 600,
             y: 510,
             width: 140,
@@ -27,29 +28,18 @@ export class CoffeeGame extends MiniGame {
             color: ex.Color.White
         });
         let coffeeFilterSpriteSheet = new ex.SpriteSheet(Resources.txCoffeeFilter, 2, 1, 120, 120);
-        this.miniGameActors.push(coffeeFilter);
-        coffeeFilter.addDrawing("default", coffeeFilterSpriteSheet.getSprite(0));
-        coffeeFilter.addDrawing("highlight", coffeeFilterSpriteSheet.getSprite(1));
-        coffeeFilter.highlight();
-        let coffeeGrounds = new CoffeeItem({
-            x: 200,
+        this._coffeeFilter.addDrawing("default", coffeeFilterSpriteSheet.getSprite(0));
+        this._coffeeFilter.addDrawing("highlight", coffeeFilterSpriteSheet.getSprite(1));
+        this._coffeeGrounds = new CoffeeItem({
+            x: 300,
             y: 500,
             width: 150,
             height: 160,
             color: ex.Color.Red
         });
         let coffeeGroundsSpritesheet = new ex.SpriteSheet(Resources.txCoffeeGrounds, 2, 1, 150, 160);
-        coffeeGrounds.addDrawing("default", coffeeGroundsSpritesheet.getSprite(0));
-        coffeeGrounds.addDrawing("highlight", coffeeGroundsSpritesheet.getSprite(1));
-        this.miniGameActors.push(coffeeGrounds);
-        // let waterPitcher = new CoffeeItem({
-        //   x: 100,
-        //   y: 500,
-        //   width: 100,
-        //   height: 150,
-        //   color: ex.Color.Cyan
-        // });
-        // this.miniGameActors.push(waterPitcher);
+        this._coffeeGrounds.addDrawing("default", coffeeGroundsSpritesheet.getSprite(0));
+        this._coffeeGrounds.addDrawing("highlight", coffeeGroundsSpritesheet.getSprite(1));
         this._coffeeMaker = new CoffeeItem({
             x: 400,
             y: 600,
@@ -60,8 +50,7 @@ export class CoffeeGame extends MiniGame {
         let coffeeMakerSpritesheet = new ex.SpriteSheet(Resources.txCoffeeMaker, 2, 1, 160, 260);
         this._coffeeMaker.addDrawing("default", coffeeMakerSpritesheet.getSprite(0));
         this._coffeeMaker.addDrawing("highlight", coffeeMakerSpritesheet.getSprite(1));
-        this.miniGameActors.push(this._coffeeMaker);
-        let coffeeCup = new CoffeeItem({
+        this._coffeeCup = new CoffeeItem({
             x: 650,
             y: 675,
             width: 100,
@@ -69,9 +58,13 @@ export class CoffeeGame extends MiniGame {
             color: ex.Color.Orange
         });
         let coffeeCupSpritesheet = new ex.SpriteSheet(Resources.txCoffeeCup, 2, 1, 100, 100);
-        coffeeCup.addDrawing("default", coffeeCupSpritesheet.getSprite(0));
-        coffeeCup.addDrawing("highlight", coffeeCupSpritesheet.getSprite(1));
-        this.miniGameActors.push(coffeeCup);
+        this._coffeeCup.addDrawing("default", coffeeCupSpritesheet.getSprite(0));
+        this._coffeeCup.addDrawing("highlight", coffeeCupSpritesheet.getSprite(1));
+        this.miniGameActors.push(this._background);
+        this.miniGameActors.push(this._coffeeFilter);
+        this.miniGameActors.push(this._coffeeGrounds);
+        this.miniGameActors.push(this._coffeeMaker);
+        this.miniGameActors.push(this._coffeeCup);
         this.scene.on("coffeeClick", () => {
             this._stepCount++;
             if (this.miniGameActors[this._stepCount - 1] == this._coffeeMaker) {
@@ -96,6 +89,13 @@ export class CoffeeGame extends MiniGame {
                 coffeeItem.highlight();
             }
         });
+    }
+    setup() {
+        this._coffeeFilter.highlight();
+        this._coffeeCup.unHighlight();
+        this._coffeeGrounds.unHighlight();
+        this._coffeeMaker.unHighlight();
+        this._stepCount = 0;
     }
 }
 //# sourceMappingURL=coffeeGame.js.map
