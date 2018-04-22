@@ -7,6 +7,7 @@ import { PrinterGame } from "./printer-game/printer-game";
 
 export class BottomSubscene {
   private miniGames: MiniGame[] = [];
+  private currentMiniGame: MiniGame;
   private collatingGame: CollatingGame;
   private coffeeGame: CoffeeGame;
   private printerGame: PrinterGame;
@@ -30,12 +31,14 @@ export class BottomSubscene {
     this.startRandomMiniGame();
   }
 
-  public teardown(scene: ex.Scene) {}
+  public teardown(scene: ex.Scene) {
+    this.currentMiniGame.cleanUp();
+  }
 
   public startRandomMiniGame() {
-    let miniGame = this.miniGames[
+    this.currentMiniGame = this.miniGames[
       Config.Rand.integer(0, this.miniGames.length - 1)
     ];
-    miniGame.start();
+    this.currentMiniGame.start();
   }
 }

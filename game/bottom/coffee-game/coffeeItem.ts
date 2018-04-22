@@ -27,11 +27,13 @@ export class CoffeeItem extends ex.Actor {
   public highlight() {
     this._originalColor = this.color;
     this.color = ex.Color.Green;
+    this.setDrawing("highlight");
     this._isHighlighted = true;
   }
 
   public unHighlight() {
     this.color = this._originalColor;
+    this.setDrawing("default");
     this._isHighlighted = false;
   }
 }

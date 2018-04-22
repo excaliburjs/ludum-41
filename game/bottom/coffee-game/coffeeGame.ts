@@ -2,6 +2,7 @@ import * as ex from "excalibur";
 import { MiniGame } from "../miniGame";
 import { CoffeeItem } from "./coffeeItem";
 import { BottomSubscene } from "../bottom";
+import Resources from "../../resources";
 
 export class CoffeeGame extends MiniGame {
   private _stepCount = 0;
@@ -11,6 +12,7 @@ export class CoffeeGame extends MiniGame {
   }
 
   public setup() {
+    this._stepCount = 0;
     let coffeeFilter = new CoffeeItem({
       x: 200,
       y: 500,
@@ -24,10 +26,22 @@ export class CoffeeGame extends MiniGame {
     let coffeeGrounds = new CoffeeItem({
       x: 300,
       y: 500,
-      width: 60,
-      height: 90,
+      width: 150,
+      height: 160,
       color: ex.Color.Red
     });
+    let coffeeGroundsSpritesheet = new ex.SpriteSheet(
+      Resources.txCoffeeGrounds,
+      2,
+      1,
+      150,
+      160
+    );
+    coffeeGrounds.addDrawing("default", coffeeGroundsSpritesheet.getSprite(0));
+    coffeeGrounds.addDrawing(
+      "highlight",
+      coffeeGroundsSpritesheet.getSprite(1)
+    );
     this.miniGameActors.push(coffeeGrounds);
 
     let waterPitcher = new CoffeeItem({
@@ -41,11 +55,20 @@ export class CoffeeGame extends MiniGame {
 
     let coffeeMaker = new CoffeeItem({
       x: 400,
-      y: 500,
-      width: 100,
-      height: 200,
+      y: 600,
+      width: 160,
+      height: 260,
       color: ex.Color.Black
     });
+    let coffeeMakerSpritesheet = new ex.SpriteSheet(
+      Resources.txCoffeeMaker,
+      2,
+      1,
+      160,
+      260
+    );
+    coffeeMaker.addDrawing("default", coffeeMakerSpritesheet.getSprite(0));
+    coffeeMaker.addDrawing("highlight", coffeeMakerSpritesheet.getSprite(1));
     this.miniGameActors.push(coffeeMaker);
 
     let coffeeCup = new CoffeeItem({
@@ -71,9 +94,5 @@ export class CoffeeGame extends MiniGame {
         coffeeItem.highlight();
       }
     });
-  }
-
-  public reset() {
-    this._stepCount = 0;
   }
 }
