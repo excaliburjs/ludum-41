@@ -26,8 +26,8 @@ export class CoffeeGame extends MiniGame {
       Resources.txCoffeeFilter,
       2,
       1,
-      140,
-      140
+      120,
+      120
     );
     this.miniGameActors.push(coffeeFilter);
     coffeeFilter.addDrawing("default", coffeeFilterSpriteSheet.getSprite(0));

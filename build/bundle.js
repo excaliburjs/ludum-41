@@ -733,7 +733,7 @@ var game = (function (exports,ex) {
                 height: 140,
                 color: ex.Color.White
             });
-            let coffeeFilterSpriteSheet = new ex.SpriteSheet(Resources.txCoffeeFilter, 2, 1, 140, 140);
+            let coffeeFilterSpriteSheet = new ex.SpriteSheet(Resources.txCoffeeFilter, 2, 1, 120, 120);
             this.miniGameActors.push(coffeeFilter);
             coffeeFilter.addDrawing("default", coffeeFilterSpriteSheet.getSprite(0));
             coffeeFilter.addDrawing("highlight", coffeeFilterSpriteSheet.getSprite(1));
