@@ -7,13 +7,11 @@ import { TopHealth } from "./health";
 import { Platform } from "./platform";
 import { Background } from "./background";
 export class TopSubscene {
-    constructor(_engine) {
+    constructor(_engine, scene) {
         this._engine = _engine;
         this.onPlayerHitObstacle = () => {
             this.healthMeter.health--;
         };
-    }
-    setup(scene) {
         this.scene = scene;
         this.floor = new Floor(this._engine);
         this.player = new TopPlayer(this._engine);
@@ -25,6 +23,11 @@ export class TopSubscene {
         this.platformTimer = new ex.Timer(() => {
             this.spawnPlatform(this._engine, scene);
         }, 2000, true);
+    }
+    setup(scene) {
+        this.player.vel = ex.Vector.Zero.clone();
+        this.player.pos = new ex.Vector(scene.engine.drawWidth * Config.TopPlayer.StartingXPercent, scene.engine.drawHeight / 3);
+        this.player.unkill();
         scene.add(this.spawnTimer);
         scene.add(this.platformTimer);
         scene.add(this.platformTimer2);
@@ -34,6 +37,7 @@ export class TopSubscene {
         scene.add(this.background);
     }
     teardown(scene) {
+        this.player.kill();
         scene.remove(this.floor);
         scene.remove(this.player);
         scene.remove(this.healthMeter);

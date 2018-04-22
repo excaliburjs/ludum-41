@@ -17,9 +17,7 @@ export class TopSubscene {
   platformTimer: ex.Timer;
   platformTimer2: ex.Timer;
 
-  constructor(private _engine: ex.Engine) {}
-
-  public setup(scene: ex.Scene) {
+  constructor(private _engine: ex.Engine, scene: ex.Scene) {
     this.scene = scene;
     this.floor = new Floor(this._engine);
     this.player = new TopPlayer(this._engine);
@@ -40,6 +38,16 @@ export class TopSubscene {
       2000,
       true
     );
+  }
+
+  public setup(scene: ex.Scene) {
+    this.player.vel = ex.Vector.Zero.clone();
+    this.player.pos = new ex.Vector(
+      scene.engine.drawWidth * Config.TopPlayer.StartingXPercent,
+      scene.engine.drawHeight / 3
+    );
+
+    this.player.unkill();
 
     scene.add(this.spawnTimer);
     scene.add(this.platformTimer);
@@ -51,6 +59,7 @@ export class TopSubscene {
   }
 
   public teardown(scene: ex.Scene) {
+    this.player.kill();
     scene.remove(this.floor);
     scene.remove(this.player);
     scene.remove(this.healthMeter);

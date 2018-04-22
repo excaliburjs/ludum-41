@@ -22,9 +22,7 @@ export class BottomSubscene {
   private _secondsRemaining: number;
   private _gameOver: boolean = false;
 
-  constructor() {}
-
-  public setup(scene: ex.Scene) {
+  constructor(scene: ex.Scene) {
     this.cursor = new Cursor();
     scene.add(this.cursor);
 
@@ -36,12 +34,12 @@ export class BottomSubscene {
       });
     }
 
-    // this.collatingGame = new CollatingGame(
-    //   scene,
-    //   Config.MiniGames.Collating.NumberOfWinsToProceed,
-    //   this
-    // );
-    //this.miniGames.push(this.collatingGame);
+    this.collatingGame = new CollatingGame(
+      scene,
+      Config.MiniGames.Collating.NumberOfWinsToProceed,
+      this
+    );
+    this.miniGames.push(this.collatingGame);
 
     this.coffeeGame = new CoffeeGame(scene, this);
     this.miniGames.push(this.coffeeGame);
@@ -59,7 +57,9 @@ export class BottomSubscene {
     });
     scene.add(this._countdownLabel);
     this._countdownLabel.setZIndex(300);
+  }
 
+  public setup(scene: ex.Scene) {
     this._miniGameTimer = new Timer(
       () => {
         this._secondsRemaining--;

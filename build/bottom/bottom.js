@@ -1,4 +1,5 @@
 import * as ex from "excalibur";
+import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
 import { PrinterGame } from "./printer-game/printer-game";
@@ -7,12 +8,10 @@ import { Timer } from "excalibur";
 import { gameover } from "../session";
 import { GameOverReason } from "../stats";
 export class BottomSubscene {
-    constructor() {
+    constructor(scene) {
         this.miniGameCount = 0;
         this.miniGames = [];
         this._gameOver = false;
-    }
-    setup(scene) {
         this.cursor = new Cursor();
         scene.add(this.cursor);
         if (Config.CheatCode) {
@@ -22,12 +21,8 @@ export class BottomSubscene {
                 }
             });
         }
-        // this.collatingGame = new CollatingGame(
-        //   scene,
-        //   Config.MiniGames.Collating.NumberOfWinsToProceed,
-        //   this
-        // );
-        //this.miniGames.push(this.collatingGame);
+        this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
+        this.miniGames.push(this.collatingGame);
         this.coffeeGame = new CoffeeGame(scene, this);
         this.miniGames.push(this.coffeeGame);
         this.printerGame = new PrinterGame(scene, this);
@@ -41,6 +36,8 @@ export class BottomSubscene {
         });
         scene.add(this._countdownLabel);
         this._countdownLabel.setZIndex(300);
+    }
+    setup(scene) {
         this._miniGameTimer = new Timer(() => {
             this._secondsRemaining--;
             this._countdownLabel.text = this._secondsRemaining.toString();

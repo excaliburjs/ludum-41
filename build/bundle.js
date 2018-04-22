@@ -472,13 +472,11 @@ var game = (function (exports,ex) {
     Background.SliceWidth = 50;
 
     class TopSubscene {
-        constructor(_engine) {
+        constructor(_engine, scene) {
             this._engine = _engine;
             this.onPlayerHitObstacle = () => {
                 this.healthMeter.health--;
             };
-        }
-        setup(scene) {
             this.scene = scene;
             this.floor = new Floor(this._engine);
             this.player = new TopPlayer(this._engine);
@@ -490,6 +488,11 @@ var game = (function (exports,ex) {
             this.platformTimer = new ex.Timer(() => {
                 this.spawnPlatform(this._engine, scene);
             }, 2000, true);
+        }
+        setup(scene) {
+            this.player.vel = ex.Vector.Zero.clone();
+            this.player.pos = new ex.Vector(scene.engine.drawWidth * Config.TopPlayer.StartingXPercent, scene.engine.drawHeight / 3);
+            this.player.unkill();
             scene.add(this.spawnTimer);
             scene.add(this.platformTimer);
             scene.add(this.platformTimer2);
@@ -499,6 +502,7 @@ var game = (function (exports,ex) {
             scene.add(this.background);
         }
         teardown(scene) {
+            this.player.kill();
             scene.remove(this.floor);
             scene.remove(this.player);
             scene.remove(this.healthMeter);
@@ -564,6 +568,130 @@ var game = (function (exports,ex) {
         }
         onFail() {
             this.cleanUp();
+        }
+    }
+
+    class OfficeDoc extends ex.Actor {
+        constructor(pageNumber) {
+            super();
+            this._pageNumber = pageNumber;
+            this.color = ex.Color.Green;
+        }
+        get pageNumber() {
+            return this._pageNumber;
+        }
+    }
+    class OfficeDocSet {
+        constructor(numDocuments) {
+            this._documents = [];
+            this._playerSortedStack = [];
+            this._numDocuments = numDocuments;
+            for (var i = 0; i < this._numDocuments; i++) {
+                this._documents.push(new OfficeDoc(i));
+            }
+        }
+        //attempt to add this document to the sorted stack
+        tryAddToSortedStack(documentIn) {
+            if (documentIn.pageNumber === this._playerSortedStack.length) {
+                this._playerSortedStack.push(documentIn);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        clear() {
+            this._playerSortedStack = [];
+        }
+        isComplete() {
+            return this._playerSortedStack.length === this._numDocuments;
+        }
+        getScrambledDocumentSet() {
+            var docsArr = this._documents;
+            var currentIndex = docsArr.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = docsArr[currentIndex];
+                docsArr[currentIndex] = docsArr[randomIndex];
+                docsArr[randomIndex] = temporaryValue;
+            }
+            return docsArr;
+        }
+    }
+
+    class CollatingGame extends MiniGame {
+        constructor(scene, winsRequired, bottomSubscene) {
+            super(scene, bottomSubscene);
+            this._docLabels = [];
+            this._winsRequired = 0;
+            this._currentWins = 0;
+            this._winsRequired = winsRequired;
+        }
+        setup() {
+            var numDocs = Config.MiniGames.Collating.NumberOfDocuments;
+            // background
+            const bg = new ex.Actor({
+                x: 0,
+                y: this.scene.engine.drawHeight / 2,
+                anchor: ex.Vector.Zero
+            });
+            bg.addDrawing(Resources.txCollateBackground);
+            this.miniGameActors.push(bg);
+            this._docSet = new OfficeDocSet(numDocs);
+            this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
+            //this.reset();
+            for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
+                //add to the scene here
+                this._scrambledOfficeDocs[i].x = 100 * i + 200;
+                this._scrambledOfficeDocs[i].setWidth(50);
+                this._scrambledOfficeDocs[i].setHeight(50);
+                this._scrambledOfficeDocs[i].y = 600;
+                this.wireUpClickEvent(this._scrambledOfficeDocs[i]);
+                var docLabel = new ex.Label({
+                    x: this._scrambledOfficeDocs[i].x,
+                    y: this._scrambledOfficeDocs[i].y + 50,
+                    color: ex.Color.Red,
+                    text: (this._scrambledOfficeDocs[i].pageNumber + 1).toString()
+                });
+                docLabel.fontSize = 16;
+                this._docLabels.push(docLabel);
+                this.miniGameActors.push(docLabel);
+                this.miniGameActors.push(this._scrambledOfficeDocs[i]);
+            }
+        }
+        reset() { }
+        wireUpClickEvent(officeDoc) {
+            officeDoc.on("pointerdown", evt => {
+                var clickedDoc = evt.target;
+                if (this._docSet.tryAddToSortedStack(clickedDoc)) {
+                    //update ui
+                    clickedDoc.color = ex.Color.Magenta;
+                    if (this._docSet.isComplete()) {
+                        //you won
+                        console.log("you won the collating game");
+                        this._currentWins++;
+                        if (this._currentWins >= this._winsRequired) {
+                            //move on to the next mini game
+                            this._currentWins = 0;
+                            this.onSucceed();
+                        }
+                        else {
+                            this.resetDocuments();
+                        }
+                    }
+                }
+            });
+        }
+        //shuffle the pages around visually
+        resetDocuments() {
+            this._docSet.clear();
+            this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
+            for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
+                this._scrambledOfficeDocs[i].x = 100 * i + 200;
+                this._scrambledOfficeDocs[i].color = ex.Color.Green;
+                this._docLabels[i].text = (this._scrambledOfficeDocs[i].pageNumber + 1).toString();
+            }
         }
     }
 
@@ -855,12 +983,10 @@ var game = (function (exports,ex) {
     }
 
     class BottomSubscene {
-        constructor() {
+        constructor(scene) {
             this.miniGameCount = 0;
             this.miniGames = [];
             this._gameOver = false;
-        }
-        setup(scene) {
             this.cursor = new Cursor();
             scene.add(this.cursor);
             if (Config.CheatCode) {
@@ -870,12 +996,8 @@ var game = (function (exports,ex) {
                     }
                 });
             }
-            // this.collatingGame = new CollatingGame(
-            //   scene,
-            //   Config.MiniGames.Collating.NumberOfWinsToProceed,
-            //   this
-            // );
-            //this.miniGames.push(this.collatingGame);
+            this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
+            this.miniGames.push(this.collatingGame);
             this.coffeeGame = new CoffeeGame(scene, this);
             this.miniGames.push(this.coffeeGame);
             this.printerGame = new PrinterGame(scene, this);
@@ -889,6 +1011,8 @@ var game = (function (exports,ex) {
             });
             scene.add(this._countdownLabel);
             this._countdownLabel.setZIndex(300);
+        }
+        setup(scene) {
             this._miniGameTimer = new ex.Timer(() => {
                 this._secondsRemaining--;
                 this._countdownLabel.text = this._secondsRemaining.toString();
@@ -936,12 +1060,13 @@ var game = (function (exports,ex) {
 
     class ScnMain extends ex.Scene {
         onInitialize(engine) {
-            this._top = new TopSubscene(this.engine);
-            this._bottom = new BottomSubscene();
+            this._top = new TopSubscene(this.engine, this);
+            this._bottom = new BottomSubscene(this);
             this._overlay = new Overlay(this.engine, this);
         }
         onActivate() {
             this._top.setup(this);
+            this._top.healthMeter.health = Config.Health.Default;
             this._bottom.setup(this);
         }
         onDeactivate() {
