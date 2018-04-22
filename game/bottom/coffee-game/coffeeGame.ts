@@ -2,6 +2,7 @@ import * as ex from "excalibur";
 import { MiniGame } from "../miniGame";
 import { CoffeeItem } from "./coffeeItem";
 import { BottomSubscene } from "../bottom";
+import Resources from "../../resources";
 
 export class CoffeeGame extends MiniGame {
   private _stepCount = 0;
@@ -28,6 +29,7 @@ export class CoffeeGame extends MiniGame {
       height: 90,
       color: ex.Color.Red
     });
+    coffeeGrounds.addDrawing(Resources.txCoffeeGrounds);
     this.miniGameActors.push(coffeeGrounds);
 
     let waterPitcher = new CoffeeItem({
@@ -46,6 +48,7 @@ export class CoffeeGame extends MiniGame {
       height: 250,
       color: ex.Color.Black
     });
+    coffeeMaker.addDrawing(Resources.txCoffeeMaker);
     this.miniGameActors.push(coffeeMaker);
 
     let coffeeCup = new CoffeeItem({
