@@ -1,4 +1,5 @@
 import * as ex from "excalibur";
+import { PrinterGame } from "./printer-game";
 
 export class Light extends ex.Actor {
   public up: Light;
@@ -7,7 +8,7 @@ export class Light extends ex.Actor {
   public right: Light;
   public lit: boolean = false;
 
-  constructor(args: ex.IActorArgs) {
+  constructor(args: ex.IActorArgs, private printer: PrinterGame) {
     super(args);
   }
 
@@ -26,6 +27,11 @@ export class Light extends ex.Actor {
       this.color = ex.Color.Yellow.clone();
     } else {
       this.color = ex.Color.Violet.clone();
+    }
+
+    if (this.printer.isAllLit() || this.printer.isAllDark()) {
+      console.log("win");
+      this.printer.onSucceed();
     }
   }
 }

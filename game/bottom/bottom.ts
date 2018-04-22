@@ -18,15 +18,15 @@ export class BottomSubscene {
   constructor() {}
 
   public setup(scene: ex.Scene) {
-    this.collatingGame = new CollatingGame(
-      scene,
-      Config.MiniGames.Collating.NumberOfWinsToProceed,
-      this
-    );
-    this.miniGames.push(this.collatingGame);
+    // this.collatingGame = new CollatingGame(
+    //   scene,
+    //   Config.MiniGames.Collating.NumberOfWinsToProceed,
+    //   this
+    // );
+    // this.miniGames.push(this.collatingGame);
 
-    this.coffeeGame = new CoffeeGame(scene, this);
-    this.miniGames.push(this.coffeeGame);
+    // this.coffeeGame = new CoffeeGame(scene, this);
+    // this.miniGames.push(this.coffeeGame);
 
     this.printerGame = new PrinterGame(scene, this);
     this.miniGames.push(this.printerGame);
