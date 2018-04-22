@@ -1,4 +1,5 @@
 import { Stats } from "./stats";
+import { createRand } from "./config";
 var stats;
 export function getStats() {
     return stats;
@@ -6,6 +7,8 @@ export function getStats() {
 export function newgame(game) {
     // clear stats
     stats = new Stats();
+    // New random
+    createRand();
     // begin main scene
     game.goToScene("main");
 }

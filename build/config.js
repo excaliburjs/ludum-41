@@ -1,6 +1,11 @@
 import { Random, Vector, Logger } from "excalibur";
-const rand = new Random(Date.now());
-Logger.getInstance().info("World seed", rand.seed);
+// GOOD SEEDS
+// 1524409882715
+var rand;
+export function createRand() {
+    rand = new Random(Date.now());
+    Logger.getInstance().info("World seed", rand.seed);
+}
 export default {
     AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
     GameWidth: 800,
@@ -30,8 +35,8 @@ export default {
     Platform: {
         Width: 100,
         Height: 10,
-        HeightAboveFloor: 60,
-        MinSpawnInterval: 500,
+        HeightAboveFloor: 70,
+        MinSpawnInterval: 1000,
         MaxSpawnInterval: 2000
     },
     PrinterMiniGame: {
@@ -42,6 +47,8 @@ export default {
      */
     ObstacleSpawnMinInterval: 1000,
     ObstacleSpawnMaxInterval: 5000,
-    Rand: rand
+    get Rand() {
+        return rand;
+    }
 };
 //# sourceMappingURL=config.js.map

@@ -16,6 +16,59 @@ var game = (function (exports,ex) {
         }
     }
 
+    // GOOD SEEDS
+    // 1524409882715
+    var rand;
+    function createRand() {
+        rand = new ex.Random(Date.now());
+        ex.Logger.getInstance().info("World seed", rand.seed);
+    }
+    var Config = {
+        AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
+        GameWidth: 800,
+        GameHeight: 800,
+        // Top Floor config
+        Floor: {
+            Speed: -200,
+            Height: 5
+        },
+        // Top Player config
+        TopPlayer: {
+            StartingXPercent: 0.25,
+            Width: 30,
+            Height: 50
+        },
+        Health: {
+            Pos: new ex.Vector(10, 10),
+            Default: 10,
+            FontSize: 50
+        },
+        MiniGames: {
+            Collating: {
+                NumberOfDocuments: 5,
+                NumberOfWinsToProceed: 3
+            }
+        },
+        Platform: {
+            Width: 100,
+            Height: 10,
+            HeightAboveFloor: 70,
+            MinSpawnInterval: 1000,
+            MaxSpawnInterval: 2000
+        },
+        PrinterMiniGame: {
+            GridDimension: 3
+        },
+        /**
+         * Obstacles spawn interval
+         */
+        ObstacleSpawnMinInterval: 1000,
+        ObstacleSpawnMaxInterval: 5000,
+        get Rand() {
+            return rand;
+        }
+    };
+
     var stats;
     function getStats() {
         return stats;
@@ -23,6 +76,8 @@ var game = (function (exports,ex) {
     function newgame(game) {
         // clear stats
         stats = new Stats();
+        // New random
+        createRand();
         // begin main scene
         game.goToScene("main");
     }
@@ -81,52 +136,6 @@ var game = (function (exports,ex) {
             newgame(game);
         }
     }
-
-    const rand = new ex.Random(Date.now());
-    ex.Logger.getInstance().info("World seed", rand.seed);
-    var Config = {
-        AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
-        GameWidth: 800,
-        GameHeight: 800,
-        // Top Floor config
-        Floor: {
-            Speed: -200,
-            Height: 5
-        },
-        // Top Player config
-        TopPlayer: {
-            StartingXPercent: 0.25,
-            Width: 30,
-            Height: 50
-        },
-        Health: {
-            Pos: new ex.Vector(10, 10),
-            Default: 10,
-            FontSize: 50
-        },
-        MiniGames: {
-            Collating: {
-                NumberOfDocuments: 5,
-                NumberOfWinsToProceed: 3
-            }
-        },
-        Platform: {
-            Width: 100,
-            Height: 10,
-            HeightAboveFloor: 60,
-            MinSpawnInterval: 500,
-            MaxSpawnInterval: 2000
-        },
-        PrinterMiniGame: {
-            GridDimension: 3
-        },
-        /**
-         * Obstacles spawn interval
-         */
-        ObstacleSpawnMinInterval: 1000,
-        ObstacleSpawnMaxInterval: 5000,
-        Rand: rand
-    };
 
     var Resources = {
         txBike: new ex.Texture("game/assets/img/bike.png"),
