@@ -151,6 +151,7 @@ var game = (function (exports,ex) {
         txCoffeeMaker: new ex.Texture("game/assets/img/coffee-maker.png"),
         txCoffeeGrounds: new ex.Texture("game/assets/img/coffee-grounds.png"),
         txCoffeeFilter: new ex.Texture("game/assets/img/coffee-filters.png"),
+        txCoffeeCup: new ex.Texture("game/assets/img/coffee-cup.png"),
         txCopierBackground: new ex.Texture("game/assets/img/printer.png"),
         txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
         txCursor: new ex.Texture("game/assets/img/thehand.png"),
@@ -772,10 +773,13 @@ var game = (function (exports,ex) {
             let coffeeCup = new CoffeeItem({
                 x: 550,
                 y: 500,
-                width: 50,
-                height: 50,
+                width: 100,
+                height: 100,
                 color: ex.Color.Orange
             });
+            let coffeeCupSpritesheet = new ex.SpriteSheet(Resources.txCoffeeCup, 2, 1, 100, 100);
+            coffeeCup.addDrawing("default", coffeeCupSpritesheet.getSprite(0));
+            coffeeCup.addDrawing("highlight", coffeeCupSpritesheet.getSprite(1));
             this.miniGameActors.push(coffeeCup);
             this.scene.on("coffeeClick", () => {
                 console.log("coffee click");

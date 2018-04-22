@@ -55,10 +55,13 @@ export class CoffeeGame extends MiniGame {
         let coffeeCup = new CoffeeItem({
             x: 550,
             y: 500,
-            width: 50,
-            height: 50,
+            width: 100,
+            height: 100,
             color: ex.Color.Orange
         });
+        let coffeeCupSpritesheet = new ex.SpriteSheet(Resources.txCoffeeCup, 2, 1, 100, 100);
+        coffeeCup.addDrawing("default", coffeeCupSpritesheet.getSprite(0));
+        coffeeCup.addDrawing("highlight", coffeeCupSpritesheet.getSprite(1));
         this.miniGameActors.push(coffeeCup);
         this.scene.on("coffeeClick", () => {
             console.log("coffee click");

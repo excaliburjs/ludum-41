@@ -7,6 +7,7 @@ export default {
     txCoffeeMaker: new Texture("game/assets/img/coffee-maker.png"),
     txCoffeeGrounds: new Texture("game/assets/img/coffee-grounds.png"),
     txCoffeeFilter: new Texture("game/assets/img/coffee-filters.png"),
+    txCoffeeCup: new Texture("game/assets/img/coffee-cup.png"),
     txCopierBackground: new Texture("game/assets/img/printer.png"),
     txOverlay: new Texture("game/assets/img/office-overlay.png"),
     txCursor: new Texture("game/assets/img/thehand.png"),
