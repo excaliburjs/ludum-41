@@ -13,11 +13,14 @@ export class CoffeeGame extends MiniGame {
         let coffeeFilter = new CoffeeItem({
             x: 200,
             y: 500,
-            width: 50,
-            height: 50,
+            width: 140,
+            height: 140,
             color: ex.Color.White
         });
+        let coffeeFilterSpriteSheet = new ex.SpriteSheet(Resources.txCoffeeFilter, 2, 1, 140, 140);
         this.miniGameActors.push(coffeeFilter);
+        coffeeFilter.addDrawing("default", coffeeFilterSpriteSheet.getSprite(0));
+        coffeeFilter.addDrawing("highlight", coffeeFilterSpriteSheet.getSprite(1));
         coffeeFilter.highlight();
         let coffeeGrounds = new CoffeeItem({
             x: 300,
@@ -30,14 +33,14 @@ export class CoffeeGame extends MiniGame {
         coffeeGrounds.addDrawing("default", coffeeGroundsSpritesheet.getSprite(0));
         coffeeGrounds.addDrawing("highlight", coffeeGroundsSpritesheet.getSprite(1));
         this.miniGameActors.push(coffeeGrounds);
-        let waterPitcher = new CoffeeItem({
-            x: 100,
-            y: 500,
-            width: 100,
-            height: 150,
-            color: ex.Color.Cyan
-        });
-        this.miniGameActors.push(waterPitcher);
+        // let waterPitcher = new CoffeeItem({
+        //   x: 100,
+        //   y: 500,
+        //   width: 100,
+        //   height: 150,
+        //   color: ex.Color.Cyan
+        // });
+        // this.miniGameActors.push(waterPitcher);
         this._coffeeMaker = new CoffeeItem({
             x: 400,
             y: 600,
