@@ -37,8 +37,8 @@ export class BottomSubscene {
       color: ex.Color.White,
       text: "60",
       fontSize: 25,
-      x: 400,
-      y: 450
+      x: 700,
+      y: 650
     });
     scene.add(this._countdownLabel);
     this._countdownLabel.setZIndex(300);
