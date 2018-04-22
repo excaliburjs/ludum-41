@@ -159,6 +159,6 @@ export class CoffeeGame extends MiniGame {
     this._coffeeCup.unHighlight();
     this._coffeeGrounds.unHighlight();
     this._coffeeMaker.unHighlight();
-    this._stepCount = 0;
+    this._stepCount = 1;
   }
 }
