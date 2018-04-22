@@ -31,7 +31,7 @@ var game = (function (exports,ex) {
         // Top Floor config
         Floor: {
             Speed: -200,
-            Height: 5
+            Height: 20
         },
         // Top Player config
         TopPlayer: {
@@ -337,7 +337,7 @@ var game = (function (exports,ex) {
                 width: engine.drawWidth * 2,
                 height: Config.Floor.Height,
                 color: ex.Color.Black,
-                anchor: new ex.Vector(0, 0.5),
+                anchor: new ex.Vector(0, 0.25),
                 collisionType: ex.CollisionType.Fixed
             });
         }
@@ -824,6 +824,7 @@ var game = (function (exports,ex) {
             this._coffeeCup.unHighlight();
             this._coffeeGrounds.unHighlight();
             this._coffeeMaker.unHighlight();
+            this._coffeeMaker.setDrawing("default");
             this._stepCount = 1;
         }
     }
