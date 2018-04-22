@@ -89,7 +89,6 @@
     };
 
     var Resources = {
-        sampleImg: new ex.Texture("game/assets/img/sample-image.png"),
         txBike: new ex.Texture("game/assets/img/bike.png"),
         txCrate: new ex.Texture("game/assets/img/crate.png"),
         txBackground: new ex.Texture("game/assets/img/top-bg.png"),
@@ -698,9 +697,9 @@
             this.miniGameActors.push(waterPitcher);
             let coffeeMaker = new CoffeeItem({
                 x: 400,
-                y: 500,
-                width: 100,
-                height: 200,
+                y: 600,
+                width: 150,
+                height: 250,
                 color: ex.Color.Black
             });
             this.miniGameActors.push(coffeeMaker);
