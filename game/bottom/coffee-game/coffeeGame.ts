@@ -126,7 +126,7 @@ export class CoffeeGame extends MiniGame {
 
     this.scene.on("coffeeClick", () => {
       this._stepCount++;
-      if (this._stepCount >= this.miniGameActors.length) {
+      if (this.miniGameActors[this._stepCount - 1] == this._coffeeMaker) {
         this._coffeeMaker.actions
           .callMethod(() => {
             // TODO play coffee brewing animation
@@ -136,8 +136,11 @@ export class CoffeeGame extends MiniGame {
           .delay(Config.MiniGames.Coffee.BrewTime)
           .callMethod(() => {
             ex.Logger.getInstance().info("coffee complete...");
-            this.onSucceed();
+            let coffeeItem = <CoffeeItem>this.miniGameActors[this._stepCount];
+            coffeeItem.highlight();
           });
+      } else if (this._stepCount >= this.miniGameActors.length) {
+        this.onSucceed();
       } else {
         let coffeeItem = <CoffeeItem>this.miniGameActors[this._stepCount];
         coffeeItem.highlight();
