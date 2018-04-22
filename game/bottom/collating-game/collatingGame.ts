@@ -1,7 +1,8 @@
-import { Scene, Label, Color } from "excalibur";
+import { Actor, Scene, Label, Color, Vector } from "excalibur";
 import { MiniGame } from "../../bottom/miniGame";
 import { OfficeDocSet, OfficeDoc } from "./officeDoc";
 import Config from "../../config";
+import Resources from "../../resources";
 import { BottomSubscene } from "../bottom";
 
 export class CollatingGame extends MiniGame {
@@ -22,6 +23,16 @@ export class CollatingGame extends MiniGame {
 
   protected setup(): void {
     var numDocs = Config.MiniGames.Collating.NumberOfDocuments;
+
+    // background
+    const bg = new Actor({
+      x: 0,
+      y: this.scene.engine.drawHeight / 2,
+      anchor: Vector.Zero
+    });
+    bg.addDrawing(Resources.txCollateBackground);
+    this.miniGameActors.push(bg);
+
     this._docSet = new OfficeDocSet(numDocs);
     this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
     //this.reset();

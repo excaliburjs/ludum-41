@@ -93,6 +93,7 @@
         txBike: new ex.Texture("game/assets/img/bike.png"),
         txCrate: new ex.Texture("game/assets/img/crate.png"),
         txBackground: new ex.Texture("game/assets/img/top-bg.png"),
+        txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -570,6 +571,14 @@
         }
         setup() {
             var numDocs = Config.MiniGames.Collating.NumberOfDocuments;
+            // background
+            const bg = new ex.Actor({
+                x: 0,
+                y: this.scene.engine.drawHeight / 2,
+                anchor: ex.Vector.Zero
+            });
+            bg.addDrawing(Resources.txCollateBackground);
+            this.miniGameActors.push(bg);
             this._docSet = new OfficeDocSet(numDocs);
             this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
             //this.reset();
