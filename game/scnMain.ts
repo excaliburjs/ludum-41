@@ -10,7 +10,7 @@ export class ScnMain extends ex.Scene {
 
   onInitialize(engine: ex.Engine) {
     this._top = new TopSubscene(this.engine);
-    this._bottom = new BottomSubscene();
+    this._bottom = new BottomSubscene(this);
     this._overlay = new Overlay(this.engine, this);
   }
 
