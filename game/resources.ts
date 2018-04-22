@@ -9,7 +9,7 @@ export default {
   txDocLineGraph: new Texture("game/assets/img/lineGraphSubmit.png"),
   txDocMoney: new Texture("game/assets/img/moneySubmit.png"),
   txDocPieChart: new Texture("game/assets/img/pieChartSubmit.png"),
-  txDocBarGraph: new Texture("game/assets/img/textBarGraph.png"),
+  txDocBarGraph: new Texture("game/assets/img/barGraphSubmit.png"),
   txDocVennDiagram: new Texture("game/assets/img/vennDiagramSubmit.png"),
 
   txCoffeeMaker: new Texture("game/assets/img/coffee-maker.png"),
