@@ -1,4 +1,4 @@
-import { Actor, Scene } from "excalibur";
+import { Actor, Scene, Timer, Label, Color } from "excalibur";
 import { BottomSubscene } from "./bottom";
 export abstract class MiniGame {
   protected miniGameActors: Array<Actor> = [];
@@ -38,6 +38,6 @@ export abstract class MiniGame {
 
   public onFail(): void {
     this.cleanUp();
-    this.bottomSubscene.startRandomMiniGame();
+    //lose the game
   }
 }
