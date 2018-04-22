@@ -93,6 +93,8 @@
         txCrate: new ex.Texture("game/assets/img/crate.png"),
         txBackground: new ex.Texture("game/assets/img/top-bg.png"),
         txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
+        txCoffeeMaker: new ex.Texture("game/assets/img/coffee-maker.png"),
+        txCoffeeGrounds: new ex.Texture("game/assets/img/coffee-grounds.png"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -686,6 +688,7 @@
                 height: 90,
                 color: ex.Color.Red
             });
+            coffeeGrounds.addDrawing(Resources.txCoffeeGrounds);
             this.miniGameActors.push(coffeeGrounds);
             let waterPitcher = new CoffeeItem({
                 x: 100,
@@ -702,6 +705,7 @@
                 height: 250,
                 color: ex.Color.Black
             });
+            coffeeMaker.addDrawing(Resources.txCoffeeMaker);
             this.miniGameActors.push(coffeeMaker);
             let coffeeCup = new CoffeeItem({
                 x: 550,
