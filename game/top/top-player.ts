@@ -55,7 +55,13 @@ export class TopPlayer extends ex.Actor {
 
     this.add(dustEmitter);
     this.dustEmitter = dustEmitter;
+
+    this.on("exitviewport", this.onExitViewport);
   }
+
+  onExitViewport = () => {
+    this.engine.goToScene("end");
+  };
 
   // le-sigh workaround for odd collision tunneling issue
   handleCollision(event: ex.PreCollisionEvent) {
