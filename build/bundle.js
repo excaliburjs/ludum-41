@@ -930,6 +930,7 @@ var game = (function (exports,ex) {
 
     class BottomSubscene {
         constructor() {
+            this.miniGameCount = 0;
             this.miniGames = [];
         }
         setup(scene) {
@@ -956,7 +957,10 @@ var game = (function (exports,ex) {
             this.currentMiniGame.cleanUp();
         }
         startRandomMiniGame() {
-            this.currentMiniGame = this.miniGames[Config.Rand.integer(0, this.miniGames.length - 1)];
+            if (this.miniGameCount % this.miniGames.length === 0) {
+                this.miniGames = Config.Rand.shuffle(this.miniGames);
+            }
+            this.currentMiniGame = this.miniGames[(this.miniGameCount + 1) % this.miniGames.length];
             this.currentMiniGame.start();
         }
     }

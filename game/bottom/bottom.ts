@@ -8,6 +8,7 @@ import { Cursor } from "./cursor";
 import { Scene, Label, Timer } from "excalibur";
 
 export class BottomSubscene {
+  public miniGameCount: number = 0;
   private miniGames: MiniGame[] = [];
   private currentMiniGame: MiniGame;
   private collatingGame: CollatingGame;
@@ -54,8 +55,12 @@ export class BottomSubscene {
   }
 
   public startRandomMiniGame() {
+    if (this.miniGameCount % this.miniGames.length === 0) {
+      this.miniGames = Config.Rand.shuffle(this.miniGames);
+    }
+
     this.currentMiniGame = this.miniGames[
-      Config.Rand.integer(0, this.miniGames.length - 1)
+      (this.miniGameCount + 1) % this.miniGames.length
     ];
     this.currentMiniGame.start();
   }
