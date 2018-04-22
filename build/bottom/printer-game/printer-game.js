@@ -7,8 +7,26 @@ export class PrinterGame extends MiniGame {
         super(scene, bottomSubscene);
         this.miniGameActors = [];
         this._lights = [];
-        let startX = scene.engine.halfDrawWidth;
-        let startY = scene.engine.halfDrawHeight + 100;
+        this.scene = scene;
+    }
+    getLight(x, y) {
+        let index = x + y * Config.PrinterMiniGame.GridDimension;
+        if (index < 0 || index > this._lights.length - 1) {
+            return null;
+        }
+        if (x >= Config.PrinterMiniGame.GridDimension ||
+            y >= Config.PrinterMiniGame.GridDimension) {
+            return null;
+        }
+        if (x < 0 || y < 0) {
+            return null;
+        }
+        return this._lights[index];
+    }
+    setup() {
+        let startX = this.scene.engine.halfDrawWidth;
+        let startY = this.scene.engine.halfDrawHeight + 100;
+        this._lights = [];
         for (let i = 0; i <
             Config.PrinterMiniGame.GridDimension *
                 Config.PrinterMiniGame.GridDimension; i++) {
@@ -34,24 +52,7 @@ export class PrinterGame extends MiniGame {
         }
         let litLight = Config.Rand.pickOne(this._lights);
         litLight.lit = true;
-    }
-    getLight(x, y) {
-        let index = x + y * Config.PrinterMiniGame.GridDimension;
-        if (index < 0 || index > this._lights.length - 1) {
-            return null;
-        }
-        if (x >= Config.PrinterMiniGame.GridDimension ||
-            y >= Config.PrinterMiniGame.GridDimension) {
-            return null;
-        }
-        if (x < 0 || y < 0) {
-            return null;
-        }
-        return this._lights[index];
-    }
-    setup() {
         this.miniGameActors = this._lights;
     }
-    reset() { }
 }
 //# sourceMappingURL=printer-game.js.map

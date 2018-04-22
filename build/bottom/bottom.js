@@ -16,10 +16,12 @@ export class BottomSubscene {
         this.miniGames.push(this.printerGame);
         this.startRandomMiniGame();
     }
-    teardown(scene) { }
+    teardown(scene) {
+        this.currentMiniGame.cleanUp();
+    }
     startRandomMiniGame() {
-        let miniGame = this.miniGames[ex.Util.randomIntInRange(0, this.miniGames.length - 1)];
-        miniGame.start();
+        this.currentMiniGame = this.miniGames[ex.Util.randomIntInRange(0, this.miniGames.length - 1)];
+        this.currentMiniGame.start();
     }
 }
 //# sourceMappingURL=bottom.js.map

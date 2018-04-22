@@ -672,6 +672,7 @@
             this._stepCount = 0;
         }
         setup() {
+            this._stepCount = 0;
             let coffeeFilter = new CoffeeItem({
                 x: 200,
                 y: 500,
@@ -731,9 +732,6 @@
                 }
             });
         }
-        reset() {
-            this._stepCount = 0;
-        }
     }
 
     class Light extends ex.Actor {
@@ -769,8 +767,26 @@
             super(scene, bottomSubscene);
             this.miniGameActors = [];
             this._lights = [];
-            let startX = scene.engine.halfDrawWidth;
-            let startY = scene.engine.halfDrawHeight + 100;
+            this.scene = scene;
+        }
+        getLight(x, y) {
+            let index = x + y * Config.PrinterMiniGame.GridDimension;
+            if (index < 0 || index > this._lights.length - 1) {
+                return null;
+            }
+            if (x >= Config.PrinterMiniGame.GridDimension ||
+                y >= Config.PrinterMiniGame.GridDimension) {
+                return null;
+            }
+            if (x < 0 || y < 0) {
+                return null;
+            }
+            return this._lights[index];
+        }
+        setup() {
+            let startX = this.scene.engine.halfDrawWidth;
+            let startY = this.scene.engine.halfDrawHeight + 100;
+            this._lights = [];
             for (let i = 0; i <
                 Config.PrinterMiniGame.GridDimension *
                     Config.PrinterMiniGame.GridDimension; i++) {
@@ -795,25 +811,8 @@
             }
             let litLight = Config.Rand.pickOne(this._lights);
             litLight.lit = true;
-        }
-        getLight(x, y) {
-            let index = x + y * Config.PrinterMiniGame.GridDimension;
-            if (index < 0 || index > this._lights.length - 1) {
-                return null;
-            }
-            if (x >= Config.PrinterMiniGame.GridDimension ||
-                y >= Config.PrinterMiniGame.GridDimension) {
-                return null;
-            }
-            if (x < 0 || y < 0) {
-                return null;
-            }
-            return this._lights[index];
-        }
-        setup() {
             this.miniGameActors = this._lights;
         }
-        reset() { }
     }
 
     class BottomSubscene {
@@ -829,10 +828,12 @@
             this.miniGames.push(this.printerGame);
             this.startRandomMiniGame();
         }
-        teardown(scene) { }
+        teardown(scene) {
+            this.currentMiniGame.cleanUp();
+        }
         startRandomMiniGame() {
-            let miniGame = this.miniGames[ex.Util.randomIntInRange(0, this.miniGames.length - 1)];
-            miniGame.start();
+            this.currentMiniGame = this.miniGames[ex.Util.randomIntInRange(0, this.miniGames.length - 1)];
+            this.currentMiniGame.start();
         }
     }
 

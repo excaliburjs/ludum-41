@@ -8,6 +8,7 @@ export class CoffeeGame extends MiniGame {
         this._stepCount = 0;
     }
     setup() {
+        this._stepCount = 0;
         let coffeeFilter = new CoffeeItem({
             x: 200,
             y: 500,
@@ -66,9 +67,6 @@ export class CoffeeGame extends MiniGame {
                 coffeeItem.highlight();
             }
         });
-    }
-    reset() {
-        this._stepCount = 0;
     }
 }
 //# sourceMappingURL=coffeeGame.js.map
