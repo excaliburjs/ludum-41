@@ -44,7 +44,7 @@ export class TopSubscene {
     this.player.vel = ex.Vector.Zero.clone();
     this.player.pos = new ex.Vector(
       scene.engine.drawWidth * Config.TopPlayer.StartingXPercent,
-      scene.engine.drawHeight / 4
+      scene.engine.drawHeight / 3
     );
 
     this.player.unkill();
