@@ -2,7 +2,6 @@ import * as ex from "excalibur";
 import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
-import { PrinterGame } from "./printer-game/printer-game";
 import { Cursor } from "./cursor";
 import { Timer } from "excalibur";
 import { gameover } from "../session";
@@ -12,32 +11,16 @@ export class BottomSubscene {
         this.miniGameCount = 0;
         this.miniGames = [];
         this._gameOver = false;
-        this.cursor = new Cursor();
-        scene.add(this.cursor);
-        if (Config.CheatCode) {
-            scene.engine.input.keyboard.on("down", (evt) => {
-                if (evt.key === ex.Input.Keys.W) {
-                    this.startRandomMiniGame();
-                }
-            });
-        }
-        this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
-        this.miniGames.push(this.collatingGame);
-        this.coffeeGame = new CoffeeGame(scene, this);
-        this.miniGames.push(this.coffeeGame);
-        this.printerGame = new PrinterGame(scene, this);
-        this.miniGames.push(this.printerGame);
-        this.miniGames = Config.Rand.shuffle(this.miniGames);
         this._countdownLabel = new ex.Label({
             color: ex.Color.White,
             fontSize: 25,
             x: 700,
-            y: 650
+            y: 650,
+            text: "60"
         });
         scene.add(this._countdownLabel);
         this._countdownLabel.setZIndex(300);
-    }
-    setup(scene) {
+        console.log("bottom");
         this._miniGameTimer = new Timer(() => {
             this._secondsRemaining--;
             this._countdownLabel.text = this._secondsRemaining.toString();
@@ -50,20 +33,32 @@ export class BottomSubscene {
             }
         }, 1000, true);
         scene.add(this._miniGameTimer);
+        this.cursor = new Cursor();
+        scene.add(this.cursor);
+        this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
+        //this.miniGames.push(this.collatingGame);
+        this.coffeeGame = new CoffeeGame(scene, this);
+        this.miniGames.push(this.coffeeGame);
+    }
+    setup(scene) {
+        this.miniGames = Config.Rand.shuffle(this.miniGames);
         this.startRandomMiniGame();
     }
     teardown(scene) {
         this.currentMiniGame.cleanUp();
-        scene.remove(this._countdownLabel);
-        this._miniGameTimer.cancel();
-        scene.remove(this._miniGameTimer);
+        //scene.remove(this._countdownLabel);
     }
     startRandomMiniGame() {
-        this.currentMiniGame = this.miniGames[this.miniGameCount];
+        // if (this.miniGameCount % this.miniGames.length === 0) {
+        //   this.miniGames = Config.Rand.shuffle(this.miniGames);
+        // }
+        this.currentMiniGame = this.collatingGame; //this.miniGames[this.miniGameCount];
         console.log("current game:", this.miniGameCount, this.currentMiniGame);
         this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
-        this.currentMiniGame.start();
         this._secondsRemaining = 60;
+        this._countdownLabel.text = "60";
+        this._gameOver = false;
+        this.currentMiniGame.start();
         this._miniGameTimer.reset(1000, 60);
     }
 }

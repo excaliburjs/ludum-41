@@ -19,12 +19,8 @@ export class CollatingGame extends MiniGame {
   ) {
     super(scene, bottomSubscene);
     this._winsRequired = winsRequired;
-  }
-
-  protected setup(): void {
     var numDocs = Config.MiniGames.Collating.NumberOfDocuments;
 
-    // background
     const bg = new Actor({
       x: 0,
       y: this.scene.engine.drawHeight / 2,
@@ -35,7 +31,7 @@ export class CollatingGame extends MiniGame {
 
     this._docSet = new OfficeDocSet(numDocs);
     this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
-    //this.reset();
+
     for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
       //add to the scene here
       this._scrambledOfficeDocs[i].x = 100 * i + 200;
@@ -57,6 +53,10 @@ export class CollatingGame extends MiniGame {
       this.miniGameActors.push(docLabel);
       this.miniGameActors.push(this._scrambledOfficeDocs[i]);
     }
+  }
+
+  protected setup(): void {
+    this.resetDocuments();
   }
 
   public reset(): void {}
