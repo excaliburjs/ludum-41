@@ -40,6 +40,9 @@ export default {
         MaxSpawnInterval: 2000
     },
     PrinterMiniGame: {
+        PrinterStartX: 300,
+        PrinterStartY: 570,
+        PrinterSpacing: 35,
         GridDimension: 3
     },
     /**

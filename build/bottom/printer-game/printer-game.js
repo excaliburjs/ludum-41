@@ -2,12 +2,21 @@ import * as ex from "excalibur";
 import { MiniGame } from "../miniGame";
 import { Light } from "./light";
 import Config from "../../config";
+import resources from "../../resources";
 export class PrinterGame extends MiniGame {
     constructor(scene, bottomSubscene) {
         super(scene, bottomSubscene);
         this.miniGameActors = [];
         this._lights = [];
+        let copier = new ex.Actor({
+            x: 0,
+            y: scene.engine.halfDrawHeight,
+            anchor: ex.Vector.Zero.clone()
+        });
+        copier.addDrawing(resources.txCopierBackground);
         this.scene = scene;
+        this.scene.add(copier);
+        copier.z = -2;
     }
     getLight(x, y) {
         let index = x + y * Config.PrinterMiniGame.GridDimension;
@@ -23,9 +32,13 @@ export class PrinterGame extends MiniGame {
         }
         return this._lights[index];
     }
+    isAllLit() {
+        return this._lights.reduce((prev, curr) => prev && curr.lit, true);
+    }
+    isAllDark() {
+        return this._lights.reduce((prev, curr) => prev && !curr.lit, true);
+    }
     setup() {
-        let startX = this.scene.engine.halfDrawWidth;
-        let startY = this.scene.engine.halfDrawHeight + 100;
         this._lights = [];
         for (let i = 0; i <
             Config.PrinterMiniGame.GridDimension *
@@ -33,12 +46,14 @@ export class PrinterGame extends MiniGame {
             let x = i % Config.PrinterMiniGame.GridDimension;
             let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
             this._lights[i] = new Light({
-                x: x * 30 + startX,
-                y: y * 30 + startY,
+                x: x * Config.PrinterMiniGame.PrinterSpacing +
+                    Config.PrinterMiniGame.PrinterStartX,
+                y: y * Config.PrinterMiniGame.PrinterSpacing +
+                    Config.PrinterMiniGame.PrinterStartY,
                 width: 20,
                 height: 20,
                 color: ex.Color.Violet.clone()
-            });
+            }, this);
         }
         let width = Config.PrinterMiniGame.GridDimension;
         for (let i = 0; i < this._lights.length; i++) {

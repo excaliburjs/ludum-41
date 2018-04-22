@@ -1,7 +1,8 @@
 import * as ex from "excalibur";
 export class Light extends ex.Actor {
-    constructor(args) {
+    constructor(args, printer) {
         super(args);
+        this.printer = printer;
         this.lit = false;
     }
     onInitialize() {
@@ -23,6 +24,10 @@ export class Light extends ex.Actor {
         }
         else {
             this.color = ex.Color.Violet.clone();
+        }
+        if (this.printer.isAllLit() || this.printer.isAllDark()) {
+            console.log("win");
+            this.printer.onSucceed();
         }
     }
 }

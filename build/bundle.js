@@ -57,6 +57,9 @@ var game = (function (exports,ex) {
             MaxSpawnInterval: 2000
         },
         PrinterMiniGame: {
+            PrinterStartX: 300,
+            PrinterStartY: 570,
+            PrinterSpacing: 35,
             GridDimension: 3
         },
         /**
@@ -144,6 +147,7 @@ var game = (function (exports,ex) {
         txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
         txCoffeeMaker: new ex.Texture("game/assets/img/coffee-maker.png"),
         txCoffeeGrounds: new ex.Texture("game/assets/img/coffee-grounds.png"),
+        txCopierBackground: new ex.Texture("game/assets/img/printer.png"),
         txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
     };
@@ -784,8 +788,9 @@ var game = (function (exports,ex) {
     }
 
     class Light extends ex.Actor {
-        constructor(args) {
+        constructor(args, printer) {
             super(args);
+            this.printer = printer;
             this.lit = false;
         }
         onInitialize() {
@@ -808,6 +813,10 @@ var game = (function (exports,ex) {
             else {
                 this.color = ex.Color.Violet.clone();
             }
+            if (this.printer.isAllLit() || this.printer.isAllDark()) {
+                console.log("win");
+                this.printer.onSucceed();
+            }
         }
     }
 
@@ -816,7 +825,15 @@ var game = (function (exports,ex) {
             super(scene, bottomSubscene);
             this.miniGameActors = [];
             this._lights = [];
+            let copier = new ex.Actor({
+                x: 0,
+                y: scene.engine.halfDrawHeight,
+                anchor: ex.Vector.Zero.clone()
+            });
+            copier.addDrawing(Resources.txCopierBackground);
             this.scene = scene;
+            this.scene.add(copier);
+            copier.z = -2;
         }
         getLight(x, y) {
             let index = x + y * Config.PrinterMiniGame.GridDimension;
@@ -832,9 +849,13 @@ var game = (function (exports,ex) {
             }
             return this._lights[index];
         }
+        isAllLit() {
+            return this._lights.reduce((prev, curr) => prev && curr.lit, true);
+        }
+        isAllDark() {
+            return this._lights.reduce((prev, curr) => prev && !curr.lit, true);
+        }
         setup() {
-            let startX = this.scene.engine.halfDrawWidth;
-            let startY = this.scene.engine.halfDrawHeight + 100;
             this._lights = [];
             for (let i = 0; i <
                 Config.PrinterMiniGame.GridDimension *
@@ -842,12 +863,14 @@ var game = (function (exports,ex) {
                 let x = i % Config.PrinterMiniGame.GridDimension;
                 let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
                 this._lights[i] = new Light({
-                    x: x * 30 + startX,
-                    y: y * 30 + startY,
+                    x: x * Config.PrinterMiniGame.PrinterSpacing +
+                        Config.PrinterMiniGame.PrinterStartX,
+                    y: y * Config.PrinterMiniGame.PrinterSpacing +
+                        Config.PrinterMiniGame.PrinterStartY,
                     width: 20,
                     height: 20,
                     color: ex.Color.Violet.clone()
-                });
+                }, this);
             }
             for (let i = 0; i < this._lights.length; i++) {
                 let light = this._lights[i];
