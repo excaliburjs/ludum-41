@@ -4,6 +4,7 @@ import { CoffeeItem } from "./coffeeItem";
 import { BottomSubscene } from "../bottom";
 import Resources from "../../resources";
 import Config from "../../config";
+import { Actor } from "excalibur";
 
 export class CoffeeGame extends MiniGame {
   private _stepCount = 0;
@@ -11,12 +12,34 @@ export class CoffeeGame extends MiniGame {
   private _coffeeFilter: CoffeeItem;
   private _coffeeGrounds: CoffeeItem;
   private _coffeeCup: CoffeeItem;
+  private _background: ex.Actor;
 
   constructor(scene: ex.Scene, bottomSubscene: BottomSubscene) {
     super(scene, bottomSubscene);
     this._coffeeFilter = new CoffeeItem({
       x: 200,
-      y: 500,
+      y: 500
+    });
+    this._stepCount = 1; // set to 1 to avoid the first element of the array, which is the background
+
+    this._background = new ex.Actor({
+      x: 400,
+      y: 600,
+      width: 1,
+      height: 1
+    });
+    let bgSpriteSheet = new ex.SpriteSheet(
+      Resources.txCoffeeBackground,
+      1,
+      1,
+      800,
+      400
+    );
+    this._background.addDrawing(bgSpriteSheet.getSprite(0));
+
+    this._coffeeFilter = new CoffeeItem({
+      x: 600,
+      y: 510,
       width: 140,
       height: 140,
       color: ex.Color.White
@@ -85,8 +108,8 @@ export class CoffeeGame extends MiniGame {
     );
 
     this._coffeeCup = new CoffeeItem({
-      x: 550,
-      y: 500,
+      x: 650,
+      y: 675,
       width: 100,
       height: 100,
       color: ex.Color.Orange
@@ -101,15 +124,15 @@ export class CoffeeGame extends MiniGame {
     this._coffeeCup.addDrawing("default", coffeeCupSpritesheet.getSprite(0));
     this._coffeeCup.addDrawing("highlight", coffeeCupSpritesheet.getSprite(1));
 
+    this.miniGameActors.push(this._background);
     this.miniGameActors.push(this._coffeeFilter);
     this.miniGameActors.push(this._coffeeGrounds);
     this.miniGameActors.push(this._coffeeMaker);
     this.miniGameActors.push(this._coffeeCup);
 
     this.scene.on("coffeeClick", () => {
-      console.log("coffee click");
       this._stepCount++;
-      if (this._stepCount >= this.miniGameActors.length) {
+      if (this.miniGameActors[this._stepCount - 1] == this._coffeeMaker) {
         this._coffeeMaker.actions
           .callMethod(() => {
             // TODO play coffee brewing animation
@@ -119,8 +142,11 @@ export class CoffeeGame extends MiniGame {
           .delay(Config.MiniGames.Coffee.BrewTime)
           .callMethod(() => {
             ex.Logger.getInstance().info("coffee complete...");
-            this.onSucceed();
+            let coffeeItem = <CoffeeItem>this.miniGameActors[this._stepCount];
+            coffeeItem.highlight();
           });
+      } else if (this._stepCount >= this.miniGameActors.length) {
+        this.onSucceed();
       } else {
         let coffeeItem = <CoffeeItem>this.miniGameActors[this._stepCount];
         coffeeItem.highlight();
