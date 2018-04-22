@@ -23,7 +23,6 @@ export class PrinterGame extends MiniGame {
         this._background.addDrawing(resources.txCopierBackground);
         this.scene = scene;
         this._copier = copier;
-        this._lights = [];
         for (let i = 0; i <
             Config.PrinterMiniGame.GridDimension *
                 Config.PrinterMiniGame.GridDimension; i++) {
@@ -51,6 +50,9 @@ export class PrinterGame extends MiniGame {
             light.left = this.getLight(x - 1, y);
             light.right = this.getLight(x + 1, y);
         }
+        this.miniGameActors.push(this._background);
+        this.miniGameActors.push(this._copier);
+        this._lights.forEach(l => this.miniGameActors.push(l));
     }
     getLight(x, y) {
         let index = x + y * Config.PrinterMiniGame.GridDimension;
@@ -77,8 +79,6 @@ export class PrinterGame extends MiniGame {
         this._lights.forEach(l => (l.lit = false));
         let litLight = Config.Rand.pickOne(this._lights);
         this.createSolution(litLight);
-        this.miniGameActors.push(this._copier);
-        this._lights.forEach(l => this.miniGameActors.push(l));
     }
     createSolution(light) {
         let x = light.boardX;

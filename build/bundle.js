@@ -543,7 +543,6 @@ var game = (function (exports,ex) {
             this.bottomSubscene = bottomSubscene;
         }
         start() {
-            this.miniGameActors = [];
             if (!this._isSetUp) {
                 this.setup(); //initialize actors and add them to the miniGameActors collection.
                 for (let i = 0; i < this.miniGameActors.length; i++) {
@@ -557,7 +556,7 @@ var game = (function (exports,ex) {
                 this.scene.remove(this.miniGameActors[i]);
                 this._isSetUp = false;
             }
-            this.miniGameActors = [];
+            console.log("Actors:", this.scene.actors.length);
         }
         onSucceed() {
             this.cleanUp();
@@ -840,6 +839,9 @@ var game = (function (exports,ex) {
                 this.lit = !this.lit;
             });
         }
+        onPostKill() {
+            this.off("pointerup");
+        }
         onPostUpdate() {
             if (this.lit) {
                 this.color = ex.Color.Yellow.clone();
@@ -874,7 +876,6 @@ var game = (function (exports,ex) {
             this._background.addDrawing(Resources.txCopierBackground);
             this.scene = scene;
             this._copier = copier;
-            this._lights = [];
             for (let i = 0; i <
                 Config.PrinterMiniGame.GridDimension *
                     Config.PrinterMiniGame.GridDimension; i++) {
@@ -901,6 +902,9 @@ var game = (function (exports,ex) {
                 light.left = this.getLight(x - 1, y);
                 light.right = this.getLight(x + 1, y);
             }
+            this.miniGameActors.push(this._background);
+            this.miniGameActors.push(this._copier);
+            this._lights.forEach(l => this.miniGameActors.push(l));
         }
         getLight(x, y) {
             let index = x + y * Config.PrinterMiniGame.GridDimension;
@@ -927,8 +931,6 @@ var game = (function (exports,ex) {
             this._lights.forEach(l => (l.lit = false));
             let litLight = Config.Rand.pickOne(this._lights);
             this.createSolution(litLight);
-            this.miniGameActors.push(this._copier);
-            this._lights.forEach(l => this.miniGameActors.push(l));
         }
         createSolution(light) {
             let x = light.boardX;
@@ -981,12 +983,18 @@ var game = (function (exports,ex) {
         setup(scene) {
             this.cursor = new Cursor();
             scene.add(this.cursor);
+            scene.engine.input.keyboard.on("down", (evt) => {
+                if (evt.key === ex.Input.Keys.W) {
+                    this.currentMiniGame.onSucceed();
+                }
+            });
             this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
             this.miniGames.push(this.collatingGame);
             this.coffeeGame = new CoffeeGame(scene, this);
             this.miniGames.push(this.coffeeGame);
             this.printerGame = new PrinterGame(scene, this);
             this.miniGames.push(this.printerGame);
+            this.miniGames = Config.Rand.shuffle(this.miniGames);
             this._countdownLabel = new ex.Label({
                 color: ex.Color.White,
                 fontSize: 25,
@@ -1016,9 +1024,6 @@ var game = (function (exports,ex) {
             scene.remove(this._miniGameTimer);
         }
         startRandomMiniGame() {
-            if (this.miniGameCount % this.miniGames.length === 0) {
-                this.miniGames = Config.Rand.shuffle(this.miniGames);
-            }
             this.currentMiniGame = this.miniGames[this.miniGameCount];
             console.log("current game:", this.miniGameCount, this.currentMiniGame);
             this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;

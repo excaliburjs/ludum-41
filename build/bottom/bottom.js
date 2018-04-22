@@ -16,12 +16,18 @@ export class BottomSubscene {
     setup(scene) {
         this.cursor = new Cursor();
         scene.add(this.cursor);
+        scene.engine.input.keyboard.on("down", (evt) => {
+            if (evt.key === ex.Input.Keys.W) {
+                this.currentMiniGame.onSucceed();
+            }
+        });
         this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
         this.miniGames.push(this.collatingGame);
         this.coffeeGame = new CoffeeGame(scene, this);
         this.miniGames.push(this.coffeeGame);
         this.printerGame = new PrinterGame(scene, this);
         this.miniGames.push(this.printerGame);
+        this.miniGames = Config.Rand.shuffle(this.miniGames);
         this._countdownLabel = new ex.Label({
             color: ex.Color.White,
             fontSize: 25,
@@ -51,9 +57,6 @@ export class BottomSubscene {
         scene.remove(this._miniGameTimer);
     }
     startRandomMiniGame() {
-        if (this.miniGameCount % this.miniGames.length === 0) {
-            this.miniGames = Config.Rand.shuffle(this.miniGames);
-        }
         this.currentMiniGame = this.miniGames[this.miniGameCount];
         console.log("current game:", this.miniGameCount, this.currentMiniGame);
         this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;

@@ -20,6 +20,9 @@ export class Light extends ex.Actor {
             this.lit = !this.lit;
         });
     }
+    onPostKill() {
+        this.off("pointerup");
+    }
     onPostUpdate() {
         if (this.lit) {
             this.color = ex.Color.Yellow.clone();
