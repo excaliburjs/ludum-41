@@ -34,7 +34,7 @@ export default {
         MaxSpawnInterval: 3000
     },
     PrinterMiniGame: {
-        GridDimension: 4
+        GridDimension: 3
     },
     /**
      * Obstacles spawn interval
