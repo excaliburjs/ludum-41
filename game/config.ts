@@ -1,8 +1,13 @@
 import { Random, Vector, Logger } from "excalibur";
 
-const rand = new Random(Date.now());
+// GOOD SEEDS
+// 1524409882715
+var rand: Random;
 
-Logger.getInstance().info("World seed", rand.seed);
+export function createRand() {
+  rand = new Random(Date.now());
+  Logger.getInstance().info("World seed", rand.seed);
+}
 
 export default {
   AnalyticsEndpoint:
@@ -40,8 +45,8 @@ export default {
   Platform: {
     Width: 100,
     Height: 10,
-    HeightAboveFloor: 60,
-    MinSpawnInterval: 500,
+    HeightAboveFloor: 70,
+    MinSpawnInterval: 1000,
     MaxSpawnInterval: 2000
   },
 
@@ -55,5 +60,7 @@ export default {
   ObstacleSpawnMinInterval: 1000,
   ObstacleSpawnMaxInterval: 5000,
 
-  Rand: rand
+  get Rand() {
+    return rand;
+  }
 };

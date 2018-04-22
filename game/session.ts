@@ -1,4 +1,5 @@
 import { GameOverReason, Stats } from "./stats";
+import { createRand } from "./config";
 
 var stats: Stats;
 
@@ -9,6 +10,9 @@ export function getStats() {
 export function newgame(game: ex.Engine) {
   // clear stats
   stats = new Stats();
+
+  // New random
+  createRand();
 
   // begin main scene
   game.goToScene("main");
