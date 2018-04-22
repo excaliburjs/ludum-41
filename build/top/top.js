@@ -25,9 +25,6 @@ export class TopSubscene {
         this.platformTimer = new ex.Timer(() => {
             this.spawnPlatform(this._engine, scene);
         }, 2000, true);
-        this.platformTimer2 = new ex.Timer(() => {
-            this.spawnPlatform2(this._engine, scene);
-        }, 3000, true);
         scene.add(this.spawnTimer);
         scene.add(this.platformTimer);
         scene.add(this.platformTimer2);
@@ -59,27 +56,19 @@ export class TopSubscene {
     }
     spawnPlatform(engine, scene) {
         const x = engine.drawWidth + 100;
+        const level = Config.Rand.integer(2, 3);
+        const shouldSpawnAboveLevelOne = Config.Rand.next() > 0.7;
         const platform = new Platform({
             x,
-            y: this.floor.getTop() - Config.Platform.HeightAboveFloor,
+            y: this.floor.getTop() -
+                Config.Platform.HeightAboveFloor *
+                    (shouldSpawnAboveLevelOne ? level : 1),
             speed: Config.Floor.Speed
         });
         ex.Logger.getInstance().debug("Spawned platform", platform);
         scene.add(platform);
         const newInterval = Config.Rand.integer(Config.Platform.MinSpawnInterval, Config.Platform.MaxSpawnInterval);
         this.platformTimer.reset(newInterval);
-    }
-    spawnPlatform2(engine, scene) {
-        const x = engine.drawWidth + 100;
-        const platform = new Platform({
-            x,
-            y: this.floor.getTop() - Config.Platform.HeightAboveFloor * 2,
-            speed: Config.Floor.Speed
-        });
-        ex.Logger.getInstance().debug("Spawned platform", platform);
-        this.scene.add(platform);
-        const newInterval = Config.Rand.integer(Config.Platform.MinSpawnInterval * 2, Config.Platform.MaxSpawnInterval * 2);
-        this.platformTimer2.reset(newInterval);
     }
 }
 //# sourceMappingURL=top.js.map

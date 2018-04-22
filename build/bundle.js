@@ -1,22 +1,61 @@
-(function (ex) {
+var game = (function (exports,ex) {
     'use strict';
 
+    var GameOverReason;
+    (function (GameOverReason) {
+        GameOverReason[GameOverReason["daydream"] = 0] = "daydream";
+        GameOverReason[GameOverReason["minigame"] = 1] = "minigame";
+        GameOverReason[GameOverReason["debug"] = 2] = "debug";
+    })(GameOverReason || (GameOverReason = {}));
+    class Stats {
+        constructor() {
+            this.startTime = Date.now();
+        }
+        get duration() {
+            return this.startTime - Date.now();
+        }
+    }
+
+    var stats;
+    function getStats() {
+        return stats;
+    }
+    function newgame(game) {
+        // clear stats
+        stats = new Stats();
+        // begin main scene
+        game.goToScene("main");
+    }
+    function gameover(game, reason) {
+        // TODO record stats
+        stats.gameOverReason = reason;
+        game.goToScene("end");
+    }
+
+    const gameOverMessages = {
+        [GameOverReason.daydream]: "You gave up on your dreams. Game over.",
+        [GameOverReason.minigame]: "Your boss caught you daydreaming. Game over.",
+        [GameOverReason.debug]: "You program dreams."
+    };
     class ScnEnd extends ex.Scene {
         onInitialize(engine) {
-            const gameOverLabel = new ex.Label({
+            this.gameOverLabel = new ex.Label({
                 x: this.engine.drawWidth / 2,
                 y: this.engine.drawHeight / 2,
-                text: "Your boss caught you daydreaming. Game over.",
                 textAlign: ex.TextAlign.Center,
                 fontSize: 36,
                 fontFamily: "Arial"
             });
-            this.add(gameOverLabel);
+            this.add(this.gameOverLabel);
             const resetButton = new ResetButton({
                 x: engine.drawWidth / 2,
                 y: engine.drawHeight / 2 + 100
             });
             this.add(resetButton);
+        }
+        onActivate() {
+            const { gameOverReason } = getStats();
+            this.gameOverLabel.text = gameOverMessages[gameOverReason];
         }
     }
     class ResetButton extends ex.Actor {
@@ -38,12 +77,13 @@
             });
             this.add(resetLabel);
         }
-        reset(engine) {
-            engine.goToScene("main");
+        reset(game) {
+            newgame(game);
         }
     }
 
-    const rand = new ex.Random(12345678910);
+    const rand = new ex.Random(Date.now());
+    ex.Logger.getInstance().info("World seed", rand.seed);
     var Config = {
         AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
         GameWidth: 800,
@@ -74,8 +114,8 @@
             Width: 100,
             Height: 10,
             HeightAboveFloor: 60,
-            MinSpawnInterval: 2000,
-            MaxSpawnInterval: 3000
+            MinSpawnInterval: 500,
+            MaxSpawnInterval: 2000
         },
         PrinterMiniGame: {
             GridDimension: 3
@@ -84,7 +124,7 @@
          * Obstacles spawn interval
          */
         ObstacleSpawnMinInterval: 1000,
-        ObstacleSpawnMaxInterval: 3000,
+        ObstacleSpawnMaxInterval: 5000,
         Rand: rand
     };
 
@@ -113,6 +153,9 @@
             this.engine = engine;
             this.canJump = false;
             this.correcting = false;
+            this.onExitViewport = () => {
+                gameover(this.engine, GameOverReason.daydream);
+            };
             engine.input.pointers.primary.on("down", this.handleInput.bind(this));
             this.on("precollision", this.handleCollision.bind(this));
         }
@@ -141,6 +184,7 @@
             dustEmitter.endColor = ex.Color.Black;
             this.add(dustEmitter);
             this.dustEmitter = dustEmitter;
+            this.on("exitviewport", this.onExitViewport);
         }
         // le-sigh workaround for odd collision tunneling issue
         handleCollision(event) {
@@ -295,7 +339,7 @@
         }
         onPostUpdate(engine, delta) {
             if (this.health < 1) {
-                engine.goToScene("end");
+                gameover(engine, GameOverReason.daydream);
                 return;
             }
             this.text = this.health.toString();
@@ -424,9 +468,6 @@
             this.platformTimer = new ex.Timer(() => {
                 this.spawnPlatform(this._engine, scene);
             }, 2000, true);
-            this.platformTimer2 = new ex.Timer(() => {
-                this.spawnPlatform2(this._engine, scene);
-            }, 3000, true);
             scene.add(this.spawnTimer);
             scene.add(this.platformTimer);
             scene.add(this.platformTimer2);
@@ -458,27 +499,19 @@
         }
         spawnPlatform(engine, scene) {
             const x = engine.drawWidth + 100;
+            const level = Config.Rand.integer(2, 3);
+            const shouldSpawnAboveLevelOne = Config.Rand.next() > 0.7;
             const platform = new Platform({
                 x,
-                y: this.floor.getTop() - Config.Platform.HeightAboveFloor,
+                y: this.floor.getTop() -
+                    Config.Platform.HeightAboveFloor *
+                        (shouldSpawnAboveLevelOne ? level : 1),
                 speed: Config.Floor.Speed
             });
             ex.Logger.getInstance().debug("Spawned platform", platform);
             scene.add(platform);
             const newInterval = Config.Rand.integer(Config.Platform.MinSpawnInterval, Config.Platform.MaxSpawnInterval);
             this.platformTimer.reset(newInterval);
-        }
-        spawnPlatform2(engine, scene) {
-            const x = engine.drawWidth + 100;
-            const platform = new Platform({
-                x,
-                y: this.floor.getTop() - Config.Platform.HeightAboveFloor * 2,
-                speed: Config.Floor.Speed
-            });
-            ex.Logger.getInstance().debug("Spawned platform", platform);
-            this.scene.add(platform);
-            const newInterval = Config.Rand.integer(Config.Platform.MinSpawnInterval * 2, Config.Platform.MaxSpawnInterval * 2);
-            this.platformTimer2.reset(newInterval);
         }
     }
 
@@ -839,7 +872,7 @@
             this.currentMiniGame.cleanUp();
         }
         startRandomMiniGame() {
-            this.currentMiniGame = this.miniGames[ex.Util.randomIntInRange(0, this.miniGames.length - 1)];
+            this.currentMiniGame = this.miniGames[Config.Rand.integer(0, this.miniGames.length - 1)];
             this.currentMiniGame.start();
         }
     }
@@ -875,7 +908,7 @@
         }
     }
 
-    var game = new ex.Engine({
+    const game = new ex.Engine({
         width: Config.GameWidth,
         height: Config.GameHeight
     });
@@ -893,7 +926,7 @@
     game.addScene("end", new ScnEnd(game));
     // uncomment loader after adding resources
     game.start(loader).then(() => {
-        game.goToScene("main");
+        newgame(game);
         // TODO: Turn on analytics
         //   Analytics.publish({
         //      commit: 'test',
@@ -921,11 +954,15 @@
                 game.isDebug = !game.isDebug;
                 break;
             case ex.Input.Keys.Esc:
-                game.goToScene("end");
+                gameover(game, GameOverReason.debug);
                 break;
         }
     });
     ////////////////////////////////////////////////////////////////////
 
-}(ex));
+    exports.game = game;
+
+    return exports;
+
+}({},ex));
 //# sourceMappingURL=bundle.js.map

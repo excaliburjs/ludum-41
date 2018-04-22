@@ -3,8 +3,10 @@ import { ScnEnd } from "./scnEnd";
 import { ScnMain } from "./scnMain";
 import Resources from "./resources";
 import Config from "./config";
+import { newgame, gameover } from "./session";
+import { GameOverReason } from "./stats";
 
-var game = new Engine({
+export const game = new Engine({
   width: Config.GameWidth,
   height: Config.GameHeight
 });
@@ -27,7 +29,7 @@ game.addScene("end", new ScnEnd(game));
 
 // uncomment loader after adding resources
 game.start(loader).then(() => {
-  game.goToScene("main");
+  newgame(game);
 
   // TODO: Turn on analytics
 
@@ -57,7 +59,7 @@ game.input.keyboard.on("down", (keyDown?: Input.KeyEvent) => {
       game.isDebug = !game.isDebug;
       break;
     case Input.Keys.Esc:
-      game.goToScene("end");
+      gameover(game, GameOverReason.debug);
       break;
   }
 });

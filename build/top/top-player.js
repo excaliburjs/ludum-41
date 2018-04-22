@@ -1,6 +1,8 @@
 import * as ex from "excalibur";
 import Config from "../config";
 import Resources from "../resources";
+import { GameOverReason } from "../stats";
+import { gameover } from "../session";
 export class TopPlayer extends ex.Actor {
     constructor(engine) {
         super({
@@ -15,6 +17,9 @@ export class TopPlayer extends ex.Actor {
         this.engine = engine;
         this.canJump = false;
         this.correcting = false;
+        this.onExitViewport = () => {
+            gameover(this.engine, GameOverReason.daydream);
+        };
         engine.input.pointers.primary.on("down", this.handleInput.bind(this));
         this.on("precollision", this.handleCollision.bind(this));
     }
@@ -43,6 +48,7 @@ export class TopPlayer extends ex.Actor {
         dustEmitter.endColor = ex.Color.Black;
         this.add(dustEmitter);
         this.dustEmitter = dustEmitter;
+        this.on("exitviewport", this.onExitViewport);
     }
     // le-sigh workaround for odd collision tunneling issue
     handleCollision(event) {

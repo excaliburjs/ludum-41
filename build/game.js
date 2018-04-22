@@ -3,7 +3,9 @@ import { ScnEnd } from "./scnEnd";
 import { ScnMain } from "./scnMain";
 import Resources from "./resources";
 import Config from "./config";
-var game = new Engine({
+import { newgame, gameover } from "./session";
+import { GameOverReason } from "./stats";
+export const game = new Engine({
     width: Config.GameWidth,
     height: Config.GameHeight
 });
@@ -21,7 +23,7 @@ game.addScene("main", new ScnMain(game));
 game.addScene("end", new ScnEnd(game));
 // uncomment loader after adding resources
 game.start(loader).then(() => {
-    game.goToScene("main");
+    newgame(game);
     // TODO: Turn on analytics
     //   Analytics.publish({
     //      commit: 'test',
@@ -49,7 +51,7 @@ game.input.keyboard.on("down", (keyDown) => {
             game.isDebug = !game.isDebug;
             break;
         case Input.Keys.Esc:
-            game.goToScene("end");
+            gameover(game, GameOverReason.debug);
             break;
     }
 });

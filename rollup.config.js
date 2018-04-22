@@ -6,6 +6,7 @@ export default {
   external: ["excalibur"],
   output: {
     file: "build/bundle.js",
+    name: "game",
     sourcemap: true,
     format: "iife",
     globals: {

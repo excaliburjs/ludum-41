@@ -1,4 +1,3 @@
-import * as ex from "excalibur";
 import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
@@ -20,7 +19,7 @@ export class BottomSubscene {
         this.currentMiniGame.cleanUp();
     }
     startRandomMiniGame() {
-        this.currentMiniGame = this.miniGames[ex.Util.randomIntInRange(0, this.miniGames.length - 1)];
+        this.currentMiniGame = this.miniGames[Config.Rand.integer(0, this.miniGames.length - 1)];
         this.currentMiniGame.start();
     }
 }

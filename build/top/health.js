@@ -1,5 +1,7 @@
 import * as ex from "excalibur";
 import Config from "../config";
+import { gameover } from "../session";
+import { GameOverReason } from "../stats";
 export class TopHealth extends ex.Label {
     constructor(engine) {
         super({
@@ -18,7 +20,7 @@ export class TopHealth extends ex.Label {
     }
     onPostUpdate(engine, delta) {
         if (this.health < 1) {
-            engine.goToScene("end");
+            gameover(engine, GameOverReason.daydream);
             return;
         }
         this.text = this.health.toString();
