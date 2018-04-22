@@ -1,6 +1,8 @@
-import { Random, Vector } from "excalibur";
+import { Random, Vector, Logger } from "excalibur";
 
-const rand = new Random(12345678910);
+const rand = new Random(Date.now());
+
+Logger.getInstance().info("World seed", rand.seed);
 
 export default {
   AnalyticsEndpoint:
@@ -39,8 +41,8 @@ export default {
     Width: 100,
     Height: 10,
     HeightAboveFloor: 60,
-    MinSpawnInterval: 2000,
-    MaxSpawnInterval: 3000
+    MinSpawnInterval: 500,
+    MaxSpawnInterval: 2000
   },
 
   PrinterMiniGame: {
@@ -51,7 +53,7 @@ export default {
    * Obstacles spawn interval
    */
   ObstacleSpawnMinInterval: 1000,
-  ObstacleSpawnMaxInterval: 3000,
+  ObstacleSpawnMaxInterval: 5000,
 
   Rand: rand
 };

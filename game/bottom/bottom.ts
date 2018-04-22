@@ -34,7 +34,7 @@ export class BottomSubscene {
 
   public startRandomMiniGame() {
     let miniGame = this.miniGames[
-      ex.Util.randomIntInRange(0, this.miniGames.length - 1)
+      Config.Rand.integer(0, this.miniGames.length - 1)
     ];
     miniGame.start();
   }
