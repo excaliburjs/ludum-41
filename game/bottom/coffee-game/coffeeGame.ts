@@ -11,6 +11,7 @@ export class CoffeeGame extends MiniGame {
   }
 
   public setup() {
+    this._stepCount = 0;
     let coffeeFilter = new CoffeeItem({
       x: 200,
       y: 500,
@@ -71,9 +72,5 @@ export class CoffeeGame extends MiniGame {
         coffeeItem.highlight();
       }
     });
-  }
-
-  public reset() {
-    this._stepCount = 0;
   }
 }
