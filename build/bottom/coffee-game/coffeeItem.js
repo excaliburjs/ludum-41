@@ -20,10 +20,12 @@ export class CoffeeItem extends ex.Actor {
     highlight() {
         this._originalColor = this.color;
         this.color = ex.Color.Green;
+        this.setDrawing("highlight");
         this._isHighlighted = true;
     }
     unHighlight() {
         this.color = this._originalColor;
+        this.setDrawing("default");
         this._isHighlighted = false;
     }
 }
