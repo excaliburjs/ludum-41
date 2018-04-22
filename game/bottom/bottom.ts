@@ -4,6 +4,7 @@ import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
 import { MiniGame } from "./miniGame";
 import { PrinterGame } from "./printer-game/printer-game";
+import { Scene, Label, Timer } from "excalibur";
 
 export class BottomSubscene {
   private miniGames: MiniGame[] = [];
@@ -11,6 +12,8 @@ export class BottomSubscene {
   private collatingGame: CollatingGame;
   private coffeeGame: CoffeeGame;
   private printerGame: PrinterGame;
+  private _countdownLabel: Label;
+  private _miniGameTimer: Timer;
 
   constructor() {}
 
@@ -29,6 +32,16 @@ export class BottomSubscene {
     this.miniGames.push(this.printerGame);
 
     this.startRandomMiniGame();
+
+    this._countdownLabel = new ex.Label({
+      color: ex.Color.White,
+      text: "60",
+      fontSize: 25,
+      x: 700,
+      y: 650
+    });
+    scene.add(this._countdownLabel);
+    this._countdownLabel.setZIndex(300);
   }
 
   public teardown(scene: ex.Scene) {

@@ -552,7 +552,7 @@ var game = (function (exports,ex) {
         }
         onFail() {
             this.cleanUp();
-            this.bottomSubscene.startRandomMiniGame();
+            //lose the game
         }
     }
 
@@ -876,6 +876,15 @@ var game = (function (exports,ex) {
             this.printerGame = new PrinterGame(scene, this);
             this.miniGames.push(this.printerGame);
             this.startRandomMiniGame();
+            this._countdownLabel = new ex.Label({
+                color: ex.Color.White,
+                text: "60",
+                fontSize: 25,
+                x: 700,
+                y: 650
+            });
+            scene.add(this._countdownLabel);
+            this._countdownLabel.setZIndex(300);
         }
         teardown(scene) {
             this.currentMiniGame.cleanUp();

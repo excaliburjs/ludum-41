@@ -26,7 +26,7 @@ export class MiniGame {
     }
     onFail() {
         this.cleanUp();
-        this.bottomSubscene.startRandomMiniGame();
+        //lose the game
     }
 }
 //# sourceMappingURL=miniGame.js.map
