@@ -4,6 +4,7 @@ import { CoffeeItem } from "./coffeeItem";
 import { BottomSubscene } from "../bottom";
 import Resources from "../../resources";
 import Config from "../../config";
+import { Actor } from "excalibur";
 
 export class CoffeeGame extends MiniGame {
   private _stepCount = 0;
@@ -14,10 +15,27 @@ export class CoffeeGame extends MiniGame {
   }
 
   public setup() {
-    this._stepCount = 0;
+    this._stepCount = 1; // set to 1 to avoid the first element of the array, which is the background
+
+    let background = new ex.Actor({
+      x: 400,
+      y: 600,
+      width: 1,
+      height: 1
+    });
+    let bgSpriteSheet = new ex.SpriteSheet(
+      Resources.txCoffeeBackground,
+      1,
+      1,
+      800,
+      400
+    );
+    background.addDrawing(bgSpriteSheet.getSprite(0));
+    this.miniGameActors.push(background);
+
     let coffeeFilter = new CoffeeItem({
-      x: 200,
-      y: 500,
+      x: 600,
+      y: 510,
       width: 140,
       height: 140,
       color: ex.Color.White
@@ -35,7 +53,7 @@ export class CoffeeGame extends MiniGame {
     coffeeFilter.highlight();
 
     let coffeeGrounds = new CoffeeItem({
-      x: 300,
+      x: 200,
       y: 500,
       width: 150,
       height: 160,
@@ -89,8 +107,8 @@ export class CoffeeGame extends MiniGame {
     this.miniGameActors.push(this._coffeeMaker);
 
     let coffeeCup = new CoffeeItem({
-      x: 550,
-      y: 500,
+      x: 650,
+      y: 675,
       width: 100,
       height: 100,
       color: ex.Color.Orange
@@ -107,7 +125,6 @@ export class CoffeeGame extends MiniGame {
     this.miniGameActors.push(coffeeCup);
 
     this.scene.on("coffeeClick", () => {
-      console.log("coffee click");
       this._stepCount++;
       if (this._stepCount >= this.miniGameActors.length) {
         this._coffeeMaker.actions
