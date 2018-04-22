@@ -4,6 +4,7 @@ import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
 import { MiniGame } from "./miniGame";
 import { PrinterGame } from "./printer-game/printer-game";
+import { Cursor } from "./cursor";
 import { Scene, Label, Timer } from "excalibur";
 
 export class BottomSubscene {
@@ -12,12 +13,16 @@ export class BottomSubscene {
   private collatingGame: CollatingGame;
   private coffeeGame: CoffeeGame;
   private printerGame: PrinterGame;
+  private cursor: Cursor;
   private _countdownLabel: Label;
   private _miniGameTimer: Timer;
 
   constructor() {}
 
   public setup(scene: ex.Scene) {
+    this.cursor = new Cursor();
+    scene.add(this.cursor);
+
     this.collatingGame = new CollatingGame(
       scene,
       Config.MiniGames.Collating.NumberOfWinsToProceed,

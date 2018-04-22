@@ -153,6 +153,7 @@ var game = (function (exports,ex) {
         txCoffeeFilter: new ex.Texture("game/assets/img/coffee-filters.png"),
         txCopierBackground: new ex.Texture("game/assets/img/printer.png"),
         txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
+        txCursor: new ex.Texture("game/assets/img/thehand.png"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -217,7 +218,7 @@ var game = (function (exports,ex) {
         }
         jump() {
             if (this.canJump) {
-                this.vel = this.vel.add(new ex.Vector(0, -400));
+                this.vel = new ex.Vector(this.vel.x, -400);
                 this.acc = new ex.Vector(0, 800);
                 this.canJump = false;
             }
@@ -232,7 +233,7 @@ var game = (function (exports,ex) {
                 this.dustEmitter.isEmitting = true;
                 if (this.x < engine.drawWidth * Config.TopPlayer.StartingXPercent) {
                     this.vel.x =
-                        (engine.drawWidth * Config.TopPlayer.StartingXPercent - this.x) / 2;
+                        engine.drawWidth * Config.TopPlayer.StartingXPercent - this.x;
                 }
                 else if (this.x >
                     engine.drawWidth * Config.TopPlayer.StartingXPercent) {
@@ -900,11 +901,40 @@ var game = (function (exports,ex) {
         }
     }
 
+    class Cursor extends ex.Actor {
+        constructor() {
+            super({
+                x: 0,
+                y: 0,
+                scale: new ex.Vector(2, 2),
+                anchor: new ex.Vector(0.5, 0),
+                rotation: -Math.PI / 4
+            });
+            this.addDrawing(Resources.txCursor);
+        }
+        onInitialize(engine) {
+            this.y = engine.drawHeight;
+            this.z = 50;
+            engine.input.pointers.primary.on("move", (evt) => {
+                let cursorPos = evt.worldPos.clone();
+                if (cursorPos.y > engine.halfDrawHeight) {
+                    this.actions.clearActions();
+                    this.pos = cursorPos;
+                }
+                else {
+                    this.actions.easeTo(engine.halfDrawWidth, engine.drawHeight, 1000, ex.EasingFunctions.EaseInOutQuad);
+                }
+            });
+        }
+    }
+
     class BottomSubscene {
         constructor() {
             this.miniGames = [];
         }
         setup(scene) {
+            this.cursor = new Cursor();
+            scene.add(this.cursor);
             this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
             this.miniGames.push(this.collatingGame);
             this.coffeeGame = new CoffeeGame(scene, this);

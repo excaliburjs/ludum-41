@@ -9,6 +9,7 @@ export default {
     txCoffeeFilter: new Texture("game/assets/img/coffee-filters.png"),
     txCopierBackground: new Texture("game/assets/img/printer.png"),
     txOverlay: new Texture("game/assets/img/office-overlay.png"),
+    txCursor: new Texture("game/assets/img/thehand.png"),
     sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };
 //# sourceMappingURL=resources.js.map

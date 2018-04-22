@@ -3,11 +3,14 @@ import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
 import { PrinterGame } from "./printer-game/printer-game";
+import { Cursor } from "./cursor";
 export class BottomSubscene {
     constructor() {
         this.miniGames = [];
     }
     setup(scene) {
+        this.cursor = new Cursor();
+        scene.add(this.cursor);
         this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
         this.miniGames.push(this.collatingGame);
         this.coffeeGame = new CoffeeGame(scene, this);
