@@ -1,17 +1,26 @@
 import * as ex from "excalibur";
+import { newgame, getStats } from "./session";
+import { GameOverReason } from "./stats";
+
+const gameOverMessages = {
+  [GameOverReason.daydream]: "You gave up on your dreams. Game over.",
+  [GameOverReason.minigame]: "Your boss caught you daydreaming. Game over.",
+  [GameOverReason.debug]: "You program dreams."
+};
 
 export class ScnEnd extends ex.Scene {
+  gameOverLabel: ex.Label;
+
   onInitialize(engine: ex.Engine) {
-    const gameOverLabel = new ex.Label({
+    this.gameOverLabel = new ex.Label({
       x: this.engine.drawWidth / 2,
       y: this.engine.drawHeight / 2,
-      text: "Your boss caught you daydreaming. Game over.",
       textAlign: ex.TextAlign.Center,
       fontSize: 36,
       fontFamily: "Arial"
     });
 
-    this.add(gameOverLabel);
+    this.add(this.gameOverLabel);
 
     const resetButton = new ResetButton({
       x: engine.drawWidth / 2,
@@ -19,6 +28,11 @@ export class ScnEnd extends ex.Scene {
     });
 
     this.add(resetButton);
+  }
+
+  onActivate() {
+    const { gameOverReason } = getStats();
+    this.gameOverLabel.text = gameOverMessages[gameOverReason];
   }
 }
 
@@ -45,7 +59,7 @@ class ResetButton extends ex.Actor {
     this.add(resetLabel);
   }
 
-  reset(engine: ex.Engine) {
-    engine.goToScene("main");
+  reset(game: ex.Engine) {
+    newgame(game);
   }
 }

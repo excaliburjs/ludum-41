@@ -1,6 +1,8 @@
 import * as ex from "excalibur";
 import Config from "../config";
 import Resources from "../resources";
+import { GameOverReason } from "../stats";
+import { gameover } from "../session";
 
 export class TopPlayer extends ex.Actor {
   public canJump: boolean = false;
@@ -60,7 +62,7 @@ export class TopPlayer extends ex.Actor {
   }
 
   onExitViewport = () => {
-    this.engine.goToScene("end");
+    gameover(this.engine, GameOverReason.daydream);
   };
 
   // le-sigh workaround for odd collision tunneling issue
