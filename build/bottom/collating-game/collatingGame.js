@@ -45,7 +45,7 @@ export class CollatingGame extends MiniGame {
     }
     reset() { }
     wireUpClickEvent(officeDoc) {
-        officeDoc.on("pointerdown", evt => {
+        officeDoc.on("pointerup", evt => {
             var clickedDoc = evt.target;
             if (this._docSet.tryAddToSortedStack(clickedDoc)) {
                 //update ui
