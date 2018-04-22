@@ -960,7 +960,8 @@ var game = (function (exports,ex) {
             if (this.miniGameCount % this.miniGames.length === 0) {
                 this.miniGames = Config.Rand.shuffle(this.miniGames);
             }
-            this.currentMiniGame = this.miniGames[(this.miniGameCount + 1) % this.miniGames.length];
+            this.currentMiniGame = this.miniGames[this.miniGameCount % this.miniGames.length];
+            this.miniGameCount++;
             this.currentMiniGame.start();
         }
     }
