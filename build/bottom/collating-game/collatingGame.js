@@ -29,7 +29,7 @@ export class CollatingGame extends MiniGame {
             this._scrambledOfficeDocs[i].x = 100 * i + 200;
             this._scrambledOfficeDocs[i].setWidth(50);
             this._scrambledOfficeDocs[i].setHeight(50);
-            this._scrambledOfficeDocs[i].y = 500;
+            this._scrambledOfficeDocs[i].y = 600;
             this.wireUpClickEvent(this._scrambledOfficeDocs[i]);
             var docLabel = new Label({
                 x: this._scrambledOfficeDocs[i].x,

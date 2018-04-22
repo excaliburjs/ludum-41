@@ -15,8 +15,7 @@ export class PrinterGame extends MiniGame {
         });
         copier.addDrawing(resources.txCopierBackground);
         this.scene = scene;
-        this.scene.add(copier);
-        copier.z = -2;
+        this._copier = copier;
     }
     getLight(x, y) {
         let index = x + y * Config.PrinterMiniGame.GridDimension;
@@ -67,7 +66,8 @@ export class PrinterGame extends MiniGame {
         }
         let litLight = Config.Rand.pickOne(this._lights);
         litLight.lit = true;
-        this.miniGameActors = this._lights;
+        this.miniGameActors.push(this._copier);
+        this.miniGameActors = this.miniGameActors.concat(this._lights);
     }
 }
 //# sourceMappingURL=printer-game.js.map

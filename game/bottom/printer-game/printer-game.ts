@@ -8,6 +8,7 @@ import resources from "../../resources";
 export class PrinterGame extends MiniGame {
   protected miniGameActors: ex.Actor[] = [];
   protected scene: ex.Scene;
+  private _copier: ex.Actor;
 
   private _lights: Light[] = [];
   constructor(scene: ex.Scene, bottomSubscene: BottomSubscene) {
@@ -20,9 +21,8 @@ export class PrinterGame extends MiniGame {
     copier.addDrawing(resources.txCopierBackground);
 
     this.scene = scene;
-    this.scene.add(copier);
 
-    copier.z = -2;
+    this._copier = copier;
   }
 
   getLight(x: number, y: number) {
@@ -94,6 +94,7 @@ export class PrinterGame extends MiniGame {
     let litLight = Config.Rand.pickOne(this._lights);
     litLight.lit = true;
 
-    this.miniGameActors = this._lights;
+    this.miniGameActors.push(this._copier);
+    this.miniGameActors = this.miniGameActors.concat(this._lights);
   }
 }

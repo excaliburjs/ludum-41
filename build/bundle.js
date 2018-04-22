@@ -638,7 +638,7 @@ var game = (function (exports,ex) {
                 this._scrambledOfficeDocs[i].x = 100 * i + 200;
                 this._scrambledOfficeDocs[i].setWidth(50);
                 this._scrambledOfficeDocs[i].setHeight(50);
-                this._scrambledOfficeDocs[i].y = 500;
+                this._scrambledOfficeDocs[i].y = 600;
                 this.wireUpClickEvent(this._scrambledOfficeDocs[i]);
                 var docLabel = new ex.Label({
                     x: this._scrambledOfficeDocs[i].x,
@@ -840,8 +840,7 @@ var game = (function (exports,ex) {
             });
             copier.addDrawing(Resources.txCopierBackground);
             this.scene = scene;
-            this.scene.add(copier);
-            copier.z = -2;
+            this._copier = copier;
         }
         getLight(x, y) {
             let index = x + y * Config.PrinterMiniGame.GridDimension;
@@ -891,7 +890,8 @@ var game = (function (exports,ex) {
             }
             let litLight = Config.Rand.pickOne(this._lights);
             litLight.lit = true;
-            this.miniGameActors = this._lights;
+            this.miniGameActors.push(this._copier);
+            this.miniGameActors = this.miniGameActors.concat(this._lights);
         }
     }
 
