@@ -62,9 +62,6 @@ export class PrinterGame extends MiniGame {
       light.left = this.getLight(x - 1, y);
       light.right = this.getLight(x + 1, y);
     }
-
-    this.miniGameActors.push(this._copier);
-    this._lights.forEach(l => this.miniGameActors.push(l));
   }
 
   getLight(x: number, y: number) {
@@ -98,6 +95,9 @@ export class PrinterGame extends MiniGame {
     this._lights.forEach(l => (l.lit = false));
     let litLight = Config.Rand.pickOne(this._lights);
     this.createSolution(litLight);
+
+    this.miniGameActors.push(this._copier);
+    this._lights.forEach(l => this.miniGameActors.push(l));
   }
 
   public createSolution(light: Light) {

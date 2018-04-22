@@ -83,10 +83,10 @@ export class BottomSubscene {
       this.miniGames = Config.Rand.shuffle(this.miniGames);
     }
 
-    this.currentMiniGame = this.miniGames[
-      this.miniGameCount % this.miniGames.length
-    ];
-    this.miniGameCount++;
+    this.currentMiniGame = this.miniGames[this.miniGameCount];
+    console.log("current game:", this.miniGameCount, this.currentMiniGame);
+
+    this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
     this.currentMiniGame.start();
     this._secondsRemaining = 20;
     this._miniGameTimer.reset(1000, 20);
