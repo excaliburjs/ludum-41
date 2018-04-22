@@ -152,7 +152,7 @@ var game = (function (exports,ex) {
         txDocLineGraph: new ex.Texture("game/assets/img/lineGraphSubmit.png"),
         txDocMoney: new ex.Texture("game/assets/img/moneySubmit.png"),
         txDocPieChart: new ex.Texture("game/assets/img/pieChartSubmit.png"),
-        txDocBarGraph: new ex.Texture("game/assets/img/textBarGraph.png"),
+        txDocBarGraph: new ex.Texture("game/assets/img/barGraphSubmit.png"),
         txDocVennDiagram: new ex.Texture("game/assets/img/vennDiagramSubmit.png"),
         txCoffeeMaker: new ex.Texture("game/assets/img/coffee-maker.png"),
         txCoffeeGrounds: new ex.Texture("game/assets/img/coffee-grounds.png"),
