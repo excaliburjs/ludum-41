@@ -4,6 +4,8 @@ export class Light extends ex.Actor {
         super(args);
         this.printer = printer;
         this.lit = false;
+        this.boardX = 0;
+        this.boardY = 0;
     }
     onInitialize() {
         this.on("pointerup", (evt) => {

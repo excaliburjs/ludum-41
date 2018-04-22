@@ -5,6 +5,8 @@ import Config from "../config";
 import { PrinterGame } from "./printer-game/printer-game";
 import { Cursor } from "./cursor";
 import { Timer } from "excalibur";
+import { gameover } from "../session";
+import { GameOverReason } from "../stats";
 export class BottomSubscene {
     constructor() {
         this.miniGameCount = 0;
@@ -35,6 +37,7 @@ export class BottomSubscene {
                 if (!this._gameOver) {
                     this._gameOver = true;
                     //game over logic
+                    gameover(scene.engine, GameOverReason.minigame);
                 }
             }
         }, 1000, true);
@@ -51,11 +54,12 @@ export class BottomSubscene {
         if (this.miniGameCount % this.miniGames.length === 0) {
             this.miniGames = Config.Rand.shuffle(this.miniGames);
         }
-        this.currentMiniGame = this.miniGames[this.miniGameCount % this.miniGames.length];
-        this.miniGameCount++;
+        this.currentMiniGame = this.miniGames[this.miniGameCount];
+        console.log("current game:", this.miniGameCount, this.currentMiniGame);
+        this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
         this.currentMiniGame.start();
-        this._secondsRemaining = 60;
-        this._miniGameTimer.reset(1000, 60);
+        this._secondsRemaining = 20;
+        this._miniGameTimer.reset(1000, 20);
     }
 }
 //# sourceMappingURL=bottom.js.map

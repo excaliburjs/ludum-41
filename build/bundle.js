@@ -563,7 +563,6 @@ var game = (function (exports,ex) {
         }
         onFail() {
             this.cleanUp();
-            //lose the game
         }
     }
 
@@ -811,6 +810,8 @@ var game = (function (exports,ex) {
             super(args);
             this.printer = printer;
             this.lit = false;
+            this.boardX = 0;
+            this.boardY = 0;
         }
         onInitialize() {
             this.on("pointerup", (evt) => {
@@ -852,6 +853,33 @@ var game = (function (exports,ex) {
             copier.addDrawing(Resources.txCopierBackground);
             this.scene = scene;
             this._copier = copier;
+            this._lights = [];
+            for (let i = 0; i <
+                Config.PrinterMiniGame.GridDimension *
+                    Config.PrinterMiniGame.GridDimension; i++) {
+                let x = i % Config.PrinterMiniGame.GridDimension;
+                let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
+                this._lights[i] = new Light({
+                    x: x * Config.PrinterMiniGame.PrinterSpacing +
+                        Config.PrinterMiniGame.PrinterStartX,
+                    y: y * Config.PrinterMiniGame.PrinterSpacing +
+                        Config.PrinterMiniGame.PrinterStartY,
+                    width: 20,
+                    height: 20,
+                    color: ex.Color.Violet.clone()
+                }, this);
+                this._lights[i].boardX = x;
+                this._lights[i].boardY = y;
+            }
+            for (let i = 0; i < this._lights.length; i++) {
+                let light = this._lights[i];
+                let x = i % Config.PrinterMiniGame.GridDimension;
+                let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
+                light.up = this.getLight(x, y - 1);
+                light.down = this.getLight(x, y + 1);
+                light.left = this.getLight(x - 1, y);
+                light.right = this.getLight(x + 1, y);
+            }
         }
         getLight(x, y) {
             let index = x + y * Config.PrinterMiniGame.GridDimension;
@@ -874,35 +902,24 @@ var game = (function (exports,ex) {
             return this._lights.reduce((prev, curr) => prev && !curr.lit, true);
         }
         setup() {
-            this._lights = [];
-            for (let i = 0; i <
-                Config.PrinterMiniGame.GridDimension *
-                    Config.PrinterMiniGame.GridDimension; i++) {
-                let x = i % Config.PrinterMiniGame.GridDimension;
-                let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
-                this._lights[i] = new Light({
-                    x: x * Config.PrinterMiniGame.PrinterSpacing +
-                        Config.PrinterMiniGame.PrinterStartX,
-                    y: y * Config.PrinterMiniGame.PrinterSpacing +
-                        Config.PrinterMiniGame.PrinterStartY,
-                    width: 20,
-                    height: 20,
-                    color: ex.Color.Violet.clone()
-                }, this);
-            }
-            for (let i = 0; i < this._lights.length; i++) {
-                let light = this._lights[i];
-                let x = i % Config.PrinterMiniGame.GridDimension;
-                let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
-                light.up = this.getLight(x, y - 1);
-                light.down = this.getLight(x, y + 1);
-                light.left = this.getLight(x - 1, y);
-                light.right = this.getLight(x + 1, y);
-            }
+            this._lights.forEach(l => (l.lit = false));
             let litLight = Config.Rand.pickOne(this._lights);
-            litLight.lit = true;
+            this.createSolution(litLight);
             this.miniGameActors.push(this._copier);
-            this.miniGameActors = this.miniGameActors.concat(this._lights);
+            this._lights.forEach(l => this.miniGameActors.push(l));
+        }
+        createSolution(light) {
+            let x = light.boardX;
+            let y = light.boardY;
+            light.lit = true;
+            if (light.up)
+                light.up.lit = true;
+            if (light.down)
+                light.down.lit = true;
+            if (light.left)
+                light.left.lit = true;
+            if (light.right)
+                light.right.lit = true;
         }
     }
 
@@ -963,6 +980,7 @@ var game = (function (exports,ex) {
                     if (!this._gameOver) {
                         this._gameOver = true;
                         //game over logic
+                        gameover(scene.engine, GameOverReason.minigame);
                     }
                 }
             }, 1000, true);
@@ -979,11 +997,12 @@ var game = (function (exports,ex) {
             if (this.miniGameCount % this.miniGames.length === 0) {
                 this.miniGames = Config.Rand.shuffle(this.miniGames);
             }
-            this.currentMiniGame = this.miniGames[this.miniGameCount % this.miniGames.length];
-            this.miniGameCount++;
+            this.currentMiniGame = this.miniGames[this.miniGameCount];
+            console.log("current game:", this.miniGameCount, this.currentMiniGame);
+            this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
             this.currentMiniGame.start();
-            this._secondsRemaining = 60;
-            this._miniGameTimer.reset(1000, 60);
+            this._secondsRemaining = 20;
+            this._miniGameTimer.reset(1000, 20);
         }
     }
 

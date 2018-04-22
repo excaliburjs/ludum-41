@@ -27,7 +27,6 @@ export class MiniGame {
     }
     onFail() {
         this.cleanUp();
-        //lose the game
     }
 }
 //# sourceMappingURL=miniGame.js.map

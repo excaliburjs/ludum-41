@@ -16,6 +16,34 @@ export class PrinterGame extends MiniGame {
         copier.addDrawing(resources.txCopierBackground);
         this.scene = scene;
         this._copier = copier;
+        this._lights = [];
+        for (let i = 0; i <
+            Config.PrinterMiniGame.GridDimension *
+                Config.PrinterMiniGame.GridDimension; i++) {
+            let x = i % Config.PrinterMiniGame.GridDimension;
+            let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
+            this._lights[i] = new Light({
+                x: x * Config.PrinterMiniGame.PrinterSpacing +
+                    Config.PrinterMiniGame.PrinterStartX,
+                y: y * Config.PrinterMiniGame.PrinterSpacing +
+                    Config.PrinterMiniGame.PrinterStartY,
+                width: 20,
+                height: 20,
+                color: ex.Color.Violet.clone()
+            }, this);
+            this._lights[i].boardX = x;
+            this._lights[i].boardY = y;
+        }
+        let width = Config.PrinterMiniGame.GridDimension;
+        for (let i = 0; i < this._lights.length; i++) {
+            let light = this._lights[i];
+            let x = i % Config.PrinterMiniGame.GridDimension;
+            let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
+            light.up = this.getLight(x, y - 1);
+            light.down = this.getLight(x, y + 1);
+            light.left = this.getLight(x - 1, y);
+            light.right = this.getLight(x + 1, y);
+        }
     }
     getLight(x, y) {
         let index = x + y * Config.PrinterMiniGame.GridDimension;
@@ -38,36 +66,24 @@ export class PrinterGame extends MiniGame {
         return this._lights.reduce((prev, curr) => prev && !curr.lit, true);
     }
     setup() {
-        this._lights = [];
-        for (let i = 0; i <
-            Config.PrinterMiniGame.GridDimension *
-                Config.PrinterMiniGame.GridDimension; i++) {
-            let x = i % Config.PrinterMiniGame.GridDimension;
-            let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
-            this._lights[i] = new Light({
-                x: x * Config.PrinterMiniGame.PrinterSpacing +
-                    Config.PrinterMiniGame.PrinterStartX,
-                y: y * Config.PrinterMiniGame.PrinterSpacing +
-                    Config.PrinterMiniGame.PrinterStartY,
-                width: 20,
-                height: 20,
-                color: ex.Color.Violet.clone()
-            }, this);
-        }
-        let width = Config.PrinterMiniGame.GridDimension;
-        for (let i = 0; i < this._lights.length; i++) {
-            let light = this._lights[i];
-            let x = i % Config.PrinterMiniGame.GridDimension;
-            let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
-            light.up = this.getLight(x, y - 1);
-            light.down = this.getLight(x, y + 1);
-            light.left = this.getLight(x - 1, y);
-            light.right = this.getLight(x + 1, y);
-        }
+        this._lights.forEach(l => (l.lit = false));
         let litLight = Config.Rand.pickOne(this._lights);
-        litLight.lit = true;
+        this.createSolution(litLight);
         this.miniGameActors.push(this._copier);
-        this.miniGameActors = this.miniGameActors.concat(this._lights);
+        this._lights.forEach(l => this.miniGameActors.push(l));
+    }
+    createSolution(light) {
+        let x = light.boardX;
+        let y = light.boardY;
+        light.lit = true;
+        if (light.up)
+            light.up.lit = true;
+        if (light.down)
+            light.down.lit = true;
+        if (light.left)
+            light.left.lit = true;
+        if (light.right)
+            light.right.lit = true;
     }
 }
 //# sourceMappingURL=printer-game.js.map
