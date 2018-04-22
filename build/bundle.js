@@ -153,7 +153,8 @@ var game = (function (exports,ex) {
         txCoffeeFilter: new ex.Texture("game/assets/img/coffee-filters.png"),
         txCoffeeCup: new ex.Texture("game/assets/img/coffee-cup.png"),
         txCoffeeBackground: new ex.Texture("game/assets/img/coffee-game-bg.png"),
-        txCopierBackground: new ex.Texture("game/assets/img/printer.png"),
+        txCopier: new ex.Texture("game/assets/img/printer.png"),
+        txCopierBackground: new ex.Texture("game/assets/img/copy-game-bg.png"),
         txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
         txCursor: new ex.Texture("game/assets/img/thehand.png"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
@@ -863,7 +864,14 @@ var game = (function (exports,ex) {
                 y: scene.engine.halfDrawHeight,
                 anchor: ex.Vector.Zero.clone()
             });
-            copier.addDrawing(Resources.txCopierBackground);
+            copier.addDrawing(Resources.txCopier);
+            this._background = new ex.Actor({
+                x: 400,
+                y: 600,
+                width: 1,
+                height: 1
+            });
+            this._background.addDrawing(Resources.txCopierBackground);
             this.scene = scene;
             this._copier = copier;
             this._lights = [];
@@ -915,6 +923,7 @@ var game = (function (exports,ex) {
             return this._lights.reduce((prev, curr) => prev && !curr.lit, true);
         }
         setup() {
+            this.miniGameActors.push(this._background);
             this._lights.forEach(l => (l.lit = false));
             let litLight = Config.Rand.pickOne(this._lights);
             this.createSolution(litLight);

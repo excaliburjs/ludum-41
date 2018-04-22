@@ -9,6 +9,7 @@ export class PrinterGame extends MiniGame {
   protected miniGameActors: ex.Actor[] = [];
   protected scene: ex.Scene;
   private _copier: ex.Actor;
+  private _background: ex.Actor;
 
   private _lights: Light[] = [];
   constructor(scene: ex.Scene, bottomSubscene: BottomSubscene) {
@@ -18,7 +19,15 @@ export class PrinterGame extends MiniGame {
       y: scene.engine.halfDrawHeight,
       anchor: ex.Vector.Zero.clone()
     });
-    copier.addDrawing(resources.txCopierBackground);
+    copier.addDrawing(resources.txCopier);
+
+    this._background = new ex.Actor({
+      x: 400,
+      y: 600,
+      width: 1,
+      height: 1
+    });
+    this._background.addDrawing(resources.txCopierBackground);
 
     this.scene = scene;
 
@@ -92,6 +101,7 @@ export class PrinterGame extends MiniGame {
   }
 
   public setup() {
+    this.miniGameActors.push(this._background);
     this._lights.forEach(l => (l.lit = false));
     let litLight = Config.Rand.pickOne(this._lights);
     this.createSolution(litLight);

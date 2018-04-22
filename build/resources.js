@@ -9,7 +9,8 @@ export default {
     txCoffeeFilter: new Texture("game/assets/img/coffee-filters.png"),
     txCoffeeCup: new Texture("game/assets/img/coffee-cup.png"),
     txCoffeeBackground: new Texture("game/assets/img/coffee-game-bg.png"),
-    txCopierBackground: new Texture("game/assets/img/printer.png"),
+    txCopier: new Texture("game/assets/img/printer.png"),
+    txCopierBackground: new Texture("game/assets/img/copy-game-bg.png"),
     txOverlay: new Texture("game/assets/img/office-overlay.png"),
     txCursor: new Texture("game/assets/img/thehand.png"),
     sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
