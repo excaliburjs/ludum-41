@@ -62,7 +62,7 @@ export class CoffeeGame extends MiniGame {
     );
 
     this._coffeeGrounds = new CoffeeItem({
-      x: 300,
+      x: 200,
       y: 500,
       width: 150,
       height: 160,
@@ -93,7 +93,7 @@ export class CoffeeGame extends MiniGame {
     });
     let coffeeMakerSpritesheet = new ex.SpriteSheet(
       Resources.txCoffeeMaker,
-      2,
+      24,
       1,
       160,
       260
@@ -106,10 +106,18 @@ export class CoffeeGame extends MiniGame {
       "highlight",
       coffeeMakerSpritesheet.getSprite(1)
     );
+    let coffeeMakeAnim = coffeeMakerSpritesheet.getAnimationBetween(
+      this.scene.engine,
+      2,
+      23,
+      250
+    );
+    coffeeMakeAnim.loop = false;
+    this._coffeeMaker.addDrawing("animate", coffeeMakeAnim);
 
     this._coffeeCup = new CoffeeItem({
       x: 650,
-      y: 675,
+      y: 687,
       width: 100,
       height: 100,
       color: ex.Color.Orange
@@ -136,6 +144,7 @@ export class CoffeeGame extends MiniGame {
         this._coffeeMaker.actions
           .callMethod(() => {
             // TODO play coffee brewing animation
+            this._coffeeMaker.setDrawing("animate");
             // TODO ramp up the music/difficulty in the top runner?
             ex.Logger.getInstance().info("brewing coffee...");
           })
