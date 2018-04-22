@@ -21,7 +21,7 @@ export default {
   // Top Floor config
   Floor: {
     Speed: -200,
-    Height: 5
+    Height: 20
   },
 
   // Top Player config
