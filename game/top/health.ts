@@ -1,5 +1,7 @@
 import * as ex from "excalibur";
 import Config from "../config";
+import { gameover } from "../session";
+import { GameOverReason } from "../stats";
 
 export class TopHealth extends ex.Label {
   public health: number = Config.Health.Default;
@@ -21,7 +23,7 @@ export class TopHealth extends ex.Label {
 
   onPostUpdate(engine: ex.Engine, delta: number) {
     if (this.health < 1) {
-      engine.goToScene("end");
+      gameover(engine, GameOverReason.daydream);
       return;
     }
 

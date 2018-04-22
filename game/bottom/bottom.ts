@@ -50,7 +50,7 @@ export class BottomSubscene {
 
   public startRandomMiniGame() {
     this.currentMiniGame = this.miniGames[
-      ex.Util.randomIntInRange(0, this.miniGames.length - 1)
+      Config.Rand.integer(0, this.miniGames.length - 1)
     ];
     this.currentMiniGame.start();
   }
