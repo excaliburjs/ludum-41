@@ -44,7 +44,7 @@ export default {
   },
 
   PrinterMiniGame: {
-    GridDimension: 4
+    GridDimension: 3
   },
 
   /**
