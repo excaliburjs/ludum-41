@@ -75,7 +75,6 @@ export class PrinterGame extends MiniGame {
         return this._lights.reduce((prev, curr) => prev && !curr.lit, true);
     }
     setup() {
-        this.miniGameActors.push(this._background);
         this._lights.forEach(l => (l.lit = false));
         let litLight = Config.Rand.pickOne(this._lights);
         this.createSolution(litLight);

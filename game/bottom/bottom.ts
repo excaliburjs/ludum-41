@@ -28,6 +28,14 @@ export class BottomSubscene {
     this.cursor = new Cursor();
     scene.add(this.cursor);
 
+    if (Config.CheatCode) {
+      scene.engine.input.keyboard.on("down", (evt: ex.Input.KeyEvent) => {
+        if (evt.key === ex.Input.Keys.W) {
+          this.startRandomMiniGame();
+        }
+      });
+    }
+
     // this.collatingGame = new CollatingGame(
     //   scene,
     //   Config.MiniGames.Collating.NumberOfWinsToProceed,
@@ -38,8 +46,8 @@ export class BottomSubscene {
     this.coffeeGame = new CoffeeGame(scene, this);
     this.miniGames.push(this.coffeeGame);
 
-    //this.printerGame = new PrinterGame(scene, this);
-    //this.miniGames.push(this.printerGame);
+    this.printerGame = new PrinterGame(scene, this);
+    this.miniGames.push(this.printerGame);
 
     this.miniGames = Config.Rand.shuffle(this.miniGames);
 
@@ -81,11 +89,7 @@ export class BottomSubscene {
   }
 
   public startRandomMiniGame() {
-    // if (this.miniGameCount % this.miniGames.length === 0) {
-    //   this.miniGames = Config.Rand.shuffle(this.miniGames);
-    // }
-
-    this.currentMiniGame = this.coffeeGame; //this.miniGames[this.miniGameCount];
+    this.currentMiniGame = this.miniGames[this.miniGameCount];
     console.log("current game:", this.miniGameCount, this.currentMiniGame);
 
     this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;

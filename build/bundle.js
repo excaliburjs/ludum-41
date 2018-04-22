@@ -24,6 +24,7 @@ var game = (function (exports,ex) {
         ex.Logger.getInstance().info("World seed", rand.seed);
     }
     var Config = {
+        CheatCode: true,
         AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
         GameWidth: 800,
         GameHeight: 800,
@@ -539,19 +540,23 @@ var game = (function (exports,ex) {
     class MiniGame {
         constructor(scene, bottomSubscene) {
             this.miniGameActors = [];
+            this.active = false;
             this.scene = scene;
             this.bottomSubscene = bottomSubscene;
         }
         start() {
             this.setup(); //initialize actors and add them to the miniGameActors collection.
+            this.active = true;
             for (let i = 0; i < this.miniGameActors.length; i++) {
                 this.scene.add(this.miniGameActors[i]);
             }
         }
         cleanUp() {
             for (let i = 0; i < this.miniGameActors.length; i++) {
+                this.miniGameActors[i].kill();
                 this.scene.remove(this.miniGameActors[i]);
             }
+            this.active = false;
         }
         onSucceed() {
             this.cleanUp();
@@ -691,6 +696,133 @@ var game = (function (exports,ex) {
         }
     }
 
+    class Light extends ex.Actor {
+        constructor(args, printer) {
+            super(args);
+            this.printer = printer;
+            this.lit = false;
+            this.boardX = 0;
+            this.boardY = 0;
+        }
+        onInitialize() {
+            this.on("pointerdown", (evt) => {
+                if (this.up)
+                    this.up.lit = !this.up.lit;
+                if (this.down)
+                    this.down.lit = !this.down.lit;
+                if (this.left)
+                    this.left.lit = !this.left.lit;
+                if (this.right)
+                    this.right.lit = !this.right.lit;
+                this.lit = !this.lit;
+            });
+        }
+        onPostUpdate() {
+            if (this.printer.active) {
+                if (this.lit) {
+                    this.color = ex.Color.Yellow.clone();
+                }
+                else {
+                    this.color = ex.Color.Violet.clone();
+                }
+                if (this.printer.isAllLit() || this.printer.isAllDark()) {
+                    console.log("win");
+                    this.printer.onSucceed();
+                }
+            }
+        }
+    }
+
+    class PrinterGame extends MiniGame {
+        constructor(scene, bottomSubscene) {
+            super(scene, bottomSubscene);
+            this.miniGameActors = [];
+            this._lights = [];
+            let copier = new ex.Actor({
+                x: 0,
+                y: scene.engine.halfDrawHeight,
+                anchor: ex.Vector.Zero.clone()
+            });
+            copier.addDrawing(Resources.txCopier);
+            this._background = new ex.Actor({
+                x: 400,
+                y: 600,
+                width: 1,
+                height: 1
+            });
+            this._background.addDrawing(Resources.txCopierBackground);
+            this.scene = scene;
+            this._copier = copier;
+            for (let i = 0; i <
+                Config.PrinterMiniGame.GridDimension *
+                    Config.PrinterMiniGame.GridDimension; i++) {
+                let x = i % Config.PrinterMiniGame.GridDimension;
+                let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
+                this._lights[i] = new Light({
+                    x: x * Config.PrinterMiniGame.PrinterSpacing +
+                        Config.PrinterMiniGame.PrinterStartX,
+                    y: y * Config.PrinterMiniGame.PrinterSpacing +
+                        Config.PrinterMiniGame.PrinterStartY,
+                    width: 20,
+                    height: 20,
+                    color: ex.Color.Violet.clone()
+                }, this);
+                this._lights[i].boardX = x;
+                this._lights[i].boardY = y;
+            }
+            for (let i = 0; i < this._lights.length; i++) {
+                let light = this._lights[i];
+                let x = i % Config.PrinterMiniGame.GridDimension;
+                let y = Math.floor(i / Config.PrinterMiniGame.GridDimension);
+                light.up = this.getLight(x, y - 1);
+                light.down = this.getLight(x, y + 1);
+                light.left = this.getLight(x - 1, y);
+                light.right = this.getLight(x + 1, y);
+            }
+            this.miniGameActors.push(this._background);
+            this.miniGameActors.push(this._copier);
+            this._lights.forEach(l => this.miniGameActors.push(l));
+        }
+        getLight(x, y) {
+            let index = x + y * Config.PrinterMiniGame.GridDimension;
+            if (index < 0 || index > this._lights.length - 1) {
+                return null;
+            }
+            if (x >= Config.PrinterMiniGame.GridDimension ||
+                y >= Config.PrinterMiniGame.GridDimension) {
+                return null;
+            }
+            if (x < 0 || y < 0) {
+                return null;
+            }
+            return this._lights[index];
+        }
+        isAllLit() {
+            return this._lights.reduce((prev, curr) => prev && curr.lit, true);
+        }
+        isAllDark() {
+            return this._lights.reduce((prev, curr) => prev && !curr.lit, true);
+        }
+        setup() {
+            this._lights.forEach(l => (l.lit = false));
+            let litLight = Config.Rand.pickOne(this._lights);
+            this.createSolution(litLight);
+        }
+        createSolution(light) {
+            let x = light.boardX;
+            let y = light.boardY;
+            light.lit = true;
+            if (light.up)
+                light.up.lit = true;
+            if (light.down)
+                light.down.lit = true;
+            if (light.left)
+                light.left.lit = true;
+            if (light.right)
+                light.right.lit = true;
+        }
+    }
+
     class Cursor extends ex.Actor {
         constructor() {
             super({
@@ -727,6 +859,13 @@ var game = (function (exports,ex) {
         setup(scene) {
             this.cursor = new Cursor();
             scene.add(this.cursor);
+            if (Config.CheatCode) {
+                scene.engine.input.keyboard.on("down", (evt) => {
+                    if (evt.key === ex.Input.Keys.W) {
+                        this.startRandomMiniGame();
+                    }
+                });
+            }
             // this.collatingGame = new CollatingGame(
             //   scene,
             //   Config.MiniGames.Collating.NumberOfWinsToProceed,
@@ -735,8 +874,8 @@ var game = (function (exports,ex) {
             //this.miniGames.push(this.collatingGame);
             this.coffeeGame = new CoffeeGame(scene, this);
             this.miniGames.push(this.coffeeGame);
-            //this.printerGame = new PrinterGame(scene, this);
-            //this.miniGames.push(this.printerGame);
+            this.printerGame = new PrinterGame(scene, this);
+            this.miniGames.push(this.printerGame);
             this.miniGames = Config.Rand.shuffle(this.miniGames);
             this._countdownLabel = new ex.Label({
                 color: ex.Color.White,
@@ -767,10 +906,7 @@ var game = (function (exports,ex) {
             scene.remove(this._miniGameTimer);
         }
         startRandomMiniGame() {
-            // if (this.miniGameCount % this.miniGames.length === 0) {
-            //   this.miniGames = Config.Rand.shuffle(this.miniGames);
-            // }
-            this.currentMiniGame = this.coffeeGame; //this.miniGames[this.miniGameCount];
+            this.currentMiniGame = this.miniGames[this.miniGameCount];
             console.log("current game:", this.miniGameCount, this.currentMiniGame);
             this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
             this.currentMiniGame.start();

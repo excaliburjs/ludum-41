@@ -7,6 +7,7 @@ export function createRand() {
     Logger.getInstance().info("World seed", rand.seed);
 }
 export default {
+    CheatCode: true,
     AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
     GameWidth: 800,
     GameHeight: 800,
