@@ -73,6 +73,7 @@ export class CoffeeGame extends MiniGame {
                     .delay(Config.MiniGames.Coffee.BrewTime)
                     .callMethod(() => {
                     ex.Logger.getInstance().info("coffee complete...");
+                    this.onSucceed();
                 });
             }
             else {
