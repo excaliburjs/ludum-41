@@ -5,6 +5,7 @@ export abstract class MiniGame {
   protected bottomSubscene: BottomSubscene;
   protected scene: Scene;
   private _timeLimit: number;
+  public active: boolean = false;
 
   constructor(scene: Scene, bottomSubscene: BottomSubscene) {
     this.scene = scene;
@@ -15,6 +16,7 @@ export abstract class MiniGame {
 
   public start(): void {
     this.setup(); //initialize actors and add them to the miniGameActors collection.
+    this.active = true;
     for (let i = 0; i < this.miniGameActors.length; i++) {
       this.scene.add(this.miniGameActors[i]);
     }
@@ -22,8 +24,10 @@ export abstract class MiniGame {
 
   public cleanUp(): void {
     for (let i = 0; i < this.miniGameActors.length; i++) {
+      this.miniGameActors[i].kill();
       this.scene.remove(this.miniGameActors[i]);
     }
+    this.active = false;
   }
 
   public onSucceed(): void {

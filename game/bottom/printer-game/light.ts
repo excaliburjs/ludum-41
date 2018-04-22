@@ -15,7 +15,7 @@ export class Light extends ex.Actor {
   }
 
   onInitialize() {
-    this.on("pointerup", (evt: ex.Input.PointerEvent) => {
+    this.on("pointerdown", (evt: ex.Input.PointerEvent) => {
       if (this.up) this.up.lit = !this.up.lit;
       if (this.down) this.down.lit = !this.down.lit;
       if (this.left) this.left.lit = !this.left.lit;
@@ -24,20 +24,18 @@ export class Light extends ex.Actor {
     });
   }
 
-  onPostKill() {
-    this.off("pointerup");
-  }
-
   onPostUpdate() {
-    if (this.lit) {
-      this.color = ex.Color.Yellow.clone();
-    } else {
-      this.color = ex.Color.Violet.clone();
-    }
+    if (this.printer.active) {
+      if (this.lit) {
+        this.color = ex.Color.Yellow.clone();
+      } else {
+        this.color = ex.Color.Violet.clone();
+      }
 
-    if (this.printer.isAllLit() || this.printer.isAllDark()) {
-      console.log("win");
-      this.printer.onSucceed();
+      if (this.printer.isAllLit() || this.printer.isAllDark()) {
+        console.log("win");
+        this.printer.onSucceed();
+      }
     }
   }
 }
