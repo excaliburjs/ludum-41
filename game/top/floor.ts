@@ -15,7 +15,7 @@ export class Floor extends ex.Actor {
       width: engine.drawWidth * 2, // twice as wide as the screen
       height: Config.Floor.Height,
       color: ex.Color.Black,
-      anchor: new ex.Vector(0, 0.5),
+      anchor: new ex.Vector(0, 0.25),
       collisionType: ex.CollisionType.Fixed
     });
   }
