@@ -47,6 +47,9 @@ var game = (function (exports,ex) {
             Collating: {
                 NumberOfDocuments: 5,
                 NumberOfWinsToProceed: 3
+            },
+            Coffee: {
+                BrewTime: 5000 // ms
             }
         },
         Platform: {
@@ -750,7 +753,7 @@ var game = (function (exports,ex) {
                 color: ex.Color.Cyan
             });
             this.miniGameActors.push(waterPitcher);
-            let coffeeMaker = new CoffeeItem({
+            this._coffeeMaker = new CoffeeItem({
                 x: 400,
                 y: 600,
                 width: 160,
@@ -758,9 +761,9 @@ var game = (function (exports,ex) {
                 color: ex.Color.Black
             });
             let coffeeMakerSpritesheet = new ex.SpriteSheet(Resources.txCoffeeMaker, 2, 1, 160, 260);
-            coffeeMaker.addDrawing("default", coffeeMakerSpritesheet.getSprite(0));
-            coffeeMaker.addDrawing("highlight", coffeeMakerSpritesheet.getSprite(1));
-            this.miniGameActors.push(coffeeMaker);
+            this._coffeeMaker.addDrawing("default", coffeeMakerSpritesheet.getSprite(0));
+            this._coffeeMaker.addDrawing("highlight", coffeeMakerSpritesheet.getSprite(1));
+            this.miniGameActors.push(this._coffeeMaker);
             let coffeeCup = new CoffeeItem({
                 x: 550,
                 y: 500,
@@ -773,11 +776,16 @@ var game = (function (exports,ex) {
                 console.log("coffee click");
                 this._stepCount++;
                 if (this._stepCount >= this.miniGameActors.length) {
-                    // TODO play coffee brewing animation
-                    // TODO ramp up the music/difficulty in the top runner
-                    // TODO hiding the actors isn't enough, they need their input disabled
-                    // maybe we should remove them from the scene?
-                    this.onSucceed();
+                    this._coffeeMaker.actions
+                        .callMethod(() => {
+                        // TODO play coffee brewing animation
+                        // TODO ramp up the music/difficulty in the top runner?
+                        ex.Logger.getInstance().info("brewing coffee...");
+                    })
+                        .delay(Config.MiniGames.Coffee.BrewTime)
+                        .callMethod(() => {
+                        ex.Logger.getInstance().info("coffee complete...");
+                    });
                 }
                 else {
                     let coffeeItem = this.miniGameActors[this._stepCount];

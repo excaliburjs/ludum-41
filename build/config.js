@@ -30,6 +30,9 @@ export default {
         Collating: {
             NumberOfDocuments: 5,
             NumberOfWinsToProceed: 3
+        },
+        Coffee: {
+            BrewTime: 5000 // ms
         }
     },
     Platform: {
