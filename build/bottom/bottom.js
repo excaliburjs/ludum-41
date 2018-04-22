@@ -2,6 +2,7 @@ import * as ex from "excalibur";
 import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
+import { PrinterGame } from "./printer-game/printer-game";
 import { Cursor } from "./cursor";
 import { Timer } from "excalibur";
 import { gameover } from "../session";
@@ -36,9 +37,11 @@ export class BottomSubscene {
         this.cursor = new Cursor();
         scene.add(this.cursor);
         this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
-        //this.miniGames.push(this.collatingGame);
+        this.miniGames.push(this.collatingGame);
         this.coffeeGame = new CoffeeGame(scene, this);
         this.miniGames.push(this.coffeeGame);
+        this.printerGame = new PrinterGame(scene, this);
+        this.miniGames.push(this.printerGame);
     }
     setup(scene) {
         this.miniGames = Config.Rand.shuffle(this.miniGames);
@@ -52,7 +55,7 @@ export class BottomSubscene {
         // if (this.miniGameCount % this.miniGames.length === 0) {
         //   this.miniGames = Config.Rand.shuffle(this.miniGames);
         // }
-        this.currentMiniGame = this.collatingGame; //this.miniGames[this.miniGameCount];
+        this.currentMiniGame = this.miniGames[this.miniGameCount];
         console.log("current game:", this.miniGameCount, this.currentMiniGame);
         this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
         this._secondsRemaining = 60;

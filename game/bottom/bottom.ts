@@ -59,10 +59,13 @@ export class BottomSubscene {
       Config.MiniGames.Collating.NumberOfWinsToProceed,
       this
     );
-    //this.miniGames.push(this.collatingGame);
+    this.miniGames.push(this.collatingGame);
 
     this.coffeeGame = new CoffeeGame(scene, this);
     this.miniGames.push(this.coffeeGame);
+
+    this.printerGame = new PrinterGame(scene, this);
+    this.miniGames.push(this.printerGame);
   }
 
   public setup(scene: ex.Scene) {
@@ -80,7 +83,7 @@ export class BottomSubscene {
     //   this.miniGames = Config.Rand.shuffle(this.miniGames);
     // }
 
-    this.currentMiniGame = this.collatingGame; //this.miniGames[this.miniGameCount];
+    this.currentMiniGame = this.miniGames[this.miniGameCount];
     console.log("current game:", this.miniGameCount, this.currentMiniGame);
 
     this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
