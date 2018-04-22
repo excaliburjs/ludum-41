@@ -7,6 +7,8 @@ export class Light extends ex.Actor {
   public left: Light;
   public right: Light;
   public lit: boolean = false;
+  public boardX: number = 0;
+  public boardY: number = 0;
 
   constructor(args: ex.IActorArgs, private printer: PrinterGame) {
     super(args);
