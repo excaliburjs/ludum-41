@@ -43,16 +43,19 @@ export abstract class MiniGame {
   }
 
   public onSucceed(): void {
-    this.cleanUp();
-    let stats = getStats();
-    stats.miniGamesCompleted++;
-    if (stats.miniGamesCompleted >= Config.numMiniGamesToComplete) {
-      console.log("you win!"); //TODO remove
-      gameover(this.scene.engine, GameOverReason.workdayComplete);
-    } else {
-      // otherwise the workday continues
-      this.bottomSubscene.startRandomMiniGame();
-    }
+    this.active = false;
+    this.bottomSubscene.transistion.transitionIn().then(() => {
+      this.cleanUp();
+      let stats = getStats();
+      stats.miniGamesCompleted++;
+      if (stats.miniGamesCompleted >= Config.numMiniGamesToComplete) {
+        console.log("you win!"); //TODO remove
+        gameover(this.scene.engine, GameOverReason.workdayComplete);
+      } else {
+        // otherwise the workday continues
+        this.bottomSubscene.startRandomMiniGame();
+      }
+    });
   }
 
   public onFail(): void {
