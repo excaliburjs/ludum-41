@@ -50,7 +50,7 @@ export class CoffeeGame extends MiniGame {
         let coffeeMakerSpritesheet = new ex.SpriteSheet(Resources.txCoffeeMaker, 24, 1, 160, 260);
         this._coffeeMaker.addDrawing("default", coffeeMakerSpritesheet.getSprite(0));
         this._coffeeMaker.addDrawing("highlight", coffeeMakerSpritesheet.getSprite(1));
-        let coffeeMakeAnim = coffeeMakerSpritesheet.getAnimationBetween(this.scene.engine, 2, 23, 250);
+        let coffeeMakeAnim = coffeeMakerSpritesheet.getAnimationBetween(this.scene.engine, 2, 24, 250);
         coffeeMakeAnim.loop = false;
         this._coffeeMaker.addDrawing("animate", coffeeMakeAnim);
         this._coffeeCup = new CoffeeItem({

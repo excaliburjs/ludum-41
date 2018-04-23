@@ -109,7 +109,7 @@ export class CoffeeGame extends MiniGame {
     let coffeeMakeAnim = coffeeMakerSpritesheet.getAnimationBetween(
       this.scene.engine,
       2,
-      23,
+      24,
       250
     );
     coffeeMakeAnim.loop = false;
