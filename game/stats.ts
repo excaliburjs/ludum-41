@@ -1,6 +1,7 @@
 export enum GameOverReason {
   daydream,
   minigame,
+  workdayComplete,
   debug
 }
 
@@ -11,4 +12,5 @@ export class Stats {
   public get duration() {
     return this.startTime - Date.now();
   }
+  public miniGamesCompleted = 0;
 }

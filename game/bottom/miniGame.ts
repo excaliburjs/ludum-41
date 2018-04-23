@@ -1,5 +1,9 @@
-import { Actor, Scene, Timer, Label, Color } from "excalibur";
+import { Actor, Scene, Timer, Label, Color, Configurable } from "excalibur";
 import { BottomSubscene } from "./bottom";
+import { getStats } from "../session";
+import { gameover } from "../session";
+import { GameOverReason } from "../stats";
+import Config from "../config";
 
 export enum MiniGameType {
   Collate,
@@ -40,7 +44,15 @@ export abstract class MiniGame {
 
   public onSucceed(): void {
     this.cleanUp();
-    this.bottomSubscene.startRandomMiniGame();
+    let stats = getStats();
+    stats.miniGamesCompleted++;
+    if (stats.miniGamesCompleted >= Config.numMiniGamesToComplete) {
+      console.log("you win!"); //TODO remove
+      gameover(this.scene.engine, GameOverReason.workdayComplete);
+    } else {
+      // otherwise the workday continues
+      this.bottomSubscene.startRandomMiniGame();
+    }
   }
 
   public onFail(): void {
