@@ -13,13 +13,29 @@
    <meta charset="UTF-8"> 
    <title>Office Daydream - Ludum Dare 41</title>
    <link rel="stylesheet" href="game/assets/game.css?COMMIT_NUMBER">
+   <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
+
+   <!-- <meta property="og:title" content="Office Daydream - Ludum Dare 41"/>
+   <meta property="og:url" content="http://excaliburjs.com/ludum-41/"/>
+   <meta property="og:image" content="http://excaliburjs.com/ludum-41/img/favicon.png" /> -->
 </head>
 <body>
+    <canvas id="game"></canvas>
+
+    <div id="sound">
+      <a id="mute-music" href="#mute-music"><i class="fa fa-music"></i></a>
+      
+      <a id="mute-all" href="#mute-all"><i class="fa fa-volume-up"></i></a>
+    </div>
+
+    <!-- JS libs -->
+    <script src="lib/storejs/store.min.js"></script>
 
     <!-- Excalibur.js reference -->
     <script src="lib/excalibur-dist/excalibur.js?COMMIT_NUMBER" type="text/javascript"></script>
     <!-- Game reference -->
     <script src="build/bundle.js?COMMIT_NUMBER" type="text/javascript"></script>
+    
     
     <footer>Made with <a href="http://excaliburjs.com">Excalibur.js</a> 
       &bull; <a href="credits.html?COMMIT_NUMBER">Credits</a>
