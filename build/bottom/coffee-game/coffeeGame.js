@@ -90,10 +90,12 @@ export class CoffeeGame extends MiniGame {
                 });
             }
             else if (this._stepCount >= this.miniGameActors.length) {
+                soundManager.playGenericSelectSound();
                 this.onSucceed();
             }
             else {
                 let coffeeItem = this.miniGameActors[this._stepCount];
+                soundManager.playGenericSelectSound();
                 coffeeItem.highlight();
             }
         });

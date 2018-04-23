@@ -30,7 +30,8 @@ export default {
     shortBeep: new Sound("game/assets/snd/shortBeep.mp3", "game/assets/snd/shortBeep.wav"),
     coffeePour: new Sound("game/assets/snd/coffeePour.mp3", "game/assets/snd/coffeePour.wav"),
     pageFlip: new Sound("game/assets/snd/pageFlip.mp3", "game/assets/snd/pageFlip.wav"),
-    jump: new Sound("game/assets/snd/jump.mp3", "game/assets/snd/jump.wav")
+    jump: new Sound("game/assets/snd/jump.mp3", "game/assets/snd/jump.wav"),
+    select: new Sound("game/assets/snd/select.mp3", "game/assets/snd/select.wav")
     //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };
 //# sourceMappingURL=resources.js.map

@@ -159,9 +159,11 @@ export class CoffeeGame extends MiniGame {
             coffeeItem.highlight();
           });
       } else if (this._stepCount >= this.miniGameActors.length) {
+        soundManager.playGenericSelectSound();
         this.onSucceed();
       } else {
         let coffeeItem = <CoffeeItem>this.miniGameActors[this._stepCount];
+        soundManager.playGenericSelectSound();
         coffeeItem.highlight();
       }
     });

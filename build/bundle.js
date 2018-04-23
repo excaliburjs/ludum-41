@@ -141,7 +141,8 @@ var game = (function (exports,ex) {
         shortBeep: new ex.Sound("game/assets/snd/shortBeep.mp3", "game/assets/snd/shortBeep.wav"),
         coffeePour: new ex.Sound("game/assets/snd/coffeePour.mp3", "game/assets/snd/coffeePour.wav"),
         pageFlip: new ex.Sound("game/assets/snd/pageFlip.mp3", "game/assets/snd/pageFlip.wav"),
-        jump: new ex.Sound("game/assets/snd/jump.mp3", "game/assets/snd/jump.wav")
+        jump: new ex.Sound("game/assets/snd/jump.mp3", "game/assets/snd/jump.wav"),
+        select: new ex.Sound("game/assets/snd/select.mp3", "game/assets/snd/select.wav")
         //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -351,6 +352,10 @@ var game = (function (exports,ex) {
         static playJumpSound() {
             //resources.shortBeep.setVolume(0.5);
             Resources.jump.play();
+        }
+        static playGenericSelectSound() {
+            Resources.select.setVolume(0.5);
+            Resources.select.play();
         }
     }
     SoundManager.allMuted = false;
@@ -1135,10 +1140,12 @@ var game = (function (exports,ex) {
                     });
                 }
                 else if (this._stepCount >= this.miniGameActors.length) {
+                    SoundManager.playGenericSelectSound();
                     this.onSucceed();
                 }
                 else {
                     let coffeeItem = this.miniGameActors[this._stepCount];
+                    SoundManager.playGenericSelectSound();
                     coffeeItem.highlight();
                 }
             });

@@ -108,6 +108,10 @@ export default class SoundManager {
         //resources.shortBeep.setVolume(0.5);
         resources.jump.play();
     }
+    static playGenericSelectSound() {
+        resources.select.setVolume(0.5);
+        resources.select.play();
+    }
 }
 SoundManager.allMuted = false;
 SoundManager.musicMuted = false;
