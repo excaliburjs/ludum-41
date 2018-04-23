@@ -8,7 +8,7 @@ import Config from "./config";
 const gameOverMessages = {
   [GameOverReason.daydream]: "You gave up on your dreams",
   [GameOverReason.minigame]: "Your boss caught you daydreaming.",
-  [GameOverReason.workdayComplete]: "Congratulations! You're free to dream now",
+  [GameOverReason.workdayComplete]: "Congratulations! You're free to dream",
   [GameOverReason.debug]: "DEBUG: You program dreams"
 };
 
@@ -70,7 +70,9 @@ export class ScnEnd extends ex.Scene {
       this.bgActor.setDrawing("defeat");
       this.hoursDoneLabel.text =
         "You made it " + 2 * miniGamesCompleted + " hours through your workday";
+      // this.hoursDoneLabel.visible = true;
     } else {
+      this.hoursDoneLabel.text = "";
       this.bgActor.setDrawing("victory");
     }
 
