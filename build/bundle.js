@@ -47,7 +47,16 @@ var game = (function (exports,ex) {
         MiniGames: {
             Collating: {
                 NumberOfDocuments: 5,
-                NumberOfWinsToProceed: 3
+                NumberOfWinsToProceed: 3,
+                OriginalDocY: 600,
+                InboxPos: {
+                    x: 115,
+                    y: 500
+                },
+                OutboxPos: {
+                    x: 650,
+                    y: 500
+                }
             },
             Coffee: {
                 BrewTime: 5000 // ms
@@ -692,7 +701,7 @@ var game = (function (exports,ex) {
                 // this._scrambledOfficeDocs[i].x = 100 * i + 200;
                 this._scrambledOfficeDocs[i].setWidth(100);
                 this._scrambledOfficeDocs[i].setHeight(150);
-                this._scrambledOfficeDocs[i].y = 600;
+                this._scrambledOfficeDocs[i].y = Config.MiniGames.Collating.OriginalDocY;
                 this.wireUpClickEvent(this._scrambledOfficeDocs[i]);
                 // var docLabel = new Label({
                 //   x: this._scrambledOfficeDocs[i].x,
@@ -716,6 +725,7 @@ var game = (function (exports,ex) {
                 if (this._docSet.tryAddToSortedStack(clickedDoc)) {
                     //update ui
                     clickedDoc.color = ex.Color.Magenta;
+                    clickedDoc.actions.moveTo(Config.MiniGames.Collating.OutboxPos.x, Config.MiniGames.Collating.OutboxPos.y, 1500); //3000);
                     if (this._docSet.isComplete()) {
                         //you won
                         console.log("you won the collating game");
@@ -726,7 +736,9 @@ var game = (function (exports,ex) {
                             this.onSucceed();
                         }
                         else {
-                            this.resetDocuments();
+                            clickedDoc.actions.callMethod(() => {
+                                this.resetDocuments();
+                            });
                         }
                     }
                 }
@@ -737,7 +749,13 @@ var game = (function (exports,ex) {
             this._docSet.clear();
             this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
             for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
-                this._scrambledOfficeDocs[i].x = 125 * i + 150;
+                this._scrambledOfficeDocs[i].x = Config.MiniGames.Collating.InboxPos.x;
+                this._scrambledOfficeDocs[i].y = Config.MiniGames.Collating.InboxPos.y;
+                this._scrambledOfficeDocs[i].actions
+                    .delay(750)
+                    .moveTo(125 * i + 150, Config.MiniGames.Collating.OriginalDocY, 1500);
+                // this._scrambledOfficeDocs[i].x = 125 * i + 150;
+                // this._scrambledOfficeDocs[i].y = Config.MiniGames.Collating.OriginalDocY;
                 this._scrambledOfficeDocs[i].color = ex.Color.Green;
                 // this._docLabels[i].text = (
                 //   this._scrambledOfficeDocs[i].pageNumber + 1
