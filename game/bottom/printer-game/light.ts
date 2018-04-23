@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import { PrinterGame } from "./printer-game";
+import soundManager from "../../soundManager";
 
 export class Light extends ex.Actor {
   public up: Light;
@@ -21,6 +22,7 @@ export class Light extends ex.Actor {
       if (this.left) this.left.lit = !this.left.lit;
       if (this.right) this.right.lit = !this.right.lit;
       this.lit = !this.lit;
+      soundManager.playShortBeep();
     });
   }
 

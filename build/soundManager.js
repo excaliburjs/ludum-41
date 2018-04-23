@@ -93,6 +93,9 @@ export default class SoundManager {
         resources.hitSound.setVolume(0.7);
         resources.hitSound.play();
     }
+    static playShortBeep() {
+        resources.shortBeep.play();
+    }
 }
 SoundManager.allMuted = false;
 SoundManager.musicMuted = false;

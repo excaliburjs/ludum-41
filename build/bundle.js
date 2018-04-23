@@ -132,7 +132,8 @@ var game = (function (exports,ex) {
         txGameOverScreen: new ex.Texture("game/assets/img/game-end-bg.png"),
         topBgMusic: new ex.Sound("game/assets/snd/extremeaction.mp3", "game/assets/snd/extremeaction.wav"),
         bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
-        hitSound: new ex.Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav")
+        hitSound: new ex.Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav"),
+        shortBeep: new ex.Sound("game/assets/snd/shortBeep.mp3", "game/assets/snd/shortBeep.wav")
         //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -665,6 +666,9 @@ var game = (function (exports,ex) {
             Resources.hitSound.setVolume(0.7);
             Resources.hitSound.play();
         }
+        static playShortBeep() {
+            Resources.shortBeep.play();
+        }
     }
     SoundManager.allMuted = false;
     SoundManager.musicMuted = false;
@@ -1116,6 +1120,7 @@ var game = (function (exports,ex) {
                 if (this.right)
                     this.right.lit = !this.right.lit;
                 this.lit = !this.lit;
+                SoundManager.playShortBeep();
             });
         }
         onPostUpdate() {
