@@ -52,6 +52,11 @@ export default {
   coffeePour: new Sound(
     "game/assets/snd/coffeePour.mp3",
     "game/assets/snd/coffeePour.wav"
+  ),
+
+  pageFlip: new Sound(
+    "game/assets/snd/pageFlip.mp3",
+    "game/assets/snd/pageFlip.wav"
   )
   //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };

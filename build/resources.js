@@ -27,7 +27,8 @@ export default {
     bottomBgMusic: new Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
     hitSound: new Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav"),
     shortBeep: new Sound("game/assets/snd/shortBeep.mp3", "game/assets/snd/shortBeep.wav"),
-    coffeePour: new Sound("game/assets/snd/coffeePour.mp3", "game/assets/snd/coffeePour.wav")
+    coffeePour: new Sound("game/assets/snd/coffeePour.mp3", "game/assets/snd/coffeePour.wav"),
+    pageFlip: new Sound("game/assets/snd/pageFlip.mp3", "game/assets/snd/pageFlip.wav")
     //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };
 //# sourceMappingURL=resources.js.map

@@ -3,6 +3,7 @@ import { MiniGame, MiniGameType } from "../../bottom/miniGame";
 import { OfficeDocSet } from "./officeDoc";
 import Config from "../../config";
 import Resources from "../../resources";
+import soundManager from "../../soundManager";
 export class CollatingGame extends MiniGame {
     constructor(scene, winsRequired, bottomSubscene) {
         super(scene, bottomSubscene);
@@ -47,6 +48,7 @@ export class CollatingGame extends MiniGame {
                 clickedDoc.actions
                     .callMethod(() => {
                     clickedDoc.setDrawing("default");
+                    soundManager.playPageFlipSound();
                 })
                     .easeTo(Config.MiniGames.Collating.OutboxPos.x, Config.MiniGames.Collating.OutboxPos.y, 500, EasingFunctions.EaseInOutQuad);
                 if (this._docSet.isComplete()) {

@@ -134,7 +134,8 @@ var game = (function (exports,ex) {
         bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
         hitSound: new ex.Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav"),
         shortBeep: new ex.Sound("game/assets/snd/shortBeep.mp3", "game/assets/snd/shortBeep.wav"),
-        coffeePour: new ex.Sound("game/assets/snd/coffeePour.mp3", "game/assets/snd/coffeePour.wav")
+        coffeePour: new ex.Sound("game/assets/snd/coffeePour.mp3", "game/assets/snd/coffeePour.wav"),
+        pageFlip: new ex.Sound("game/assets/snd/pageFlip.mp3", "game/assets/snd/pageFlip.wav")
         //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -674,6 +675,10 @@ var game = (function (exports,ex) {
         static playCoffeePouringSound() {
             Resources.coffeePour.play();
         }
+        static playPageFlipSound() {
+            Resources.pageFlip.setVolume(0.5);
+            Resources.pageFlip.play();
+        }
     }
     SoundManager.allMuted = false;
     SoundManager.musicMuted = false;
@@ -910,6 +915,7 @@ var game = (function (exports,ex) {
                     clickedDoc.actions
                         .callMethod(() => {
                         clickedDoc.setDrawing("default");
+                        SoundManager.playPageFlipSound();
                     })
                         .easeTo(Config.MiniGames.Collating.OutboxPos.x, Config.MiniGames.Collating.OutboxPos.y, 500, ex.EasingFunctions.EaseInOutQuad);
                     if (this._docSet.isComplete()) {
