@@ -1,39 +1,23 @@
 import { Actor, Color } from "excalibur";
-import Resources from "../../resources";
 export class OfficeDoc extends Actor {
-    constructor(pageNumber) {
+    constructor(pageNumber, art) {
         super();
         this._pageNumber = pageNumber;
         this.color = Color.Green;
-        switch (this._pageNumber) {
-            case 0:
-                this.addDrawing(Resources.txDocPieChart);
-                break;
-            case 1:
-                this.addDrawing(Resources.txDocBarGraph);
-                break;
-            case 2:
-                this.addDrawing(Resources.txDocLineGraph);
-                break;
-            case 3:
-                this.addDrawing(Resources.txDocVennDiagram);
-                break;
-            case 4:
-                this.addDrawing(Resources.txDocMoney);
-                break;
-        }
+        this.addDrawing("default", art[this._pageNumber].getSprite(0));
+        this.addDrawing("numbered", art[this._pageNumber].getSprite(1));
     }
     get pageNumber() {
         return this._pageNumber;
     }
 }
 export class OfficeDocSet {
-    constructor(numDocuments) {
+    constructor(numDocuments, art) {
         this._documents = [];
         this._playerSortedStack = [];
         this._numDocuments = numDocuments;
         for (var i = 0; i < this._numDocuments; i++) {
-            this._documents.push(new OfficeDoc(i));
+            this._documents.push(new OfficeDoc(i, art));
         }
     }
     //attempt to add this document to the sorted stack
