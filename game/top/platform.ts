@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import { TopSubscene } from "./top";
 import Config from "../config";
+import resources from "../resources";
 
 interface Props {
   x: number;
@@ -21,6 +22,8 @@ export class Platform extends ex.Actor {
       // Anchor to bottom since
       // we will be placing it on a "floor"
     });
+
+    this.addDrawing(resources.txGurter);
   }
 
   onInitialize(engine: ex.Engine) {
