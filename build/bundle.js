@@ -438,7 +438,8 @@ var game = (function (exports,ex) {
                 }
                 else if (this.x >
                     engine.drawWidth * Config.TopPlayer.StartingXPercent) {
-                    this.x = engine.drawWidth * Config.TopPlayer.StartingXPercent;
+                    this.vel.x =
+                        engine.drawWidth * Config.TopPlayer.StartingXPercent - this.x;
                 }
                 this.rotation = 0;
             }
