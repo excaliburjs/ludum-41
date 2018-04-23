@@ -8,7 +8,7 @@ import {
   Sprite,
   EasingFunctions
 } from "excalibur";
-import { MiniGame } from "../../bottom/miniGame";
+import { MiniGame, MiniGameType } from "../../bottom/miniGame";
 import { OfficeDocSet, OfficeDoc } from "./officeDoc";
 import Config from "../../config";
 import Resources from "../../resources";
@@ -21,6 +21,7 @@ export class CollatingGame extends MiniGame {
   private _winsRequired: number = 0;
   private _currentWins: number = 0;
   public secondsToComplete: number = 30;
+  public miniGameType: MiniGameType = MiniGameType.Collate;
 
   private _art: SpriteSheet[] = [];
 
