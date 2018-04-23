@@ -116,7 +116,10 @@ export class TopSubscene {
   }
 
   onPlayerHitObstacle = () => {
-    this.healthMeter.health--;
+    if (this.healthMeter.health > 0) {
+      soundManager.playHitSound();
+      this.healthMeter.health--;
+    }
   };
 
   handleInput(event: ex.Input.PointerEvent) {
