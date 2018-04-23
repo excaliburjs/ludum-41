@@ -59,6 +59,8 @@ export default {
     "game/assets/snd/pageFlip.wav"
   ),
 
-  jump: new Sound("game/assets/snd/jump.mp3", "game/assets/snd/jump.wav")
+  jump: new Sound("game/assets/snd/jump.mp3", "game/assets/snd/jump.wav"),
+
+  select: new Sound("game/assets/snd/select.mp3", "game/assets/snd/select.wav")
   //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };
