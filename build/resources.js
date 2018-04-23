@@ -23,6 +23,7 @@ export default {
     txCursor: new Texture("game/assets/img/thehand.png"),
     txTimerBg: new Texture("game/assets/img/timerbg.png"),
     txGameOverScreen: new Texture("game/assets/img/game-end-bg.png"),
+    txMiniGameTransitionScreen: new Texture("game/assets/img/minigame-transition.png"),
     topBgMusic: new Sound("game/assets/snd/extremeaction.mp3", "game/assets/snd/extremeaction.wav"),
     bottomBgMusic: new Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
     hitSound: new Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav"),

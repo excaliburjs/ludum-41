@@ -131,6 +131,7 @@ var game = (function (exports,ex) {
         txCursor: new ex.Texture("game/assets/img/thehand.png"),
         txTimerBg: new ex.Texture("game/assets/img/timerbg.png"),
         txGameOverScreen: new ex.Texture("game/assets/img/game-end-bg.png"),
+        txMiniGameTransitionScreen: new ex.Texture("game/assets/img/minigame-transition.png"),
         topBgMusic: new ex.Sound("game/assets/snd/extremeaction.mp3", "game/assets/snd/extremeaction.wav"),
         bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
         hitSound: new ex.Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav"),
