@@ -11,4 +11,5 @@ export class Stats {
   public get duration() {
     return this.startTime - Date.now();
   }
+  public miniGamesCompleted = 0;
 }
