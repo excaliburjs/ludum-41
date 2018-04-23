@@ -29,6 +29,9 @@ export default {
   txTimerBg: new Texture("game/assets/img/timerbg.png"),
 
   txGameOverScreen: new Texture("game/assets/img/game-end-bg.png"),
+  txMiniGameTransitionScreen: new Texture(
+    "game/assets/img/minigame-transition.png"
+  ),
 
   topBgMusic: new Sound(
     "game/assets/snd/extremeaction.mp3",
