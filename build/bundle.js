@@ -672,6 +672,7 @@ var game = (function (exports,ex) {
             this._docLabels = [];
             this._winsRequired = 0;
             this._currentWins = 0;
+            this.secondsToComplete = 30;
             this._art = [];
             this._winsRequired = winsRequired;
             var numDocs = Config.MiniGames.Collating.NumberOfDocuments;
@@ -795,6 +796,7 @@ var game = (function (exports,ex) {
         constructor(scene, bottomSubscene) {
             super(scene, bottomSubscene);
             this._stepCount = 0;
+            this.secondsToComplete = 15;
             this._coffeeFilter = new CoffeeItem({
                 x: 200,
                 y: 500
@@ -933,6 +935,7 @@ var game = (function (exports,ex) {
         constructor(scene, bottomSubscene) {
             super(scene, bottomSubscene);
             this.miniGameActors = [];
+            this.secondsToComplete = 60;
             this._lights = [];
             let copier = new ex.Actor({
                 x: 0,
@@ -1097,11 +1100,11 @@ var game = (function (exports,ex) {
             this.currentMiniGame = this.miniGames[this.miniGameCount];
             console.log("current game:", this.miniGameCount, this.currentMiniGame);
             this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
-            this._secondsRemaining = 60;
-            this._countdownLabel.text = "60";
+            this._secondsRemaining = this.currentMiniGame.secondsToComplete;
+            this._countdownLabel.text = this.currentMiniGame.secondsToComplete.toString();
             this._gameOver = false;
             this.currentMiniGame.start();
-            this._miniGameTimer.reset(1000, 60);
+            this._miniGameTimer.reset(1000, this.currentMiniGame.secondsToComplete);
         }
     }
 

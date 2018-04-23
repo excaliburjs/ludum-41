@@ -87,10 +87,10 @@ export class BottomSubscene {
     console.log("current game:", this.miniGameCount, this.currentMiniGame);
 
     this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
-    this._secondsRemaining = 60;
-    this._countdownLabel.text = "60";
+    this._secondsRemaining = this.currentMiniGame.secondsToComplete;
+    this._countdownLabel.text = this.currentMiniGame.secondsToComplete.toString();
     this._gameOver = false;
     this.currentMiniGame.start();
-    this._miniGameTimer.reset(1000, 60);
+    this._miniGameTimer.reset(1000, this.currentMiniGame.secondsToComplete);
   }
 }

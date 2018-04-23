@@ -7,6 +7,7 @@ export class CoffeeGame extends MiniGame {
     constructor(scene, bottomSubscene) {
         super(scene, bottomSubscene);
         this._stepCount = 0;
+        this.secondsToComplete = 15;
         this._coffeeFilter = new CoffeeItem({
             x: 200,
             y: 500

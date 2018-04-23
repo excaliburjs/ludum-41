@@ -9,6 +9,7 @@ export class CollatingGame extends MiniGame {
         this._docLabels = [];
         this._winsRequired = 0;
         this._currentWins = 0;
+        this.secondsToComplete = 30;
         this._art = [];
         this._winsRequired = winsRequired;
         var numDocs = Config.MiniGames.Collating.NumberOfDocuments;

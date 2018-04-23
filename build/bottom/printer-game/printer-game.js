@@ -7,6 +7,7 @@ export class PrinterGame extends MiniGame {
     constructor(scene, bottomSubscene) {
         super(scene, bottomSubscene);
         this.miniGameActors = [];
+        this.secondsToComplete = 60;
         this._lights = [];
         let copier = new ex.Actor({
             x: 0,

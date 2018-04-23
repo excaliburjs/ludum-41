@@ -20,6 +20,7 @@ export class CollatingGame extends MiniGame {
   private _docSet: OfficeDocSet;
   private _winsRequired: number = 0;
   private _currentWins: number = 0;
+  public secondsToComplete: number = 30;
 
   private _art: SpriteSheet[] = [];
 

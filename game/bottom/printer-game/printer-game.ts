@@ -10,6 +10,7 @@ export class PrinterGame extends MiniGame {
   protected scene: ex.Scene;
   private _copier: ex.Actor;
   private _background: ex.Actor;
+  public secondsToComplete: number = 60;
 
   private _lights: Light[] = [];
   constructor(scene: ex.Scene, bottomSubscene: BottomSubscene) {
