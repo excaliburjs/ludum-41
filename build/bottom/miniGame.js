@@ -1,3 +1,9 @@
+export var MiniGameType;
+(function (MiniGameType) {
+    MiniGameType[MiniGameType["Collate"] = 0] = "Collate";
+    MiniGameType[MiniGameType["Coffee"] = 1] = "Coffee";
+    MiniGameType[MiniGameType["Printer"] = 2] = "Printer";
+})(MiniGameType || (MiniGameType = {}));
 export class MiniGame {
     constructor(scene, bottomSubscene) {
         this.miniGameActors = [];

@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import { MiniGame } from "../miniGame";
+import { MiniGame, MiniGameType } from "../miniGame";
 import { CoffeeItem } from "./coffeeItem";
 import Resources from "../../resources";
 import Config from "../../config";
@@ -8,6 +8,7 @@ export class CoffeeGame extends MiniGame {
         super(scene, bottomSubscene);
         this._stepCount = 0;
         this.secondsToComplete = 15;
+        this.miniGameType = MiniGameType.Coffee;
         this._coffeeFilter = new CoffeeItem({
             x: 200,
             y: 500

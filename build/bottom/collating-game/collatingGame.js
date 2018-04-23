@@ -1,5 +1,5 @@
 import { Actor, Color, Vector, SpriteSheet, EasingFunctions } from "excalibur";
-import { MiniGame } from "../../bottom/miniGame";
+import { MiniGame, MiniGameType } from "../../bottom/miniGame";
 import { OfficeDocSet } from "./officeDoc";
 import Config from "../../config";
 import Resources from "../../resources";
@@ -10,6 +10,7 @@ export class CollatingGame extends MiniGame {
         this._winsRequired = 0;
         this._currentWins = 0;
         this.secondsToComplete = 30;
+        this.miniGameType = MiniGameType.Collate;
         this._art = [];
         this._winsRequired = winsRequired;
         var numDocs = Config.MiniGames.Collating.NumberOfDocuments;

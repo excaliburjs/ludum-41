@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import { MiniGame } from "../miniGame";
+import { MiniGame, MiniGameType } from "../miniGame";
 import { CoffeeItem } from "./coffeeItem";
 import { BottomSubscene } from "../bottom";
 import Resources from "../../resources";
@@ -14,6 +14,7 @@ export class CoffeeGame extends MiniGame {
   private _coffeeCup: CoffeeItem;
   private _background: ex.Actor;
   public secondsToComplete: number = 15;
+  public miniGameType: MiniGameType = MiniGameType.Coffee;
 
   constructor(scene: ex.Scene, bottomSubscene: BottomSubscene) {
     super(scene, bottomSubscene);

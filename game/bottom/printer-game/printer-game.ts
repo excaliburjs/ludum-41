@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import { MiniGame } from "../miniGame";
+import { MiniGame, MiniGameType } from "../miniGame";
 import { Light } from "./light";
 import Config from "../../config";
 import { BottomSubscene } from "../bottom";
@@ -11,6 +11,7 @@ export class PrinterGame extends MiniGame {
   private _copier: ex.Actor;
   private _background: ex.Actor;
   public secondsToComplete: number = 60;
+  public miniGameType: MiniGameType = MiniGameType.Printer;
 
   private _lights: Light[] = [];
   constructor(scene: ex.Scene, bottomSubscene: BottomSubscene) {

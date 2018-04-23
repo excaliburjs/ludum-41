@@ -585,6 +585,12 @@ var game = (function (exports,ex) {
         }
     }
 
+    var MiniGameType;
+    (function (MiniGameType) {
+        MiniGameType[MiniGameType["Collate"] = 0] = "Collate";
+        MiniGameType[MiniGameType["Coffee"] = 1] = "Coffee";
+        MiniGameType[MiniGameType["Printer"] = 2] = "Printer";
+    })(MiniGameType || (MiniGameType = {}));
     class MiniGame {
         constructor(scene, bottomSubscene) {
             this.miniGameActors = [];
@@ -673,6 +679,7 @@ var game = (function (exports,ex) {
             this._winsRequired = 0;
             this._currentWins = 0;
             this.secondsToComplete = 30;
+            this.miniGameType = MiniGameType.Collate;
             this._art = [];
             this._winsRequired = winsRequired;
             var numDocs = Config.MiniGames.Collating.NumberOfDocuments;
@@ -807,6 +814,7 @@ var game = (function (exports,ex) {
             super(scene, bottomSubscene);
             this._stepCount = 0;
             this.secondsToComplete = 15;
+            this.miniGameType = MiniGameType.Coffee;
             this._coffeeFilter = new CoffeeItem({
                 x: 200,
                 y: 500
@@ -946,6 +954,7 @@ var game = (function (exports,ex) {
             super(scene, bottomSubscene);
             this.miniGameActors = [];
             this.secondsToComplete = 60;
+            this.miniGameType = MiniGameType.Printer;
             this._lights = [];
             let copier = new ex.Actor({
                 x: 0,
@@ -1073,8 +1082,7 @@ var game = (function (exports,ex) {
                 color: ex.Color.White,
                 fontSize: 25,
                 x: 700,
-                y: 650,
-                text: "60"
+                y: 650
             });
             scene.add(this._countdownLabel);
             this._countdownLabel.setZIndex(300);
@@ -1094,32 +1102,48 @@ var game = (function (exports,ex) {
             this.cursor = new Cursor();
             scene.add(this.cursor);
             this.collatingGame = new CollatingGame(scene, Config.MiniGames.Collating.NumberOfWinsToProceed, this);
-            this.miniGames.push(this.collatingGame);
+            //this.miniGames.push(this.collatingGame);
             this.coffeeGame = new CoffeeGame(scene, this);
-            this.miniGames.push(this.coffeeGame);
+            //this.miniGames.push(this.coffeeGame);
             this.printerGame = new PrinterGame(scene, this);
-            this.miniGames.push(this.printerGame);
+            //this.miniGames.push(this.printerGame);
         }
         setup(scene) {
-            this.miniGames = Config.Rand.shuffle(this.miniGames);
+            var keys = Object.keys(MiniGameType).filter(key => typeof MiniGameType[key] === "number");
+            this.miniGames = keys.map(key => MiniGameType[key]);
+            console.log(this.miniGames);
             this.startRandomMiniGame();
         }
         teardown(scene) {
             this.currentMiniGame.cleanUp();
             //scene.remove(this._countdownLabel);
         }
+        startMiniGame(miniGameType, secondsToComplete) {
+            switch (miniGameType) {
+                case MiniGameType.Coffee:
+                    this.currentMiniGame = this.coffeeGame;
+                    break;
+                case MiniGameType.Collate:
+                    this.currentMiniGame = this.collatingGame;
+                    break;
+                case MiniGameType.Printer:
+                    this.currentMiniGame = this.printerGame;
+                    break;
+            }
+            this._secondsRemaining =
+                secondsToComplete || this.currentMiniGame.secondsToComplete;
+            this._gameOver = false;
+            this.currentMiniGame.start();
+            this._miniGameTimer.reset(1000, this._secondsRemaining);
+            this._countdownLabel.text = this._secondsRemaining.toString();
+        }
         startRandomMiniGame() {
             // if (this.miniGameCount % this.miniGames.length === 0) {
             //   this.miniGames = Config.Rand.shuffle(this.miniGames);
             // }
-            this.currentMiniGame = this.miniGames[this.miniGameCount];
-            console.log("current game:", this.miniGameCount, this.currentMiniGame);
             this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
-            this._secondsRemaining = this.currentMiniGame.secondsToComplete;
-            this._countdownLabel.text = this.currentMiniGame.secondsToComplete.toString();
-            this._gameOver = false;
-            this.currentMiniGame.start();
-            this._miniGameTimer.reset(1000, this.currentMiniGame.secondsToComplete);
+            this.startMiniGame(this.miniGames[this.miniGameCount]);
+            console.log("current game:", this.miniGameCount, this.currentMiniGame);
         }
     }
 

@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import { MiniGame } from "../miniGame";
+import { MiniGame, MiniGameType } from "../miniGame";
 import { Light } from "./light";
 import Config from "../../config";
 import resources from "../../resources";
@@ -8,6 +8,7 @@ export class PrinterGame extends MiniGame {
         super(scene, bottomSubscene);
         this.miniGameActors = [];
         this.secondsToComplete = 60;
+        this.miniGameType = MiniGameType.Printer;
         this._lights = [];
         let copier = new ex.Actor({
             x: 0,
