@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import soundManager from "../../soundManager";
+import Config from "../../config";
 export class Light extends ex.Actor {
     constructor(args, printer) {
         super(args);
@@ -10,14 +11,16 @@ export class Light extends ex.Actor {
     }
     onInitialize() {
         this.on("pointerdown", (evt) => {
-            if (this.up)
-                this.up.lit = !this.up.lit;
-            if (this.down)
-                this.down.lit = !this.down.lit;
-            if (this.left)
-                this.left.lit = !this.left.lit;
-            if (this.right)
-                this.right.lit = !this.right.lit;
+            if (Config.PrinterMiniGame.HardMode) {
+                if (this.up)
+                    this.up.lit = !this.up.lit;
+                if (this.down)
+                    this.down.lit = !this.down.lit;
+                if (this.left)
+                    this.left.lit = !this.left.lit;
+                if (this.right)
+                    this.right.lit = !this.right.lit;
+            }
             this.lit = !this.lit;
             soundManager.playShortBeep();
         });

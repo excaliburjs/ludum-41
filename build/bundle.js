@@ -73,6 +73,7 @@ var game = (function (exports,ex) {
             MaxSpawnInterval: 2000
         },
         PrinterMiniGame: {
+            HardMode: false,
             PrinterStartX: 300,
             PrinterStartY: 570,
             PrinterSpacing: 35,
@@ -1134,14 +1135,16 @@ var game = (function (exports,ex) {
         }
         onInitialize() {
             this.on("pointerdown", (evt) => {
-                if (this.up)
-                    this.up.lit = !this.up.lit;
-                if (this.down)
-                    this.down.lit = !this.down.lit;
-                if (this.left)
-                    this.left.lit = !this.left.lit;
-                if (this.right)
-                    this.right.lit = !this.right.lit;
+                if (Config.PrinterMiniGame.HardMode) {
+                    if (this.up)
+                        this.up.lit = !this.up.lit;
+                    if (this.down)
+                        this.down.lit = !this.down.lit;
+                    if (this.left)
+                        this.left.lit = !this.left.lit;
+                    if (this.right)
+                        this.right.lit = !this.right.lit;
+                }
                 this.lit = !this.lit;
                 SoundManager.playShortBeep();
             });
@@ -1166,7 +1169,7 @@ var game = (function (exports,ex) {
         constructor(scene, bottomSubscene) {
             super(scene, bottomSubscene);
             this.miniGameActors = [];
-            this.secondsToComplete = 60;
+            this.secondsToComplete = 20;
             this.miniGameType = MiniGameType.Printer;
             this._lights = [];
             let copier = new ex.Actor({

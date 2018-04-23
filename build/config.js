@@ -54,6 +54,7 @@ export default {
         MaxSpawnInterval: 2000
     },
     PrinterMiniGame: {
+        HardMode: false,
         PrinterStartX: 300,
         PrinterStartY: 570,
         PrinterSpacing: 35,
