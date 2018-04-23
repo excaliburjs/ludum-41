@@ -667,6 +667,7 @@ var game = (function (exports,ex) {
             Resources.hitSound.play();
         }
         static playShortBeep() {
+            Resources.shortBeep.setVolume(0.5);
             Resources.shortBeep.play();
         }
     }

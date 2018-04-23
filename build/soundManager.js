@@ -94,6 +94,7 @@ export default class SoundManager {
         resources.hitSound.play();
     }
     static playShortBeep() {
+        resources.shortBeep.setVolume(0.5);
         resources.shortBeep.play();
     }
 }
