@@ -133,7 +133,8 @@ var game = (function (exports,ex) {
         topBgMusic: new ex.Sound("game/assets/snd/extremeaction.mp3", "game/assets/snd/extremeaction.wav"),
         bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
         hitSound: new ex.Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav"),
-        shortBeep: new ex.Sound("game/assets/snd/shortBeep.mp3", "game/assets/snd/shortBeep.wav")
+        shortBeep: new ex.Sound("game/assets/snd/shortBeep.mp3", "game/assets/snd/shortBeep.wav"),
+        coffeePour: new ex.Sound("game/assets/snd/coffeePour.mp3", "game/assets/snd/coffeePour.wav")
         //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -670,6 +671,9 @@ var game = (function (exports,ex) {
             Resources.shortBeep.setVolume(0.5);
             Resources.shortBeep.play();
         }
+        static playCoffeePouringSound() {
+            Resources.coffeePour.play();
+        }
     }
     SoundManager.allMuted = false;
     SoundManager.musicMuted = false;
@@ -1074,6 +1078,7 @@ var game = (function (exports,ex) {
                         // TODO play coffee brewing animation
                         this._coffeeMaker.setDrawing("animate");
                         // TODO ramp up the music/difficulty in the top runner?
+                        SoundManager.playCoffeePouringSound();
                         ex.Logger.getInstance().info("brewing coffee...");
                     })
                         .delay(Config.MiniGames.Coffee.BrewTime)

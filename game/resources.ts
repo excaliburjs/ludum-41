@@ -47,6 +47,11 @@ export default {
   shortBeep: new Sound(
     "game/assets/snd/shortBeep.mp3",
     "game/assets/snd/shortBeep.wav"
+  ),
+
+  coffeePour: new Sound(
+    "game/assets/snd/coffeePour.mp3",
+    "game/assets/snd/coffeePour.wav"
   )
   //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };

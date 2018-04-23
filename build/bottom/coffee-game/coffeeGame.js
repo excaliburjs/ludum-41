@@ -3,6 +3,7 @@ import { MiniGame, MiniGameType } from "../miniGame";
 import { CoffeeItem } from "./coffeeItem";
 import Resources from "../../resources";
 import Config from "../../config";
+import soundManager from "../../soundManager";
 export class CoffeeGame extends MiniGame {
     constructor(scene, bottomSubscene) {
         super(scene, bottomSubscene);
@@ -78,6 +79,7 @@ export class CoffeeGame extends MiniGame {
                     // TODO play coffee brewing animation
                     this._coffeeMaker.setDrawing("animate");
                     // TODO ramp up the music/difficulty in the top runner?
+                    soundManager.playCoffeePouringSound();
                     ex.Logger.getInstance().info("brewing coffee...");
                 })
                     .delay(Config.MiniGames.Coffee.BrewTime)
