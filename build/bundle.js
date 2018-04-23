@@ -5,7 +5,8 @@ var game = (function (exports,ex) {
     (function (GameOverReason) {
         GameOverReason[GameOverReason["daydream"] = 0] = "daydream";
         GameOverReason[GameOverReason["minigame"] = 1] = "minigame";
-        GameOverReason[GameOverReason["debug"] = 2] = "debug";
+        GameOverReason[GameOverReason["workdayComplete"] = 2] = "workdayComplete";
+        GameOverReason[GameOverReason["debug"] = 3] = "debug";
     })(GameOverReason || (GameOverReason = {}));
     class Stats {
         constructor() {
@@ -29,6 +30,7 @@ var game = (function (exports,ex) {
         AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
         GameWidth: 800,
         GameHeight: 800,
+        numMiniGamesToComplete: 1,
         // Top Floor config
         Floor: {
             Speed: -200,
@@ -136,6 +138,7 @@ var game = (function (exports,ex) {
     const gameOverMessages = {
         [GameOverReason.daydream]: "You gave up on your dreams. Game over.",
         [GameOverReason.minigame]: "Your boss caught you daydreaming. Game over.",
+        [GameOverReason.workdayComplete]: "Congratulations! You found your dream.",
         [GameOverReason.debug]: "You program dreams."
     };
     class ScnEnd extends ex.Scene {
@@ -171,8 +174,10 @@ var game = (function (exports,ex) {
             const { gameOverReason } = getStats();
             const { miniGamesCompleted } = getStats();
             this.gameOverLabel.text = gameOverMessages[gameOverReason];
-            this.hoursDoneLabel.text =
-                "You made it " + 2 * miniGamesCompleted + " hours through your workday";
+            if (gameOverReason != GameOverReason.workdayComplete) {
+                this.hoursDoneLabel.text =
+                    "You made it " + 2 * miniGamesCompleted + " hours through your workday";
+            }
         }
     }
     class ResetButton extends ex.Actor {
@@ -697,7 +702,14 @@ var game = (function (exports,ex) {
             this.cleanUp();
             let stats = getStats();
             stats.miniGamesCompleted++;
-            this.bottomSubscene.startRandomMiniGame();
+            if (stats.miniGamesCompleted >= Config.numMiniGamesToComplete) {
+                console.log("you win!"); //TODO remove
+                gameover(this.scene.engine, GameOverReason.workdayComplete);
+            }
+            else {
+                // otherwise the workday continues
+                this.bottomSubscene.startRandomMiniGame();
+            }
         }
         onFail() {
             this.cleanUp();

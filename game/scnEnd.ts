@@ -6,6 +6,7 @@ import Resources from "./resources";
 const gameOverMessages = {
   [GameOverReason.daydream]: "You gave up on your dreams. Game over.",
   [GameOverReason.minigame]: "Your boss caught you daydreaming. Game over.",
+  [GameOverReason.workdayComplete]: "Congratulations! You found your dream.",
   [GameOverReason.debug]: "You program dreams."
 };
 
@@ -52,8 +53,10 @@ export class ScnEnd extends ex.Scene {
     const { gameOverReason } = getStats();
     const { miniGamesCompleted } = getStats();
     this.gameOverLabel.text = gameOverMessages[gameOverReason];
-    this.hoursDoneLabel.text =
-      "You made it " + 2 * miniGamesCompleted + " hours through your workday";
+    if (gameOverReason != GameOverReason.workdayComplete) {
+      this.hoursDoneLabel.text =
+        "You made it " + 2 * miniGamesCompleted + " hours through your workday";
+    }
   }
 }
 

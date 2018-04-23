@@ -1,4 +1,7 @@
 import { getStats } from "../session";
+import { gameover } from "../session";
+import { GameOverReason } from "../stats";
+import Config from "../config";
 export var MiniGameType;
 (function (MiniGameType) {
     MiniGameType[MiniGameType["Collate"] = 0] = "Collate";
@@ -30,7 +33,14 @@ export class MiniGame {
         this.cleanUp();
         let stats = getStats();
         stats.miniGamesCompleted++;
-        this.bottomSubscene.startRandomMiniGame();
+        if (stats.miniGamesCompleted >= Config.numMiniGamesToComplete) {
+            console.log("you win!"); //TODO remove
+            gameover(this.scene.engine, GameOverReason.workdayComplete);
+        }
+        else {
+            // otherwise the workday continues
+            this.bottomSubscene.startRandomMiniGame();
+        }
     }
     onFail() {
         this.cleanUp();
