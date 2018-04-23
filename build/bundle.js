@@ -1116,6 +1116,7 @@ var game = (function (exports,ex) {
         }
         teardown(scene) {
             this.currentMiniGame.cleanUp();
+            this.miniGameCount = 0;
             //scene.remove(this._countdownLabel);
         }
         startMiniGame(miniGameType, secondsToComplete) {

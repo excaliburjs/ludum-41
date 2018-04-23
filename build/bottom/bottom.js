@@ -51,6 +51,7 @@ export class BottomSubscene {
     }
     teardown(scene) {
         this.currentMiniGame.cleanUp();
+        this.miniGameCount = 0;
         //scene.remove(this._countdownLabel);
     }
     startMiniGame(miniGameType, secondsToComplete) {
