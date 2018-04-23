@@ -16,11 +16,16 @@ export class Cursor extends ex.Actor {
         this.z = 50;
         engine.input.pointers.primary.on("move", (evt) => {
             let cursorPos = evt.worldPos.clone();
-            if (cursorPos.y > engine.halfDrawHeight) {
+            if (cursorPos.y > engine.halfDrawHeight + 30 &&
+                cursorPos.x < engine.drawWidth &&
+                cursorPos.x > 0) {
                 this.actions.clearActions();
                 this.pos = cursorPos;
+                this.rotation = ex.EasingFunctions.Linear(evt.worldPos.x, -Math.PI / 4, Math.PI / 4, engine.drawWidth);
+                this.rx = 0;
             }
             else {
+                this.rx = -this.rotation;
                 this.actions.easeTo(engine.halfDrawWidth, engine.drawHeight, 1000, ex.EasingFunctions.EaseInOutQuad);
             }
         });
