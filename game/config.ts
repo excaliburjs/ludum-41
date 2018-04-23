@@ -42,6 +42,10 @@ export default {
       NumberOfDocuments: 5,
       NumberOfWinsToProceed: 3,
       OriginalDocY: 600,
+      InboxPos: {
+        x: 115,
+        y: 500
+      },
       OutboxPos: {
         x: 650,
         y: 500

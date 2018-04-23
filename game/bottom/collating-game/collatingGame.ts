@@ -95,8 +95,14 @@ export class CollatingGame extends MiniGame {
     this._docSet.clear();
     this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
     for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
-      this._scrambledOfficeDocs[i].x = 125 * i + 150;
-      this._scrambledOfficeDocs[i].y = Config.MiniGames.Collating.OriginalDocY;
+      this._scrambledOfficeDocs[i].x = Config.MiniGames.Collating.InboxPos.x;
+      this._scrambledOfficeDocs[i].y = Config.MiniGames.Collating.InboxPos.y;
+      this._scrambledOfficeDocs[i].actions
+        .delay(750)
+        .moveTo(125 * i + 150, Config.MiniGames.Collating.OriginalDocY, 1500);
+
+      // this._scrambledOfficeDocs[i].x = 125 * i + 150;
+      // this._scrambledOfficeDocs[i].y = Config.MiniGames.Collating.OriginalDocY;
       this._scrambledOfficeDocs[i].color = Color.Green;
       // this._docLabels[i].text = (
       //   this._scrambledOfficeDocs[i].pageNumber + 1
