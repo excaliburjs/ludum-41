@@ -20,6 +20,8 @@ export default {
     txCopierBackground: new Texture("game/assets/img/copy-game-bg.png"),
     txOverlay: new Texture("game/assets/img/office-overlay.png"),
     txCursor: new Texture("game/assets/img/thehand.png"),
+    topBgMusic: new Sound("games/assets/snd/extremeaction.mp3", "games/assets/snd/extremeaction.wav"),
+    bottomBgMusic: new Sound("games/assets/snd/office-ambience.mp3", "games/assets/snd/office-ambience.wav"),
     sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };
 //# sourceMappingURL=resources.js.map

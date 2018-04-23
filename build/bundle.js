@@ -174,6 +174,8 @@ var game = (function (exports,ex) {
         txCopierBackground: new ex.Texture("game/assets/img/copy-game-bg.png"),
         txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
         txCursor: new ex.Texture("game/assets/img/thehand.png"),
+        topBgMusic: new ex.Sound("games/assets/snd/extremeaction.mp3", "games/assets/snd/extremeaction.wav"),
+        bottomBgMusic: new ex.Sound("games/assets/snd/office-ambience.mp3", "games/assets/snd/office-ambience.wav"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
     };
 
