@@ -186,31 +186,6 @@ var game = (function (exports,ex) {
         }
     }
 
-    class SoundManager {
-        static startActionMusic() {
-            Resources.topBgMusic.setVolume(0.3);
-            if (!Resources.topBgMusic.isPlaying()) {
-                Resources.topBgMusic.play();
-            }
-        }
-        static startOfficeAmbience() {
-            Resources.bottomBgMusic.setVolume(0.85);
-            if (!Resources.bottomBgMusic.isPlaying()) {
-                Resources.bottomBgMusic.play();
-            }
-        }
-        static pauseActionMusic() {
-            Resources.topBgMusic.setVolume(0);
-        }
-        static pauseOfficeAmbience() {
-            Resources.bottomBgMusic.setVolume(0);
-        }
-        static stopBackgroundAudio() {
-            Resources.bottomBgMusic.stop();
-            Resources.topBgMusic.stop();
-        }
-    }
-
     class TopPlayer extends ex.Actor {
         constructor(engine) {
             super({
@@ -228,7 +203,6 @@ var game = (function (exports,ex) {
             this.onExitViewport = () => {
                 gameover(this.engine, GameOverReason.daydream);
             };
-            engine.input.pointers.primary.on("down", this.handleInput.bind(this));
             this.on("precollision", this.handleCollision.bind(this));
         }
         onInitialize(engine) {
@@ -270,21 +244,6 @@ var game = (function (exports,ex) {
         handleCollision(event) {
             if (event.side === ex.Side.Bottom) {
                 this.canJump = true;
-            }
-        }
-        handleInput(event) {
-            //let camera = this.scene.camera;
-            ex.Logger.getInstance().debug("event:", event);
-            if (event.worldPos.y < this.engine.halfDrawHeight) {
-                this.jump();
-                SoundManager.pauseOfficeAmbience();
-                SoundManager.startActionMusic();
-                //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight-200), 1000, ex.EasingFunctions.EaseInOutCubic);
-            }
-            else {
-                SoundManager.pauseActionMusic();
-                SoundManager.startOfficeAmbience();
-                //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight), 1000, ex.EasingFunctions.EaseInOutCubic);
             }
         }
         jump() {
@@ -580,6 +539,31 @@ var game = (function (exports,ex) {
     Background.Slices = 16;
     Background.SliceWidth = 50;
 
+    class SoundManager {
+        static startActionMusic() {
+            Resources.topBgMusic.setVolume(0.3);
+            if (!Resources.topBgMusic.isPlaying()) {
+                Resources.topBgMusic.play();
+            }
+        }
+        static startOfficeAmbience() {
+            Resources.bottomBgMusic.setVolume(0.85);
+            if (!Resources.bottomBgMusic.isPlaying()) {
+                Resources.bottomBgMusic.play();
+            }
+        }
+        static pauseActionMusic() {
+            Resources.topBgMusic.setVolume(0);
+        }
+        static pauseOfficeAmbience() {
+            Resources.bottomBgMusic.setVolume(0);
+        }
+        static stopBackgroundAudio() {
+            Resources.bottomBgMusic.stop();
+            Resources.topBgMusic.stop();
+        }
+    }
+
     class TopSubscene {
         constructor(_engine, scene) {
             this._engine = _engine;
@@ -597,6 +581,7 @@ var game = (function (exports,ex) {
             this.platformTimer = new ex.Timer(() => {
                 this.spawnPlatform(this._engine, scene);
             }, 2000, true);
+            this._engine.input.pointers.primary.on("down", this.handleInput.bind(this));
         }
         setup(scene) {
             this.player.vel = ex.Vector.Zero.clone();
@@ -647,6 +632,24 @@ var game = (function (exports,ex) {
             scene.add(platform);
             const newInterval = Config.Rand.integer(Config.Platform.MinSpawnInterval, Config.Platform.MaxSpawnInterval);
             this.platformTimer.reset(newInterval);
+        }
+        handleInput(event) {
+            //let camera = this.scene.camera;
+            ex.Logger.getInstance().debug("event:", event);
+            if (event.worldPos.y < this._engine.halfDrawHeight &&
+                this._engine.currentScene == this.scene) {
+                this.player.jump();
+                SoundManager.pauseOfficeAmbience();
+                SoundManager.startActionMusic();
+                //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight-200), 1000, ex.EasingFunctions.EaseInOutCubic);
+            }
+            else {
+                if (this._engine.currentScene == this.scene) {
+                    SoundManager.pauseActionMusic();
+                    SoundManager.startOfficeAmbience();
+                }
+                //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight), 1000, ex.EasingFunctions.EaseInOutCubic);
+            }
         }
     }
 

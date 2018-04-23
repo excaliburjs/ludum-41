@@ -6,6 +6,7 @@ import { TopPlayer } from "./top-player";
 import { TopHealth } from "./health";
 import { Platform } from "./platform";
 import { Background } from "./background";
+import soundManager from "../soundManager";
 export class TopSubscene {
     constructor(_engine, scene) {
         this._engine = _engine;
@@ -23,6 +24,7 @@ export class TopSubscene {
         this.platformTimer = new ex.Timer(() => {
             this.spawnPlatform(this._engine, scene);
         }, 2000, true);
+        this._engine.input.pointers.primary.on("down", this.handleInput.bind(this));
     }
     setup(scene) {
         this.player.vel = ex.Vector.Zero.clone();
@@ -73,6 +75,24 @@ export class TopSubscene {
         scene.add(platform);
         const newInterval = Config.Rand.integer(Config.Platform.MinSpawnInterval, Config.Platform.MaxSpawnInterval);
         this.platformTimer.reset(newInterval);
+    }
+    handleInput(event) {
+        //let camera = this.scene.camera;
+        ex.Logger.getInstance().debug("event:", event);
+        if (event.worldPos.y < this._engine.halfDrawHeight &&
+            this._engine.currentScene == this.scene) {
+            this.player.jump();
+            soundManager.pauseOfficeAmbience();
+            soundManager.startActionMusic();
+            //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight-200), 1000, ex.EasingFunctions.EaseInOutCubic);
+        }
+        else {
+            if (this._engine.currentScene == this.scene) {
+                soundManager.pauseActionMusic();
+                soundManager.startOfficeAmbience();
+            }
+            //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight), 1000, ex.EasingFunctions.EaseInOutCubic);
+        }
     }
 }
 //# sourceMappingURL=top.js.map

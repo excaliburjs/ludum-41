@@ -3,7 +3,6 @@ import Config from "../config";
 import Resources from "../resources";
 import { GameOverReason } from "../stats";
 import { gameover } from "../session";
-import soundManager from "../soundManager";
 export class TopPlayer extends ex.Actor {
     constructor(engine) {
         super({
@@ -21,7 +20,6 @@ export class TopPlayer extends ex.Actor {
         this.onExitViewport = () => {
             gameover(this.engine, GameOverReason.daydream);
         };
-        engine.input.pointers.primary.on("down", this.handleInput.bind(this));
         this.on("precollision", this.handleCollision.bind(this));
     }
     onInitialize(engine) {
@@ -63,21 +61,6 @@ export class TopPlayer extends ex.Actor {
     handleCollision(event) {
         if (event.side === ex.Side.Bottom) {
             this.canJump = true;
-        }
-    }
-    handleInput(event) {
-        //let camera = this.scene.camera;
-        ex.Logger.getInstance().debug("event:", event);
-        if (event.worldPos.y < this.engine.halfDrawHeight) {
-            this.jump();
-            soundManager.pauseOfficeAmbience();
-            soundManager.startActionMusic();
-            //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight-200), 1000, ex.EasingFunctions.EaseInOutCubic);
-        }
-        else {
-            soundManager.pauseActionMusic();
-            soundManager.startOfficeAmbience();
-            //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight), 1000, ex.EasingFunctions.EaseInOutCubic);
         }
     }
     jump() {
