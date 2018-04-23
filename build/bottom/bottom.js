@@ -8,11 +8,14 @@ import { Timer } from "excalibur";
 import { gameover } from "../session";
 import { GameOverReason } from "../stats";
 import { CountDown } from "./countdown";
+import { Transition } from "./transition";
 export class BottomSubscene {
     constructor(scene) {
         this.miniGameCount = 0;
         this.miniGames = [];
         this._gameOver = false;
+        this.transistion = new Transition(scene);
+        scene.add(this.transistion);
         this._countdown = new CountDown(scene.engine);
         scene.add(this._countdown);
         console.log("bottom");
@@ -38,6 +41,7 @@ export class BottomSubscene {
         //this.miniGames.push(this.printerGame);
     }
     setup(scene) {
+        this.transistion.start();
         var keys = Object.keys(MiniGameType).filter(key => typeof MiniGameType[key] === "number");
         this.miniGames = keys.map(key => MiniGameType[key]);
         console.log(this.miniGames);
@@ -68,6 +72,9 @@ export class BottomSubscene {
         this._miniGameTimer.reset(1000, this._secondsRemaining);
         this._countdown.maxTime = this._secondsRemaining;
         this._countdown.timeRemaining = this._secondsRemaining;
+        this.transistion
+            .transitionOut()
+            .then(() => this.transistion.actions.clearActions());
     }
     startRandomMiniGame() {
         // if (this.miniGameCount % this.miniGames.length === 0) {

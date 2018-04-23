@@ -23,13 +23,13 @@ export class Light extends ex.Actor {
         });
     }
     onPostUpdate() {
+        if (this.lit) {
+            this.color = ex.Color.Yellow.clone();
+        }
+        else {
+            this.color = ex.Color.Violet.clone();
+        }
         if (this.printer.active) {
-            if (this.lit) {
-                this.color = ex.Color.Yellow.clone();
-            }
-            else {
-                this.color = ex.Color.Violet.clone();
-            }
             if (this.printer.isAllLit() || this.printer.isAllDark()) {
                 console.log("win");
                 this.printer.onSucceed();

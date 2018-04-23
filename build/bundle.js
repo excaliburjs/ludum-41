@@ -803,17 +803,22 @@ var game = (function (exports,ex) {
             this.active = false;
         }
         onSucceed() {
-            this.cleanUp();
             let stats = getStats();
             stats.miniGamesCompleted++;
             if (stats.miniGamesCompleted >= Config.numMiniGamesToComplete) {
                 console.log("you win!"); //TODO remove
                 gameover(this.scene.engine, GameOverReason.workdayComplete);
+                return;
             }
-            else {
-                // otherwise the workday continues
-                this.bottomSubscene.startRandomMiniGame();
-            }
+            this.active = false;
+            this.bottomSubscene.transistion.transitionIn().then(() => {
+                this.cleanUp();
+                let stats = getStats();
+                if (stats.miniGamesCompleted < Config.numMiniGamesToComplete) {
+                    // otherwise the workday continues
+                    this.bottomSubscene.startRandomMiniGame();
+                }
+            });
         }
         onFail() {
             this.cleanUp();
@@ -1136,13 +1141,13 @@ var game = (function (exports,ex) {
             });
         }
         onPostUpdate() {
+            if (this.lit) {
+                this.color = ex.Color.Yellow.clone();
+            }
+            else {
+                this.color = ex.Color.Violet.clone();
+            }
             if (this.printer.active) {
-                if (this.lit) {
-                    this.color = ex.Color.Yellow.clone();
-                }
-                else {
-                    this.color = ex.Color.Violet.clone();
-                }
                 if (this.printer.isAllLit() || this.printer.isAllDark()) {
                     console.log("win");
                     this.printer.onSucceed();
@@ -1297,7 +1302,7 @@ var game = (function (exports,ex) {
             this.timeRemaining = 0;
         }
         onInitialize() {
-            this.z = 100;
+            this.z = 97;
             this.sprite = Resources.txTimerBg.asSprite();
             this.sprite.anchor = ex.Vector.Half.clone();
         }
@@ -1328,11 +1333,47 @@ var game = (function (exports,ex) {
         }
     }
 
+    class Transition extends ex.Actor {
+        constructor(scene) {
+            super({
+                x: scene.engine.drawWidth + scene.engine.drawWidth,
+                y: scene.engine.halfDrawHeight,
+                width: scene.engine.drawWidth,
+                height: scene.engine.halfDrawHeight,
+                anchor: new ex.Vector(0.5, 0),
+                color: ex.Color.Red
+            });
+        }
+        onInitialize() {
+            this.z = 98;
+        }
+        start() {
+            this.pos = new ex.Vector(this.scene.engine.halfDrawWidth, this.scene.engine.halfDrawHeight);
+            this.actions.delay(3000);
+        }
+        transitionIn() {
+            return this.actions
+                .easeTo(this.scene.engine.halfDrawWidth, this.y, 1000, ex.EasingFunctions.EaseInOutQuad)
+                .asPromise();
+        }
+        transitionOut() {
+            return this.actions
+                .easeTo(-this.scene.engine.drawWidth, this.y, 1000, ex.EasingFunctions.EaseInOutQuad)
+                .callMethod(() => {
+                this.x = this.scene.engine.drawWidth + this.scene.engine.drawWidth;
+                this.y = this.scene.engine.halfDrawHeight;
+            })
+                .asPromise();
+        }
+    }
+
     class BottomSubscene {
         constructor(scene) {
             this.miniGameCount = 0;
             this.miniGames = [];
             this._gameOver = false;
+            this.transistion = new Transition(scene);
+            scene.add(this.transistion);
             this._countdown = new CountDown(scene.engine);
             scene.add(this._countdown);
             console.log("bottom");
@@ -1358,6 +1399,7 @@ var game = (function (exports,ex) {
             //this.miniGames.push(this.printerGame);
         }
         setup(scene) {
+            this.transistion.start();
             var keys = Object.keys(MiniGameType).filter(key => typeof MiniGameType[key] === "number");
             this.miniGames = keys.map(key => MiniGameType[key]);
             console.log(this.miniGames);
@@ -1388,6 +1430,9 @@ var game = (function (exports,ex) {
             this._miniGameTimer.reset(1000, this._secondsRemaining);
             this._countdown.maxTime = this._secondsRemaining;
             this._countdown.timeRemaining = this._secondsRemaining;
+            this.transistion
+                .transitionOut()
+                .then(() => this.transistion.actions.clearActions());
         }
         startRandomMiniGame() {
             // if (this.miniGameCount % this.miniGames.length === 0) {

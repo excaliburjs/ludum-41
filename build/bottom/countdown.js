@@ -13,7 +13,7 @@ export class CountDown extends ex.Actor {
         this.timeRemaining = 0;
     }
     onInitialize() {
-        this.z = 100;
+        this.z = 97;
         this.sprite = resources.txTimerBg.asSprite();
         this.sprite.anchor = ex.Vector.Half.clone();
     }

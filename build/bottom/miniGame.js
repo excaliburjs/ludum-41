@@ -30,17 +30,22 @@ export class MiniGame {
         this.active = false;
     }
     onSucceed() {
-        this.cleanUp();
         let stats = getStats();
         stats.miniGamesCompleted++;
         if (stats.miniGamesCompleted >= Config.numMiniGamesToComplete) {
             console.log("you win!"); //TODO remove
             gameover(this.scene.engine, GameOverReason.workdayComplete);
+            return;
         }
-        else {
-            // otherwise the workday continues
-            this.bottomSubscene.startRandomMiniGame();
-        }
+        this.active = false;
+        this.bottomSubscene.transistion.transitionIn().then(() => {
+            this.cleanUp();
+            let stats = getStats();
+            if (stats.miniGamesCompleted < Config.numMiniGamesToComplete) {
+                // otherwise the workday continues
+                this.bottomSubscene.startRandomMiniGame();
+            }
+        });
     }
     onFail() {
         this.cleanUp();
