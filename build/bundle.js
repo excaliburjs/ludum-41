@@ -175,7 +175,7 @@ var game = (function (exports,ex) {
         txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
         txCursor: new ex.Texture("game/assets/img/thehand.png"),
         topBgMusic: new ex.Sound("games/assets/snd/extremeaction.mp3", "games/assets/snd/extremeaction.wav"),
-        bottomBgMusic: new ex.Sound("games/assets/snd/office-ambience.mp3", "games/assets/snd/office-ambience.wav"),
+        bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -1190,6 +1190,21 @@ var game = (function (exports,ex) {
         }
     }
 
+    class SoundManager {
+        static startActionMusic() {
+            Resources.topBgMusic.play();
+        }
+        static startOfficeAmbience() {
+            Resources.bottomBgMusic.play();
+        }
+        static pauseActionMusic() {
+            Resources.topBgMusic.pause();
+        }
+        static pauseOfficeAmbience() {
+            Resources.bottomBgMusic.pause();
+        }
+    }
+
     const game = new ex.Engine({
         width: Config.GameWidth,
         height: Config.GameHeight
@@ -1209,6 +1224,7 @@ var game = (function (exports,ex) {
     // uncomment loader after adding resources
     game.start(loader).then(() => {
         newgame(game);
+        SoundManager.startOfficeAmbience();
         // TODO: Turn on analytics
         //   Analytics.publish({
         //      commit: 'test',

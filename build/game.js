@@ -5,6 +5,7 @@ import Resources from "./resources";
 import Config from "./config";
 import { newgame, gameover } from "./session";
 import { GameOverReason } from "./stats";
+import soundManager from "./soundManager";
 export const game = new Engine({
     width: Config.GameWidth,
     height: Config.GameHeight
@@ -24,6 +25,7 @@ game.addScene("end", new ScnEnd(game));
 // uncomment loader after adding resources
 game.start(loader).then(() => {
     newgame(game);
+    soundManager.startOfficeAmbience();
     // TODO: Turn on analytics
     //   Analytics.publish({
     //      commit: 'test',

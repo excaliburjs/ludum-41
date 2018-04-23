@@ -1,5 +1,5 @@
 import resources from "./resources";
-export class SoundManager {
+export default class SoundManager {
     static startActionMusic() {
         resources.topBgMusic.play();
     }
