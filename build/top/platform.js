@@ -9,6 +9,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 import * as ex from "excalibur";
 import Config from "../config";
+import resources from "../resources";
 export class Platform extends ex.Actor {
     constructor(_a) {
         var { x, y, speed } = _a, props = __rest(_a, ["x", "y", "speed"]);
@@ -31,6 +32,7 @@ export class Platform extends ex.Actor {
                 e.target.kill();
             }
         };
+        this.addDrawing(resources.txGurter);
     }
     onInitialize(engine) {
         this.on("exitviewport", this.onExitViewPort(engine));

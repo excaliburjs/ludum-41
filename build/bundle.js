@@ -158,6 +158,7 @@ var game = (function (exports,ex) {
         txTNTSpriteSheet: new ex.Texture("game/assets/img/tnt.png"),
         txBombSpriteSheet: new ex.Texture("game/assets/img/bomb.png"),
         txBackground: new ex.Texture("game/assets/img/top-bg.png"),
+        txGurter: new ex.Texture("game/assets/img/gurter.png"),
         txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
         txDocPieChart: new ex.Texture("game/assets/img/pieChartSubmit.png"),
         txDocBarGraph: new ex.Texture("game/assets/img/barGraphSubmit.png"),
@@ -441,6 +442,7 @@ var game = (function (exports,ex) {
                     e.target.kill();
                 }
             };
+            this.addDrawing(Resources.txGurter);
         }
         onInitialize(engine) {
             this.on("exitviewport", this.onExitViewPort(engine));
