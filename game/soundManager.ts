@@ -110,6 +110,7 @@ export default class SoundManager {
   }
 
   static playShortBeep() {
+    resources.shortBeep.setVolume(0.5);
     resources.shortBeep.play();
   }
 }
