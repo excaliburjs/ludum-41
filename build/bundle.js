@@ -150,11 +150,11 @@ var game = (function (exports,ex) {
         txBombSpriteSheet: new ex.Texture("game/assets/img/bomb.png"),
         txBackground: new ex.Texture("game/assets/img/top-bg.png"),
         txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
-        txDocLineGraph: new ex.Texture("game/assets/img/lineGraphSubmit.png"),
-        txDocMoney: new ex.Texture("game/assets/img/moneySubmit.png"),
         txDocPieChart: new ex.Texture("game/assets/img/pieChartSubmit.png"),
         txDocBarGraph: new ex.Texture("game/assets/img/barGraphSubmit.png"),
+        txDocLineGraph: new ex.Texture("game/assets/img/lineGraphSubmit.png"),
         txDocVennDiagram: new ex.Texture("game/assets/img/vennDiagramSubmit.png"),
+        txDocMoney: new ex.Texture("game/assets/img/moneySubmit.png"),
         txCoffeeMaker: new ex.Texture("game/assets/img/coffee-maker.png"),
         txCoffeeGrounds: new ex.Texture("game/assets/img/coffee-grounds.png"),
         txCoffeeFilter: new ex.Texture("game/assets/img/coffee-filters.png"),
@@ -609,6 +609,23 @@ var game = (function (exports,ex) {
             super();
             this._pageNumber = pageNumber;
             this.color = ex.Color.Green;
+            switch (this._pageNumber) {
+                case 0:
+                    this.addDrawing(Resources.txDocPieChart);
+                    break;
+                case 1:
+                    this.addDrawing(Resources.txDocBarGraph);
+                    break;
+                case 2:
+                    this.addDrawing(Resources.txDocLineGraph);
+                    break;
+                case 3:
+                    this.addDrawing(Resources.txDocVennDiagram);
+                    break;
+                case 4:
+                    this.addDrawing(Resources.txDocMoney);
+                    break;
+            }
         }
         get pageNumber() {
             return this._pageNumber;
@@ -672,20 +689,20 @@ var game = (function (exports,ex) {
             this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
             for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
                 //add to the scene here
-                this._scrambledOfficeDocs[i].x = 100 * i + 200;
-                this._scrambledOfficeDocs[i].setWidth(50);
-                this._scrambledOfficeDocs[i].setHeight(50);
+                // this._scrambledOfficeDocs[i].x = 100 * i + 200;
+                this._scrambledOfficeDocs[i].setWidth(100);
+                this._scrambledOfficeDocs[i].setHeight(150);
                 this._scrambledOfficeDocs[i].y = 600;
                 this.wireUpClickEvent(this._scrambledOfficeDocs[i]);
-                var docLabel = new ex.Label({
-                    x: this._scrambledOfficeDocs[i].x,
-                    y: this._scrambledOfficeDocs[i].y + 50,
-                    color: ex.Color.Red,
-                    text: (this._scrambledOfficeDocs[i].pageNumber + 1).toString()
-                });
-                docLabel.fontSize = 16;
-                this._docLabels.push(docLabel);
-                this.miniGameActors.push(docLabel);
+                // var docLabel = new Label({
+                //   x: this._scrambledOfficeDocs[i].x,
+                //   y: this._scrambledOfficeDocs[i].y + 50,
+                //   color: Color.Red,
+                //   text: (this._scrambledOfficeDocs[i].pageNumber + 1).toString()
+                // });
+                // docLabel.fontSize = 16;
+                // this._docLabels.push(docLabel);
+                // this.miniGameActors.push(docLabel);
                 this.miniGameActors.push(this._scrambledOfficeDocs[i]);
             }
         }
@@ -720,9 +737,11 @@ var game = (function (exports,ex) {
             this._docSet.clear();
             this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
             for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
-                this._scrambledOfficeDocs[i].x = 100 * i + 200;
+                this._scrambledOfficeDocs[i].x = 125 * i + 150;
                 this._scrambledOfficeDocs[i].color = ex.Color.Green;
-                this._docLabels[i].text = (this._scrambledOfficeDocs[i].pageNumber + 1).toString();
+                // this._docLabels[i].text = (
+                //   this._scrambledOfficeDocs[i].pageNumber + 1
+                // ).toString();
             }
         }
     }

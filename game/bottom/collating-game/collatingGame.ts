@@ -34,23 +34,23 @@ export class CollatingGame extends MiniGame {
 
     for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
       //add to the scene here
-      this._scrambledOfficeDocs[i].x = 100 * i + 200;
-      this._scrambledOfficeDocs[i].setWidth(50);
-      this._scrambledOfficeDocs[i].setHeight(50);
+      // this._scrambledOfficeDocs[i].x = 100 * i + 200;
+      this._scrambledOfficeDocs[i].setWidth(100);
+      this._scrambledOfficeDocs[i].setHeight(150);
       this._scrambledOfficeDocs[i].y = 600;
 
       this.wireUpClickEvent(this._scrambledOfficeDocs[i]);
 
-      var docLabel = new Label({
-        x: this._scrambledOfficeDocs[i].x,
-        y: this._scrambledOfficeDocs[i].y + 50,
-        color: Color.Red,
-        text: (this._scrambledOfficeDocs[i].pageNumber + 1).toString()
-      });
+      // var docLabel = new Label({
+      //   x: this._scrambledOfficeDocs[i].x,
+      //   y: this._scrambledOfficeDocs[i].y + 50,
+      //   color: Color.Red,
+      //   text: (this._scrambledOfficeDocs[i].pageNumber + 1).toString()
+      // });
 
-      docLabel.fontSize = 16;
-      this._docLabels.push(docLabel);
-      this.miniGameActors.push(docLabel);
+      // docLabel.fontSize = 16;
+      // this._docLabels.push(docLabel);
+      // this.miniGameActors.push(docLabel);
       this.miniGameActors.push(this._scrambledOfficeDocs[i]);
     }
   }
@@ -88,11 +88,11 @@ export class CollatingGame extends MiniGame {
     this._docSet.clear();
     this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
     for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
-      this._scrambledOfficeDocs[i].x = 100 * i + 200;
+      this._scrambledOfficeDocs[i].x = 125 * i + 150;
       this._scrambledOfficeDocs[i].color = Color.Green;
-      this._docLabels[i].text = (
-        this._scrambledOfficeDocs[i].pageNumber + 1
-      ).toString();
+      // this._docLabels[i].text = (
+      //   this._scrambledOfficeDocs[i].pageNumber + 1
+      // ).toString();
     }
   }
 }

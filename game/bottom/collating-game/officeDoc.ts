@@ -1,4 +1,5 @@
 import { Actor, Color, Label } from "excalibur";
+import Resources from "../../resources";
 
 export class OfficeDoc extends Actor {
   private _pageNumber: number;
@@ -8,6 +9,23 @@ export class OfficeDoc extends Actor {
     super();
     this._pageNumber = pageNumber;
     this.color = Color.Green;
+    switch (this._pageNumber) {
+      case 0:
+        this.addDrawing(Resources.txDocPieChart);
+        break;
+      case 1:
+        this.addDrawing(Resources.txDocBarGraph);
+        break;
+      case 2:
+        this.addDrawing(Resources.txDocLineGraph);
+        break;
+      case 3:
+        this.addDrawing(Resources.txDocVennDiagram);
+        break;
+      case 4:
+        this.addDrawing(Resources.txDocMoney);
+        break;
+    }
   }
 
   public get pageNumber(): number {
