@@ -3,8 +3,8 @@ import { newgame, getStats } from "./session";
 import { GameOverReason } from "./stats";
 import Resources from "./resources";
 const gameOverMessages = {
-    [GameOverReason.daydream]: "You gave up on your dreams. Game over.",
-    [GameOverReason.minigame]: "Your boss caught you daydreaming. Game over.",
+    [GameOverReason.daydream]: "You gave up on your dreams.",
+    [GameOverReason.minigame]: "Your boss caught you daydreaming.",
     [GameOverReason.workdayComplete]: "Congratulations! You found your dream.",
     [GameOverReason.debug]: "You program dreams."
 };
@@ -27,8 +27,11 @@ export class ScnEnd extends ex.Scene {
             color: ex.Color.White
         });
         this.bgActor = new ex.Actor(engine.drawWidth / 2, engine.drawHeight / 2);
-        this.bgActor.addDrawing(Resources.txGameOverScreen);
+        // this.bgActor.addDrawing(Resources.txGameOverScreen);
         this.add(this.bgActor);
+        let bgSpriteSheet = new ex.SpriteSheet(Resources.txGameOverScreen, 2, 1, 800, 800);
+        this.bgActor.addDrawing("defeat", bgSpriteSheet.getSprite(0));
+        this.bgActor.addDrawing("victory", bgSpriteSheet.getSprite(1));
         this.add(this.gameOverLabel);
         this.add(this.hoursDoneLabel);
         const resetButton = new ResetButton({
@@ -42,8 +45,12 @@ export class ScnEnd extends ex.Scene {
         const { miniGamesCompleted } = getStats();
         this.gameOverLabel.text = gameOverMessages[gameOverReason];
         if (gameOverReason != GameOverReason.workdayComplete) {
+            this.bgActor.setDrawing("defeat");
             this.hoursDoneLabel.text =
                 "You made it " + 2 * miniGamesCompleted + " hours through your workday";
+        }
+        else {
+            this.bgActor.setDrawing("victory");
         }
     }
 }

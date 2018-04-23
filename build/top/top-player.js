@@ -88,6 +88,9 @@ export class TopPlayer extends ex.Actor {
             }
             this.rotation = 0;
         }
+        if (this.y > engine.halfDrawHeight) {
+            this.y = engine.halfDrawHeight - 40;
+        }
     }
 }
 //# sourceMappingURL=top-player.js.map

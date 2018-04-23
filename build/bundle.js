@@ -30,7 +30,7 @@ var game = (function (exports,ex) {
         AnalyticsEndpoint: "https://ludum41stats.azurewebsites.net/api/HttpLudum41StatsTrigger?code=eumYNdyRh0yfBAk0NLrfrKkXxtGsX7/Jo5gAcYo13k3GcVFNBdG3yw==",
         GameWidth: 800,
         GameHeight: 800,
-        numMiniGamesToComplete: 1,
+        numMiniGamesToComplete: 4,
         // Top Floor config
         Floor: {
             Speed: -200,
@@ -137,8 +137,8 @@ var game = (function (exports,ex) {
     };
 
     const gameOverMessages = {
-        [GameOverReason.daydream]: "You gave up on your dreams. Game over.",
-        [GameOverReason.minigame]: "Your boss caught you daydreaming. Game over.",
+        [GameOverReason.daydream]: "You gave up on your dreams.",
+        [GameOverReason.minigame]: "Your boss caught you daydreaming.",
         [GameOverReason.workdayComplete]: "Congratulations! You found your dream.",
         [GameOverReason.debug]: "You program dreams."
     };
@@ -161,8 +161,11 @@ var game = (function (exports,ex) {
                 color: ex.Color.White
             });
             this.bgActor = new ex.Actor(engine.drawWidth / 2, engine.drawHeight / 2);
-            this.bgActor.addDrawing(Resources.txGameOverScreen);
+            // this.bgActor.addDrawing(Resources.txGameOverScreen);
             this.add(this.bgActor);
+            let bgSpriteSheet = new ex.SpriteSheet(Resources.txGameOverScreen, 2, 1, 800, 800);
+            this.bgActor.addDrawing("defeat", bgSpriteSheet.getSprite(0));
+            this.bgActor.addDrawing("victory", bgSpriteSheet.getSprite(1));
             this.add(this.gameOverLabel);
             this.add(this.hoursDoneLabel);
             const resetButton = new ResetButton({
@@ -176,8 +179,12 @@ var game = (function (exports,ex) {
             const { miniGamesCompleted } = getStats();
             this.gameOverLabel.text = gameOverMessages[gameOverReason];
             if (gameOverReason != GameOverReason.workdayComplete) {
+                this.bgActor.setDrawing("defeat");
                 this.hoursDoneLabel.text =
                     "You made it " + 2 * miniGamesCompleted + " hours through your workday";
+            }
+            else {
+                this.bgActor.setDrawing("victory");
             }
         }
     }
@@ -290,6 +297,9 @@ var game = (function (exports,ex) {
                 }
                 this.rotation = 0;
             }
+            if (this.y > engine.halfDrawHeight) {
+                this.y = engine.halfDrawHeight - 40;
+            }
         }
     }
 
@@ -321,7 +331,11 @@ var game = (function (exports,ex) {
             this.onCollision = (event) => {
                 if (event.other instanceof TopPlayer) {
                     this.onHitPlayer();
-                    this.kill();
+                    event.other.actions.blink(200, 100, 5);
+                    this.collisionType = ex.CollisionType.PreventCollision;
+                    this.acc = new ex.Vector(0, 900);
+                    this.rx = Config.Rand.floating(Math.PI, Math.PI * 2);
+                    this.vel = new ex.Vector(Config.Rand.floating(50, 100), Config.Rand.floating(-400, -800));
                 }
             };
             this.onHitPlayer = onHitPlayer;
@@ -559,7 +573,69 @@ var game = (function (exports,ex) {
     Background.SliceWidth = 50;
 
     class SoundManager {
+        static init() {
+            document.getElementById("mute-music").addEventListener("click", () => {
+                if (this.musicMuted) {
+                    this.unmuteMusic();
+                }
+                else {
+                    this.muteMusic();
+                }
+                SoundManager._updateMusicButton();
+            });
+            document.getElementById("mute-all").addEventListener("click", () => {
+                if (this.allMuted) {
+                    this.unmuteAll();
+                }
+                else {
+                    this.muteAll();
+                }
+            });
+        }
+        static _updateMusicButton() {
+            document.querySelector("#mute-music i").classList.toggle("fa-music");
+            document.querySelector("#mute-music i").classList.toggle("fa-play");
+        }
+        static _updateMuteAllButton() {
+            document.querySelector("#mute-all i").classList.toggle("fa-volume-off");
+            document.querySelector("#mute-all i").classList.toggle("fa-volume-up");
+        }
+        static muteMusic() {
+            SoundManager.musicMuted = true;
+            this.pauseActionMusic();
+            this.pauseOfficeAmbience();
+        }
+        static unmuteMusic() {
+            SoundManager.musicMuted = false;
+            this.startOfficeAmbience();
+        }
+        static muteAll() {
+            SoundManager.allMuted = true;
+            SoundManager.musicMuted = true;
+            for (let r in Resources) {
+                let snd = Resources[r];
+                if (snd instanceof ex.Sound) {
+                    snd.setVolume(0);
+                }
+            }
+            // SoundManager.muteBackgroundMusic();
+            SoundManager._updateMuteAllButton();
+        }
+        static unmuteAll() {
+            SoundManager.allMuted = false;
+            SoundManager.musicMuted = false;
+            for (let r in Resources) {
+                let snd = Resources[r];
+                if (snd instanceof ex.Sound) {
+                    snd.setVolume(1);
+                }
+            }
+            this.startOfficeAmbience();
+            SoundManager._updateMuteAllButton();
+        }
         static startActionMusic() {
+            if (this.allMuted || this.musicMuted)
+                return;
             Resources.topBgMusic.setVolume(0.3);
             Resources.topBgMusic.setLoop(true);
             if (!Resources.topBgMusic.isPlaying()) {
@@ -567,6 +643,8 @@ var game = (function (exports,ex) {
             }
         }
         static startOfficeAmbience() {
+            if (this.allMuted || this.musicMuted)
+                return;
             Resources.bottomBgMusic.setVolume(0.85);
             Resources.bottomBgMusic.setLoop(true);
             if (!Resources.bottomBgMusic.isPlaying()) {
@@ -588,6 +666,8 @@ var game = (function (exports,ex) {
             Resources.hitSound.play();
         }
     }
+    SoundManager.allMuted = false;
+    SoundManager.musicMuted = false;
 
     class TopSubscene {
         constructor(_engine, scene) {
@@ -1332,12 +1412,12 @@ var game = (function (exports,ex) {
     }
 
     const game = new ex.Engine({
+        canvasElementId: "game",
         width: Config.GameWidth,
         height: Config.GameHeight
     });
+    SoundManager.init();
     // Physics
-    // ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.RigidBody
-    // ex.Physics.allowRigidBodyRotation = false;
     ex.Physics.checkForFastBodies = true;
     // create an asset loader
     var loader = new ex.Loader();

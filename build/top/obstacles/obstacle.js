@@ -8,6 +8,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import * as ex from "excalibur";
+import Config from "../../config";
 import { TopPlayer } from "../top-player";
 export class Obstacle extends ex.Actor {
     /**
@@ -28,7 +29,11 @@ export class Obstacle extends ex.Actor {
         this.onCollision = (event) => {
             if (event.other instanceof TopPlayer) {
                 this.onHitPlayer();
-                this.kill();
+                event.other.actions.blink(200, 100, 5);
+                this.collisionType = ex.CollisionType.PreventCollision;
+                this.acc = new ex.Vector(0, 900);
+                this.rx = Config.Rand.floating(Math.PI, Math.PI * 2);
+                this.vel = new ex.Vector(Config.Rand.floating(50, 100), Config.Rand.floating(-400, -800));
             }
         };
         this.onHitPlayer = onHitPlayer;
