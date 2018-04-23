@@ -1081,7 +1081,7 @@ var game = (function (exports,ex) {
             this._countdownLabel = new ex.Label({
                 color: ex.Color.White,
                 fontSize: 25,
-                x: 700,
+                x: 730,
                 y: 650
             });
             scene.add(this._countdownLabel);
