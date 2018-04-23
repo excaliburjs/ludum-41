@@ -26,5 +26,5 @@ export default {
   txOverlay: new Texture("game/assets/img/office-overlay.png"),
   txCursor: new Texture("game/assets/img/thehand.png"),
 
-  sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
+  txGameOverScreen: new Texture("game/assets/img/game-end-bg.png")
 };
