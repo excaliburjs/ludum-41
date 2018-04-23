@@ -31,8 +31,8 @@ export default {
     "games/assets/snd/extremeaction.wav"
   ),
   bottomBgMusic: new Sound(
-    "games/assets/snd/office-ambience.mp3",
-    "games/assets/snd/office-ambience.wav"
+    "game/assets/snd/office-ambience.mp3",
+    "game/assets/snd/office-ambience.wav"
   ),
   sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };
