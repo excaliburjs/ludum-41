@@ -18,10 +18,14 @@ npm run bundle
 echo "Copying built files"
 cp -R $(ls | grep -v '^\(out\|lib\|\.vscode\|deploy\.sh\|node_modules\)$') out
 mkdir -p out/lib/excalibur-dist
+mkdir -p out/lib/fetchjs
+mkdir -p out/lib/font-awesome
 
 echo "Copy library files"
 cd lib
 cp -R excalibur-dist/ ../out/lib
+cp -R fetchjs/ ../out/lib
+cp -R font-awesome/ ../out/lib
 cd ..
 
 
