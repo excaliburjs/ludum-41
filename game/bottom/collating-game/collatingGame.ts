@@ -34,7 +34,7 @@ export class CollatingGame extends MiniGame {
 
     for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
       //add to the scene here
-      this._scrambledOfficeDocs[i].x = 100 * i + 200;
+      // this._scrambledOfficeDocs[i].x = 100 * i + 200;
       this._scrambledOfficeDocs[i].setWidth(100);
       this._scrambledOfficeDocs[i].setHeight(150);
       this._scrambledOfficeDocs[i].y = 600;
@@ -88,7 +88,7 @@ export class CollatingGame extends MiniGame {
     this._docSet.clear();
     this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
     for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
-      this._scrambledOfficeDocs[i].x = 100 * i + 200;
+      this._scrambledOfficeDocs[i].x = 125 * i + 150;
       this._scrambledOfficeDocs[i].color = Color.Green;
       // this._docLabels[i].text = (
       //   this._scrambledOfficeDocs[i].pageNumber + 1
