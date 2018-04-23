@@ -13,6 +13,7 @@ import { OfficeDocSet, OfficeDoc } from "./officeDoc";
 import Config from "../../config";
 import Resources from "../../resources";
 import { BottomSubscene } from "../bottom";
+import soundManager from "../../soundManager";
 
 export class CollatingGame extends MiniGame {
   private _scrambledOfficeDocs: Array<OfficeDoc>;
@@ -74,6 +75,7 @@ export class CollatingGame extends MiniGame {
         clickedDoc.actions
           .callMethod(() => {
             clickedDoc.setDrawing("default");
+            soundManager.playPageFlipSound();
           })
           .easeTo(
             Config.MiniGames.Collating.OutboxPos.x,

@@ -117,4 +117,9 @@ export default class SoundManager {
   static playCoffeePouringSound() {
     resources.coffeePour.play();
   }
+
+  static playPageFlipSound() {
+    resources.pageFlip.setVolume(0.5);
+    resources.pageFlip.play();
+  }
 }
