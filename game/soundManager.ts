@@ -113,4 +113,8 @@ export default class SoundManager {
     resources.shortBeep.setVolume(0.5);
     resources.shortBeep.play();
   }
+
+  static playCoffeePouringSound() {
+    resources.coffeePour.play();
+  }
 }
