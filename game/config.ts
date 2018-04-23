@@ -47,7 +47,7 @@ export default {
         y: 500
       },
       OutboxPos: {
-        x: 650,
+        x: 680,
         y: 500
       }
     },
