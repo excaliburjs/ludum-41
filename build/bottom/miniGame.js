@@ -1,3 +1,4 @@
+import { getStats } from "../session";
 export var MiniGameType;
 (function (MiniGameType) {
     MiniGameType[MiniGameType["Collate"] = 0] = "Collate";
@@ -27,6 +28,8 @@ export class MiniGame {
     }
     onSucceed() {
         this.cleanUp();
+        let stats = getStats();
+        stats.miniGamesCompleted++;
         this.bottomSubscene.startRandomMiniGame();
     }
     onFail() {

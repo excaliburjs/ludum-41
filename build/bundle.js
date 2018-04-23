@@ -10,6 +10,7 @@ var game = (function (exports,ex) {
     class Stats {
         constructor() {
             this.startTime = Date.now();
+            this.miniGamesCompleted = 0;
         }
         get duration() {
             return this.startTime - Date.now();
@@ -147,10 +148,19 @@ var game = (function (exports,ex) {
                 fontFamily: "Arial",
                 color: ex.Color.White
             });
+            this.hoursDoneLabel = new ex.Label({
+                x: this.engine.drawWidth / 2,
+                y: this.engine.drawHeight / 2 + 50,
+                textAlign: ex.TextAlign.Center,
+                fontSize: 36,
+                fontFamily: "Arial",
+                color: ex.Color.White
+            });
             this.bgActor = new ex.Actor(engine.drawWidth / 2, engine.drawHeight / 2);
             this.bgActor.addDrawing(Resources.txGameOverScreen);
             this.add(this.bgActor);
             this.add(this.gameOverLabel);
+            this.add(this.hoursDoneLabel);
             const resetButton = new ResetButton({
                 x: engine.drawWidth / 2,
                 y: engine.drawHeight / 2 + 100
@@ -159,7 +169,10 @@ var game = (function (exports,ex) {
         }
         onActivate() {
             const { gameOverReason } = getStats();
+            const { miniGamesCompleted } = getStats();
             this.gameOverLabel.text = gameOverMessages[gameOverReason];
+            this.hoursDoneLabel.text =
+                "You made it " + 2 * miniGamesCompleted + " hours through your workday";
         }
     }
     class ResetButton extends ex.Actor {
@@ -682,6 +695,8 @@ var game = (function (exports,ex) {
         }
         onSucceed() {
             this.cleanUp();
+            let stats = getStats();
+            stats.miniGamesCompleted++;
             this.bottomSubscene.startRandomMiniGame();
         }
         onFail() {
@@ -881,7 +896,7 @@ var game = (function (exports,ex) {
         constructor(scene, bottomSubscene) {
             super(scene, bottomSubscene);
             this._stepCount = 0;
-            this.secondsToComplete = 15;
+            this.secondsToComplete = 45;
             this.miniGameType = MiniGameType.Coffee;
             this._coffeeFilter = new CoffeeItem({
                 x: 200,

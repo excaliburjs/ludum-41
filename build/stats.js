@@ -7,6 +7,7 @@ export var GameOverReason;
 export class Stats {
     constructor() {
         this.startTime = Date.now();
+        this.miniGamesCompleted = 0;
     }
     get duration() {
         return this.startTime - Date.now();
