@@ -1,5 +1,6 @@
 import { GameOverReason, Stats } from "./stats";
 import { createRand } from "./config";
+import soundManager from "./soundManager";
 
 var stats: Stats;
 
