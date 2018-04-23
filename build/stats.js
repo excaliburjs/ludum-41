@@ -10,8 +10,11 @@ export class Stats {
         this.startTime = Date.now();
         this.miniGamesCompleted = 0;
     }
+    get start() {
+        return this.startTime;
+    }
     get duration() {
-        return this.startTime - Date.now();
+        return Date.now() - this.startTime;
     }
 }
 //# sourceMappingURL=stats.js.map

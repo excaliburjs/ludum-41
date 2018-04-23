@@ -2,6 +2,8 @@ import * as ex from "excalibur";
 import { newgame, getStats } from "./session";
 import { GameOverReason } from "./stats";
 import Resources from "./resources";
+import { Analytics } from "./analytics";
+import Config from "./config";
 
 const gameOverMessages = {
   [GameOverReason.daydream]: "You gave up on your dreams",
@@ -71,6 +73,20 @@ export class ScnEnd extends ex.Scene {
     } else {
       this.bgActor.setDrawing("victory");
     }
+
+    let stats = getStats();
+
+    let commit = document.getElementById("commit-number").innerText;
+
+    Analytics.publish({
+      commit: commit,
+      seed: Config.Rand.seed,
+      started: stats.start,
+      duration: stats.duration,
+      reason: stats.gameOverReason,
+      miniGamesCompleted: stats.miniGamesCompleted,
+      date: new Date().toISOString()
+    });
   }
 }
 

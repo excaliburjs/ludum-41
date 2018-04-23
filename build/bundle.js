@@ -13,8 +13,11 @@ var game = (function (exports,ex) {
             this.startTime = Date.now();
             this.miniGamesCompleted = 0;
         }
+        get start() {
+            return this.startTime;
+        }
         get duration() {
-            return this.startTime - Date.now();
+            return Date.now() - this.startTime;
         }
     }
 
@@ -142,6 +145,18 @@ var game = (function (exports,ex) {
         //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
     };
 
+    class Analytics {
+        static publish(payload) {
+            return fetch(Config.AnalyticsEndpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+        }
+    }
+
     const gameOverMessages = {
         [GameOverReason.daydream]: "You gave up on your dreams",
         [GameOverReason.minigame]: "Your boss caught you daydreaming.",
@@ -192,6 +207,17 @@ var game = (function (exports,ex) {
             else {
                 this.bgActor.setDrawing("victory");
             }
+            let stats = getStats();
+            let commit = document.getElementById("commit-number").innerText;
+            Analytics.publish({
+                commit: commit,
+                seed: Config.Rand.seed,
+                started: stats.start,
+                duration: stats.duration,
+                reason: stats.gameOverReason,
+                miniGamesCompleted: stats.miniGamesCompleted,
+                date: new Date().toISOString()
+            });
         }
     }
     class ResetButton extends ex.Actor {
