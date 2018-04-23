@@ -697,7 +697,7 @@ var game = (function (exports,ex) {
             }
         }
         setup() {
-            this.resetDocuments();
+            this.resetDocuments(true);
         }
         reset() { }
         wireUpClickEvent(officeDoc) {
@@ -718,7 +718,9 @@ var game = (function (exports,ex) {
                         if (this._currentWins >= this._winsRequired) {
                             //move on to the next mini game
                             this._currentWins = 0;
-                            this.onSucceed();
+                            clickedDoc.actions.callMethod(() => {
+                                this.onSucceed();
+                            });
                         }
                         else {
                             clickedDoc.actions.callMethod(() => {
@@ -730,14 +732,22 @@ var game = (function (exports,ex) {
             });
         }
         //shuffle the pages around visually
-        resetDocuments() {
+        resetDocuments(initial) {
             this._docSet.clear();
             this._scrambledOfficeDocs = this._docSet.getScrambledDocumentSet();
             for (let i = 0; i < this._scrambledOfficeDocs.length; i++) {
-                this._scrambledOfficeDocs[i].x = Config.MiniGames.Collating.InboxPos.x;
-                this._scrambledOfficeDocs[i].y = Config.MiniGames.Collating.InboxPos.y;
+                if (!initial) {
+                    this._scrambledOfficeDocs[i].actions.easeTo(Config.MiniGames.Collating.OutboxPos.x + 200, Config.MiniGames.Collating.OutboxPos.y, 500, ex.EasingFunctions.EaseInOutQuad);
+                }
                 this._scrambledOfficeDocs[i].actions
-                    .delay(750)
+                    .callMethod(() => {
+                    this._scrambledOfficeDocs[i].x =
+                        Config.MiniGames.Collating.InboxPos.x - 300;
+                    this._scrambledOfficeDocs[i].y =
+                        Config.MiniGames.Collating.InboxPos.y;
+                })
+                    .easeTo(Config.MiniGames.Collating.InboxPos.x, Config.MiniGames.Collating.InboxPos.y, 500, ex.EasingFunctions.EaseInOutQuad)
+                    .delay(250)
                     .easeTo(125 * i + 150, Config.MiniGames.Collating.OriginalDocY, 500, ex.EasingFunctions.EaseInOutQuad)
                     .callMethod(() => {
                     this._scrambledOfficeDocs[i].setDrawing("numbered");
