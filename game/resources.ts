@@ -5,6 +5,7 @@ export default {
   txTNTSpriteSheet: new Texture("game/assets/img/tnt.png"),
   txBombSpriteSheet: new Texture("game/assets/img/bomb.png"),
   txBackground: new Texture("game/assets/img/top-bg.png"),
+  txGurter: new Texture("game/assets/img/gurter.png"),
 
   txCollateBackground: new Texture("game/assets/img/collate-bg.png"),
   txDocPieChart: new Texture("game/assets/img/pieChartSubmit.png"),
