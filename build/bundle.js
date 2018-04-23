@@ -146,7 +146,8 @@ var game = (function (exports,ex) {
 
     var Resources = {
         txBike: new ex.Texture("game/assets/img/bike.png"),
-        txCrate: new ex.Texture("game/assets/img/crate.png"),
+        txTNTSpriteSheet: new ex.Texture("game/assets/img/tnt.png"),
+        txBombSpriteSheet: new ex.Texture("game/assets/img/bomb.png"),
         txBackground: new ex.Texture("game/assets/img/top-bg.png"),
         txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
         txDocLineGraph: new ex.Texture("game/assets/img/lineGraphSubmit.png"),
@@ -220,9 +221,14 @@ var game = (function (exports,ex) {
             }
         }
         handleInput(event) {
+            //let camera = this.scene.camera;
             ex.Logger.getInstance().debug("event:", event);
             if (event.worldPos.y < this.engine.halfDrawHeight) {
                 this.jump();
+                //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight-200), 1000, ex.EasingFunctions.EaseInOutCubic);
+            }
+            else {
+                //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight), 1000, ex.EasingFunctions.EaseInOutCubic);
             }
         }
         jump() {
@@ -296,40 +302,62 @@ var game = (function (exports,ex) {
         }
     }
 
-    class Crate extends Obstacle {
+    class Bomb extends Obstacle {
         constructor(props) {
-            super(Object.assign({}, props, { width: 16, height: 16 }));
+            super(Object.assign({}, props, { width: 32, height: 32 }));
         }
         onInitialize(engine) {
             super.onInitialize(engine);
-            this.addDrawing(Resources.txCrate);
+            let ss = new ex.SpriteSheet({
+                image: Resources.txBombSpriteSheet,
+                rows: 1,
+                columns: 2,
+                spWidth: 18,
+                spHeight: 18
+            });
+            let anim = ss.getAnimationForAll(engine, 300);
+            this.addDrawing("default", anim);
+            this.currentDrawing.scale.setTo(2, 2);
         }
     }
 
-    class Crates extends Obstacle {
+    class Stack extends Obstacle {
         constructor(props) {
-            super(Object.assign({}, props, { width: 16, height: 16 * 3 }));
+            super(Object.assign({}, props, { width: 18 * 2, height: 18 * 2 * 2 }));
         }
         onInitialize(engine) {
             super.onInitialize(engine);
+            let ss = new ex.SpriteSheet({
+                image: Resources.txTNTSpriteSheet,
+                rows: 1,
+                columns: 2,
+                spWidth: 18,
+                spHeight: 18
+            });
+            let anim = ss.getAnimationForAll(engine, 300);
+            let width = 18 * 2;
+            let height = 18 * 2;
             const crateArgs = {
                 anchor: ex.Vector.Zero,
-                width: 16,
-                height: 16
+                width: width,
+                height: height
             };
-            const crate1 = new ex.Actor(Object.assign({}, crateArgs, { y: -16 }));
-            const crate2 = new ex.Actor(Object.assign({}, crateArgs, { y: -32 }));
-            const crate3 = new ex.Actor(Object.assign({}, crateArgs, { y: -48 }));
-            crate1.addDrawing(Resources.txCrate);
-            crate2.addDrawing(Resources.txCrate);
-            crate3.addDrawing(Resources.txCrate);
+            const crate1 = new ex.Actor(Object.assign({}, crateArgs, { y: -height }));
+            const crate2 = new ex.Actor(Object.assign({}, crateArgs, { y: -height * 2 }));
+            // const crate3 = new ex.Actor({ ...crateArgs, y: -96 });
+            crate1.addDrawing("default", anim);
+            crate1.currentDrawing.scale.setTo(2, 2);
+            crate2.addDrawing("default", anim);
+            crate2.currentDrawing.scale.setTo(2, 2);
+            // crate3.addDrawing('default', anim);
+            // crate3.currentDrawing.scale.setTo(2, 2);
             this.add(crate1);
             this.add(crate2);
-            this.add(crate3);
+            // this.add(crate3);
         }
     }
 
-    const obstacles = [Crate, Crates];
+    const obstacles = [Bomb, Stack];
 
     class Floor extends ex.Actor {
         /**

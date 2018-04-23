@@ -1,5 +1,5 @@
-import { Crate } from "./crate";
-import { Crates } from "./crates";
-const obstacles = [Crate, Crates];
+import { Bomb } from "./bomb";
+import { Stack } from "./stack";
+const obstacles = [Bomb, Stack];
 export default obstacles;
 //# sourceMappingURL=index.js.map

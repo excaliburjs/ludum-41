@@ -1,7 +1,7 @@
-import { Crate } from "./crate";
-import { Crates } from "./crates";
+import { Bomb } from "./bomb";
+import { Stack } from "./stack";
 import { Obstacle } from "./obstacle";
 
-const obstacles = [Crate, Crates];
+const obstacles = [Bomb, Stack];
 
 export default obstacles;

@@ -57,9 +57,14 @@ export class TopPlayer extends ex.Actor {
         }
     }
     handleInput(event) {
+        //let camera = this.scene.camera;
         ex.Logger.getInstance().debug("event:", event);
         if (event.worldPos.y < this.engine.halfDrawHeight) {
             this.jump();
+            //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight-200), 1000, ex.EasingFunctions.EaseInOutCubic);
+        }
+        else {
+            //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight), 1000, ex.EasingFunctions.EaseInOutCubic);
         }
     }
     jump() {
