@@ -21,6 +21,9 @@ export class ScnMain extends ex.Scene {
     this._top.healthMeter.health = Config.Health.Default;
     this._bottom.setup(this);
     soundManager.startOfficeAmbience();
+    let randomHeadIndex = Config.Rand.integer(0, 9);
+    console.log("setting overlay to head: " + randomHeadIndex);
+    this._overlay.setDrawing("head_" + randomHeadIndex);
   }
 
   onDeactivate() {
