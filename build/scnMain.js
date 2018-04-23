@@ -3,6 +3,7 @@ import { TopSubscene } from "./top/top";
 import { BottomSubscene } from "./bottom/bottom";
 import { Overlay } from "./overlay";
 import Config from "./config";
+import soundManager from "./soundManager";
 export class ScnMain extends ex.Scene {
     onInitialize(engine) {
         this._top = new TopSubscene(this.engine, this);
@@ -13,10 +14,12 @@ export class ScnMain extends ex.Scene {
         this._top.setup(this);
         this._top.healthMeter.health = Config.Health.Default;
         this._bottom.setup(this);
+        soundManager.startOfficeAmbience();
     }
     onDeactivate() {
         this._top.teardown(this);
         this._bottom.teardown(this);
+        soundManager.stopBackgroundAudio();
     }
 }
 //# sourceMappingURL=scnMain.js.map

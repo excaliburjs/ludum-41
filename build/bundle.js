@@ -188,22 +188,26 @@ var game = (function (exports,ex) {
 
     class SoundManager {
         static startActionMusic() {
+            Resources.topBgMusic.setVolume(0.3);
             if (!Resources.topBgMusic.isPlaying()) {
                 Resources.topBgMusic.play();
             }
-            Resources.topBgMusic.setVolume(0.5);
         }
         static startOfficeAmbience() {
+            Resources.bottomBgMusic.setVolume(0.85);
             if (!Resources.bottomBgMusic.isPlaying()) {
                 Resources.bottomBgMusic.play();
             }
-            Resources.bottomBgMusic.setVolume(0.75);
         }
         static pauseActionMusic() {
             Resources.topBgMusic.setVolume(0);
         }
         static pauseOfficeAmbience() {
             Resources.bottomBgMusic.setVolume(0);
+        }
+        static stopBackgroundAudio() {
+            Resources.bottomBgMusic.stop();
+            Resources.topBgMusic.stop();
         }
     }
 
@@ -1278,10 +1282,12 @@ var game = (function (exports,ex) {
             this._top.setup(this);
             this._top.healthMeter.health = Config.Health.Default;
             this._bottom.setup(this);
+            SoundManager.startOfficeAmbience();
         }
         onDeactivate() {
             this._top.teardown(this);
             this._bottom.teardown(this);
+            SoundManager.stopBackgroundAudio();
         }
     }
 
@@ -1304,7 +1310,6 @@ var game = (function (exports,ex) {
     // uncomment loader after adding resources
     game.start(loader).then(() => {
         newgame(game);
-        SoundManager.startOfficeAmbience();
         // TODO: Turn on analytics
         //   Analytics.publish({
         //      commit: 'test',
