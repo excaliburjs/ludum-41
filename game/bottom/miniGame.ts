@@ -1,5 +1,6 @@
 import { Actor, Scene, Timer, Label, Color } from "excalibur";
 import { BottomSubscene } from "./bottom";
+import { getStats } from "../session";
 
 export enum MiniGameType {
   Collate,
@@ -40,6 +41,8 @@ export abstract class MiniGame {
 
   public onSucceed(): void {
     this.cleanUp();
+    let stats = getStats();
+    stats.miniGamesCompleted++;
     this.bottomSubscene.startRandomMiniGame();
   }
 

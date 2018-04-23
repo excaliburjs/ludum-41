@@ -11,6 +11,7 @@ const gameOverMessages = {
 
 export class ScnEnd extends ex.Scene {
   gameOverLabel: ex.Label;
+  hoursDoneLabel: ex.Label;
   bgActor: ex.Actor;
 
   onInitialize(engine: ex.Engine) {
@@ -23,11 +24,21 @@ export class ScnEnd extends ex.Scene {
       color: ex.Color.White
     });
 
+    this.hoursDoneLabel = new ex.Label({
+      x: this.engine.drawWidth / 2,
+      y: this.engine.drawHeight / 2 + 50,
+      textAlign: ex.TextAlign.Center,
+      fontSize: 36,
+      fontFamily: "Arial",
+      color: ex.Color.White
+    });
+
     this.bgActor = new ex.Actor(engine.drawWidth / 2, engine.drawHeight / 2);
     this.bgActor.addDrawing(Resources.txGameOverScreen);
     this.add(this.bgActor);
 
     this.add(this.gameOverLabel);
+    this.add(this.hoursDoneLabel);
 
     const resetButton = new ResetButton({
       x: engine.drawWidth / 2,
@@ -39,7 +50,10 @@ export class ScnEnd extends ex.Scene {
 
   onActivate() {
     const { gameOverReason } = getStats();
+    const { miniGamesCompleted } = getStats();
     this.gameOverLabel.text = gameOverMessages[gameOverReason];
+    this.hoursDoneLabel.text =
+      "You made it " + 2 * miniGamesCompleted + " hours through your workday";
   }
 }
 
