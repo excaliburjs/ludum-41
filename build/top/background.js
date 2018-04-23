@@ -38,7 +38,7 @@ export class Background extends ex.Actor {
     }
     onPostUpdate(engine, delta) {
         if (this.x <= -engine.halfDrawWidth) {
-            ex.Logger.getInstance().info("Reset background");
+            // ex.Logger.getInstance().info("Reset background");
             this.x = 0;
             this.drawSlices = this.drawSlices.slice(16);
             this.drawToOffscreen(0, 16);

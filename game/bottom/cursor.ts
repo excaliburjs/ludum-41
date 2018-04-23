@@ -10,7 +10,11 @@ export class Cursor extends ex.Actor {
       anchor: new ex.Vector(0.5, 0),
       rotation: -Math.PI / 4
     });
-    this.addDrawing(resources.txCursor);
+    // this.addDrawing(resources.txCursor);
+    let spriteSheet = new ex.SpriteSheet(resources.txCursor, 10, 1, 100, 400);
+    for (let i = 0; i < 10; i++) {
+      this.addDrawing("hand_" + i, spriteSheet.getSprite(i));
+    }
   }
 
   onInitialize(engine: ex.Engine) {

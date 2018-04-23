@@ -547,7 +547,7 @@ var game = (function (exports,ex) {
         }
         onPostUpdate(engine, delta) {
             if (this.x <= -engine.halfDrawWidth) {
-                ex.Logger.getInstance().info("Reset background");
+                // ex.Logger.getInstance().info("Reset background");
                 this.x = 0;
                 this.drawSlices = this.drawSlices.slice(16);
                 this.drawToOffscreen(0, 16);
@@ -1252,7 +1252,11 @@ var game = (function (exports,ex) {
                 anchor: new ex.Vector(0.5, 0),
                 rotation: -Math.PI / 4
             });
-            this.addDrawing(Resources.txCursor);
+            // this.addDrawing(resources.txCursor);
+            let spriteSheet = new ex.SpriteSheet(Resources.txCursor, 10, 1, 100, 400);
+            for (let i = 0; i < 10; i++) {
+                this.addDrawing("hand_" + i, spriteSheet.getSprite(i));
+            }
         }
         onInitialize(engine) {
             this.y = engine.drawHeight;
@@ -1357,6 +1361,7 @@ var game = (function (exports,ex) {
             var keys = Object.keys(MiniGameType).filter(key => typeof MiniGameType[key] === "number");
             this.miniGames = keys.map(key => MiniGameType[key]);
             console.log(this.miniGames);
+            this.cursor.setDrawing("hand_" + Config.Rand.integer(0, 9));
             this.startRandomMiniGame();
         }
         teardown(scene) {
@@ -1405,7 +1410,11 @@ var game = (function (exports,ex) {
             });
             scene.add(this);
             this.z = 99;
-            this.addDrawing(Resources.txOverlay);
+            // this.addDrawing(resources.txOverlay);
+            let spriteSheet = new ex.SpriteSheet(Resources.txOverlay, 10, 1, 800, 800);
+            for (let i = 0; i < 10; i++) {
+                this.addDrawing("head_" + i, spriteSheet.getSprite(i));
+            }
         }
     }
 
@@ -1420,6 +1429,9 @@ var game = (function (exports,ex) {
             this._top.healthMeter.health = Config.Health.Default;
             this._bottom.setup(this);
             SoundManager.startOfficeAmbience();
+            let randomHeadIndex = Config.Rand.integer(0, 9);
+            console.log("setting overlay to head: " + randomHeadIndex);
+            this._overlay.setDrawing("head_" + randomHeadIndex);
         }
         onDeactivate() {
             this._top.teardown(this);

@@ -15,6 +15,12 @@ export class Overlay extends ex.Actor {
 
     this.z = 99;
 
-    this.addDrawing(resources.txOverlay);
+    // this.addDrawing(resources.txOverlay);
+
+    let spriteSheet = new ex.SpriteSheet(resources.txOverlay, 10, 1, 800, 800);
+
+    for (let i = 0; i < 10; i++) {
+      this.addDrawing("head_" + i, spriteSheet.getSprite(i));
+    }
   }
 }

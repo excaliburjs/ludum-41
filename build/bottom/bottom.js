@@ -41,6 +41,7 @@ export class BottomSubscene {
         var keys = Object.keys(MiniGameType).filter(key => typeof MiniGameType[key] === "number");
         this.miniGames = keys.map(key => MiniGameType[key]);
         console.log(this.miniGames);
+        this.cursor.setDrawing("hand_" + Config.Rand.integer(0, 9));
         this.startRandomMiniGame();
     }
     teardown(scene) {

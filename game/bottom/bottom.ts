@@ -67,6 +67,7 @@ export class BottomSubscene {
     );
     this.miniGames = <any>keys.map(key => MiniGameType[key as any]);
     console.log(this.miniGames);
+    this.cursor.setDrawing("hand_" + Config.Rand.integer(0, 9));
     this.startRandomMiniGame();
   }
 
