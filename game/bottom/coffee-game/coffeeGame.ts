@@ -13,7 +13,7 @@ export class CoffeeGame extends MiniGame {
   private _coffeeGrounds: CoffeeItem;
   private _coffeeCup: CoffeeItem;
   private _background: ex.Actor;
-  public secondsToComplete: number = 15;
+  public secondsToComplete: number = 45;
   public miniGameType: MiniGameType = MiniGameType.Coffee;
 
   constructor(scene: ex.Scene, bottomSubscene: BottomSubscene) {
