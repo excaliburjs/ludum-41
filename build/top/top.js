@@ -11,7 +11,10 @@ export class TopSubscene {
     constructor(_engine, scene) {
         this._engine = _engine;
         this.onPlayerHitObstacle = () => {
-            this.healthMeter.health--;
+            if (this.healthMeter.health > 0) {
+                soundManager.playHitSound();
+                this.healthMeter.health--;
+            }
         };
         this.scene = scene;
         this.floor = new Floor(this._engine);

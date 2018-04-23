@@ -25,6 +25,7 @@ export default {
     txGameOverScreen: new Texture("game/assets/img/game-end-bg.png"),
     topBgMusic: new Sound("game/assets/snd/extremeaction.mp3", "game/assets/snd/extremeaction.wav"),
     bottomBgMusic: new Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
-    sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
+    hitSound: new Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav")
+    //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };
 //# sourceMappingURL=resources.js.map

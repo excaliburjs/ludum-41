@@ -38,5 +38,10 @@ export default {
     "game/assets/snd/office-ambience.mp3",
     "game/assets/snd/office-ambience.wav"
   ),
-  sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
+
+  hitSound: new Sound(
+    "game/assets/snd/hitSound.mp3",
+    "game/assets/snd/hitSound.wav"
+  )
+  //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };

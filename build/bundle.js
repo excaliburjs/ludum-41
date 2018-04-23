@@ -132,7 +132,8 @@ var game = (function (exports,ex) {
         txGameOverScreen: new ex.Texture("game/assets/img/game-end-bg.png"),
         topBgMusic: new ex.Sound("game/assets/snd/extremeaction.mp3", "game/assets/snd/extremeaction.wav"),
         bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
-        sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
+        hitSound: new ex.Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav")
+        //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
     };
 
     const gameOverMessages = {
@@ -560,12 +561,14 @@ var game = (function (exports,ex) {
     class SoundManager {
         static startActionMusic() {
             Resources.topBgMusic.setVolume(0.3);
+            Resources.topBgMusic.setLoop(true);
             if (!Resources.topBgMusic.isPlaying()) {
                 Resources.topBgMusic.play();
             }
         }
         static startOfficeAmbience() {
             Resources.bottomBgMusic.setVolume(0.85);
+            Resources.bottomBgMusic.setLoop(true);
             if (!Resources.bottomBgMusic.isPlaying()) {
                 Resources.bottomBgMusic.play();
             }
@@ -580,13 +583,20 @@ var game = (function (exports,ex) {
             Resources.bottomBgMusic.stop();
             Resources.topBgMusic.stop();
         }
+        static playHitSound() {
+            Resources.hitSound.setVolume(0.7);
+            Resources.hitSound.play();
+        }
     }
 
     class TopSubscene {
         constructor(_engine, scene) {
             this._engine = _engine;
             this.onPlayerHitObstacle = () => {
-                this.healthMeter.health--;
+                if (this.healthMeter.health > 0) {
+                    SoundManager.playHitSound();
+                    this.healthMeter.health--;
+                }
             };
             this.scene = scene;
             this.floor = new Floor(this._engine);
