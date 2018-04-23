@@ -19,7 +19,7 @@ export class Cursor extends ex.Actor {
     engine.input.pointers.primary.on("move", (evt: ex.Input.PointerEvent) => {
       let cursorPos = evt.worldPos.clone();
       if (
-        cursorPos.y > engine.halfDrawHeight &&
+        cursorPos.y > engine.halfDrawHeight + 30 &&
         cursorPos.x < engine.drawWidth &&
         cursorPos.x > 0
       ) {
