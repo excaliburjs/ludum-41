@@ -26,7 +26,12 @@ export class Cursor extends ex.Actor {
             }
             else {
                 this.rx = -this.rotation;
-                this.actions.easeTo(engine.halfDrawWidth, engine.drawHeight, 1000, ex.EasingFunctions.EaseInOutQuad);
+                this.actions
+                    .easeTo(engine.halfDrawWidth, engine.drawHeight, 1000, ex.EasingFunctions.EaseInOutQuad)
+                    .callMethod(() => {
+                    this.rotation = 0;
+                    this.rx = 0;
+                });
             }
         });
     }

@@ -2,28 +2,48 @@ import * as ex from "excalibur";
 import Config from "../config";
 import { gameover } from "../session";
 import { GameOverReason } from "../stats";
-export class TopHealth extends ex.Label {
+import resources from "../resources";
+export class TopHealth extends ex.Actor {
     constructor(engine) {
         super({
-            x: Config.Health.Pos.x,
-            y: Config.Health.Pos.y + Config.Health.FontSize,
-            fontSize: Config.Health.FontSize,
-            fontUnit: ex.FontUnit.Px,
-            anchor: ex.Vector.Zero.clone(),
-            color: ex.Color.Red,
-            text: Config.Health.Default.toString()
+            x: 20,
+            y: engine.halfDrawHeight - 20,
+            anchor: new ex.Vector(0, 1),
+            color: ex.Color.Red
         });
         this.health = Config.Health.Default;
     }
     onInitialize() {
         this.z = 4;
+        this.heartSpriteSheet = new ex.SpriteSheet({
+            image: resources.txHeartSpriteSheet,
+            columns: 3,
+            rows: 1,
+            spWidth: 19,
+            spHeight: 18
+        });
     }
     onPostUpdate(engine, delta) {
         if (this.health < 1) {
             gameover(engine, GameOverReason.daydream);
             return;
         }
-        this.text = this.health.toString();
+    }
+    onPostDraw(ctx) {
+        let fullHealth = Math.floor(this.health / 2);
+        let halfHealth = this.health % 2;
+        let i = 0;
+        for (; i < fullHealth; i++) {
+            this.heartSpriteSheet.getSprite(0).draw(ctx, 20 * i, 0);
+        }
+        if (halfHealth) {
+            this.heartSpriteSheet.getSprite(1).draw(ctx, 20 * i, 0);
+            i++;
+        }
+        // no health
+        for (let j = 0; j < Config.Health.Default / 2 - fullHealth - halfHealth; j++) {
+            this.heartSpriteSheet.getSprite(2).draw(ctx, 20 * (j + i), 0);
+        }
     }
 }
 //# sourceMappingURL=health.js.map

@@ -1,4 +1,3 @@
-import * as ex from "excalibur";
 import { CollatingGame } from "./collating-game/collatingGame";
 import { CoffeeGame } from "./coffee-game/coffeeGame";
 import Config from "../config";
@@ -8,23 +7,18 @@ import { Cursor } from "./cursor";
 import { Timer } from "excalibur";
 import { gameover } from "../session";
 import { GameOverReason } from "../stats";
+import { CountDown } from "./countdown";
 export class BottomSubscene {
     constructor(scene) {
         this.miniGameCount = 0;
         this.miniGames = [];
         this._gameOver = false;
-        this._countdownLabel = new ex.Label({
-            color: ex.Color.White,
-            fontSize: 25,
-            x: 730,
-            y: 650
-        });
-        scene.add(this._countdownLabel);
-        this._countdownLabel.setZIndex(300);
+        this._countdown = new CountDown(scene.engine);
+        scene.add(this._countdown);
         console.log("bottom");
         this._miniGameTimer = new Timer(() => {
             this._secondsRemaining--;
-            this._countdownLabel.text = this._secondsRemaining.toString();
+            this._countdown.timeRemaining = this._secondsRemaining;
             if (this._secondsRemaining <= 0) {
                 if (!this._gameOver) {
                     this._gameOver = true;
@@ -71,7 +65,8 @@ export class BottomSubscene {
         this._gameOver = false;
         this.currentMiniGame.start();
         this._miniGameTimer.reset(1000, this._secondsRemaining);
-        this._countdownLabel.text = this._secondsRemaining.toString();
+        this._countdown.maxTime = this._secondsRemaining;
+        this._countdown.timeRemaining = this._secondsRemaining;
     }
     startRandomMiniGame() {
         // if (this.miniGameCount % this.miniGames.length === 0) {

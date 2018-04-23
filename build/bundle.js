@@ -159,6 +159,7 @@ var game = (function (exports,ex) {
         txBombSpriteSheet: new ex.Texture("game/assets/img/bomb.png"),
         txBackground: new ex.Texture("game/assets/img/top-bg.png"),
         txGurter: new ex.Texture("game/assets/img/gurter.png"),
+        txHeartSpriteSheet: new ex.Texture("game/assets/img/heart.png"),
         txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
         txDocPieChart: new ex.Texture("game/assets/img/pieChartSubmit.png"),
         txDocBarGraph: new ex.Texture("game/assets/img/barGraphSubmit.png"),
@@ -174,6 +175,7 @@ var game = (function (exports,ex) {
         txCopierBackground: new ex.Texture("game/assets/img/copy-game-bg.png"),
         txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
         txCursor: new ex.Texture("game/assets/img/thehand.png"),
+        txTimerBg: new ex.Texture("game/assets/img/timerbg.png"),
         topBgMusic: new ex.Sound("games/assets/snd/extremeaction.mp3", "games/assets/snd/extremeaction.wav"),
         bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
@@ -396,28 +398,47 @@ var game = (function (exports,ex) {
         }
     }
 
-    class TopHealth extends ex.Label {
+    class TopHealth extends ex.Actor {
         constructor(engine) {
             super({
-                x: Config.Health.Pos.x,
-                y: Config.Health.Pos.y + Config.Health.FontSize,
-                fontSize: Config.Health.FontSize,
-                fontUnit: ex.FontUnit.Px,
-                anchor: ex.Vector.Zero.clone(),
-                color: ex.Color.Red,
-                text: Config.Health.Default.toString()
+                x: 20,
+                y: engine.halfDrawHeight - 20,
+                anchor: new ex.Vector(0, 1),
+                color: ex.Color.Red
             });
             this.health = Config.Health.Default;
         }
         onInitialize() {
             this.z = 4;
+            this.heartSpriteSheet = new ex.SpriteSheet({
+                image: Resources.txHeartSpriteSheet,
+                columns: 3,
+                rows: 1,
+                spWidth: 19,
+                spHeight: 18
+            });
         }
         onPostUpdate(engine, delta) {
             if (this.health < 1) {
                 gameover(engine, GameOverReason.daydream);
                 return;
             }
-            this.text = this.health.toString();
+        }
+        onPostDraw(ctx) {
+            let fullHealth = Math.floor(this.health / 2);
+            let halfHealth = this.health % 2;
+            let i = 0;
+            for (; i < fullHealth; i++) {
+                this.heartSpriteSheet.getSprite(0).draw(ctx, 20 * i, 0);
+            }
+            if (halfHealth) {
+                this.heartSpriteSheet.getSprite(1).draw(ctx, 20 * i, 0);
+                i++;
+            }
+            // no health
+            for (let j = 0; j < Config.Health.Default / 2 - fullHealth - halfHealth; j++) {
+                this.heartSpriteSheet.getSprite(2).draw(ctx, 20 * (j + i), 0);
+            }
         }
     }
 
@@ -1077,9 +1098,58 @@ var game = (function (exports,ex) {
                 }
                 else {
                     this.rx = -this.rotation;
-                    this.actions.easeTo(engine.halfDrawWidth, engine.drawHeight, 1000, ex.EasingFunctions.EaseInOutQuad);
+                    this.actions
+                        .easeTo(engine.halfDrawWidth, engine.drawHeight, 1000, ex.EasingFunctions.EaseInOutQuad)
+                        .callMethod(() => {
+                        this.rotation = 0;
+                        this.rx = 0;
+                    });
                 }
             });
+        }
+    }
+
+    class CountDown extends ex.Actor {
+        constructor(engine) {
+            super({
+                x: 70,
+                y: engine.halfDrawHeight + 60,
+                width: 40,
+                height: 40
+                // color: ex.Color.Red
+            });
+            this.maxTime = 100;
+            this.timeRemaining = 0;
+        }
+        onInitialize() {
+            this.z = 100;
+            this.sprite = Resources.txTimerBg.asSprite();
+            this.sprite.anchor = ex.Vector.Half.clone();
+        }
+        onPostDraw(ctx, delta) {
+            ctx.fillStyle = ex.Color.Black.toRGBA();
+            ctx.beginPath();
+            ctx.arc(0, 0, 24, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+            let percentLeft = this.timeRemaining / this.maxTime;
+            let timeLeftRadian = Math.PI * 2 * percentLeft;
+            ctx.fillStyle = ex.Color.Green.toRGBA();
+            if (percentLeft < 0.75) {
+                ctx.fillStyle = ex.Color.Yellow.toRGBA();
+            }
+            if (percentLeft < 0.5) {
+                ctx.fillStyle = ex.Color.Orange.toRGBA();
+            }
+            if (percentLeft < 0.25) {
+                ctx.fillStyle = ex.Color.Red.toRGBA();
+            }
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, 24, -Math.PI / 2, -Math.PI / 2 + timeLeftRadian, false);
+            ctx.closePath();
+            ctx.fill();
+            this.sprite.draw(ctx, 0, 0);
         }
     }
 
@@ -1088,18 +1158,12 @@ var game = (function (exports,ex) {
             this.miniGameCount = 0;
             this.miniGames = [];
             this._gameOver = false;
-            this._countdownLabel = new ex.Label({
-                color: ex.Color.White,
-                fontSize: 25,
-                x: 730,
-                y: 650
-            });
-            scene.add(this._countdownLabel);
-            this._countdownLabel.setZIndex(300);
+            this._countdown = new CountDown(scene.engine);
+            scene.add(this._countdown);
             console.log("bottom");
             this._miniGameTimer = new ex.Timer(() => {
                 this._secondsRemaining--;
-                this._countdownLabel.text = this._secondsRemaining.toString();
+                this._countdown.timeRemaining = this._secondsRemaining;
                 if (this._secondsRemaining <= 0) {
                     if (!this._gameOver) {
                         this._gameOver = true;
@@ -1146,7 +1210,8 @@ var game = (function (exports,ex) {
             this._gameOver = false;
             this.currentMiniGame.start();
             this._miniGameTimer.reset(1000, this._secondsRemaining);
-            this._countdownLabel.text = this._secondsRemaining.toString();
+            this._countdown.maxTime = this._secondsRemaining;
+            this._countdown.timeRemaining = this._secondsRemaining;
         }
         startRandomMiniGame() {
             // if (this.miniGameCount % this.miniGames.length === 0) {

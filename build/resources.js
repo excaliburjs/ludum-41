@@ -5,6 +5,7 @@ export default {
     txBombSpriteSheet: new Texture("game/assets/img/bomb.png"),
     txBackground: new Texture("game/assets/img/top-bg.png"),
     txGurter: new Texture("game/assets/img/gurter.png"),
+    txHeartSpriteSheet: new Texture("game/assets/img/heart.png"),
     txCollateBackground: new Texture("game/assets/img/collate-bg.png"),
     txDocPieChart: new Texture("game/assets/img/pieChartSubmit.png"),
     txDocBarGraph: new Texture("game/assets/img/barGraphSubmit.png"),
@@ -20,6 +21,7 @@ export default {
     txCopierBackground: new Texture("game/assets/img/copy-game-bg.png"),
     txOverlay: new Texture("game/assets/img/office-overlay.png"),
     txCursor: new Texture("game/assets/img/thehand.png"),
+    txTimerBg: new Texture("game/assets/img/timerbg.png"),
     topBgMusic: new Sound("games/assets/snd/extremeaction.mp3", "games/assets/snd/extremeaction.wav"),
     bottomBgMusic: new Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
     sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
