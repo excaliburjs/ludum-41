@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import { newgame, getStats } from "./session";
 import { GameOverReason } from "./stats";
+import Resources from "./resources";
 const gameOverMessages = {
     [GameOverReason.daydream]: "You gave up on your dreams. Game over.",
     [GameOverReason.minigame]: "Your boss caught you daydreaming. Game over.",
@@ -13,8 +14,12 @@ export class ScnEnd extends ex.Scene {
             y: this.engine.drawHeight / 2,
             textAlign: ex.TextAlign.Center,
             fontSize: 36,
-            fontFamily: "Arial"
+            fontFamily: "Arial",
+            color: ex.Color.White
         });
+        this.bgActor = new ex.Actor(engine.drawWidth / 2, engine.drawHeight / 2);
+        this.bgActor.addDrawing(Resources.txGameOverScreen);
+        this.add(this.bgActor);
         this.add(this.gameOverLabel);
         const resetButton = new ResetButton({
             x: engine.drawWidth / 2,

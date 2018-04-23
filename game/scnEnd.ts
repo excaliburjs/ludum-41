@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import { newgame, getStats } from "./session";
 import { GameOverReason } from "./stats";
+import Resources from "./resources";
 
 const gameOverMessages = {
   [GameOverReason.daydream]: "You gave up on your dreams. Game over.",
@@ -10,6 +11,7 @@ const gameOverMessages = {
 
 export class ScnEnd extends ex.Scene {
   gameOverLabel: ex.Label;
+  bgActor: ex.Actor;
 
   onInitialize(engine: ex.Engine) {
     this.gameOverLabel = new ex.Label({
@@ -17,8 +19,13 @@ export class ScnEnd extends ex.Scene {
       y: this.engine.drawHeight / 2,
       textAlign: ex.TextAlign.Center,
       fontSize: 36,
-      fontFamily: "Arial"
+      fontFamily: "Arial",
+      color: ex.Color.White
     });
+
+    this.bgActor = new ex.Actor(engine.drawWidth / 2, engine.drawHeight / 2);
+    this.bgActor.addDrawing(Resources.txGameOverScreen);
+    this.add(this.bgActor);
 
     this.add(this.gameOverLabel);
 

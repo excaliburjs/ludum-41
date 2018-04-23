@@ -103,6 +103,35 @@ var game = (function (exports,ex) {
         game.goToScene("end");
     }
 
+    var Resources = {
+        txBike: new ex.Texture("game/assets/img/bike.png"),
+        txTNTSpriteSheet: new ex.Texture("game/assets/img/tnt.png"),
+        txBombSpriteSheet: new ex.Texture("game/assets/img/bomb.png"),
+        txBackground: new ex.Texture("game/assets/img/top-bg.png"),
+        txGurter: new ex.Texture("game/assets/img/gurter.png"),
+        txHeartSpriteSheet: new ex.Texture("game/assets/img/heart.png"),
+        txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
+        txDocPieChart: new ex.Texture("game/assets/img/pieChartSubmit.png"),
+        txDocBarGraph: new ex.Texture("game/assets/img/barGraphSubmit.png"),
+        txDocLineGraph: new ex.Texture("game/assets/img/lineGraphSubmit.png"),
+        txDocVennDiagram: new ex.Texture("game/assets/img/vennDiagramSubmit.png"),
+        txDocMoney: new ex.Texture("game/assets/img/moneySubmit.png"),
+        txCoffeeMaker: new ex.Texture("game/assets/img/coffee-maker.png"),
+        txCoffeeGrounds: new ex.Texture("game/assets/img/coffee-grounds.png"),
+        txCoffeeFilter: new ex.Texture("game/assets/img/coffee-filters.png"),
+        txCoffeeCup: new ex.Texture("game/assets/img/coffee-cup.png"),
+        txCoffeeBackground: new ex.Texture("game/assets/img/coffee-game-bg.png"),
+        txCopier: new ex.Texture("game/assets/img/printer.png"),
+        txCopierBackground: new ex.Texture("game/assets/img/copy-game-bg.png"),
+        txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
+        txCursor: new ex.Texture("game/assets/img/thehand.png"),
+        txTimerBg: new ex.Texture("game/assets/img/timerbg.png"),
+        txGameOverScreen: new ex.Texture("game/assets/img/game-end-bg.png"),
+        topBgMusic: new ex.Sound("games/assets/snd/extremeaction.mp3", "games/assets/snd/extremeaction.wav"),
+        bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
+        sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
+    };
+
     const gameOverMessages = {
         [GameOverReason.daydream]: "You gave up on your dreams. Game over.",
         [GameOverReason.minigame]: "Your boss caught you daydreaming. Game over.",
@@ -115,8 +144,12 @@ var game = (function (exports,ex) {
                 y: this.engine.drawHeight / 2,
                 textAlign: ex.TextAlign.Center,
                 fontSize: 36,
-                fontFamily: "Arial"
+                fontFamily: "Arial",
+                color: ex.Color.White
             });
+            this.bgActor = new ex.Actor(engine.drawWidth / 2, engine.drawHeight / 2);
+            this.bgActor.addDrawing(Resources.txGameOverScreen);
+            this.add(this.bgActor);
             this.add(this.gameOverLabel);
             const resetButton = new ResetButton({
                 x: engine.drawWidth / 2,
@@ -152,34 +185,6 @@ var game = (function (exports,ex) {
             newgame(game);
         }
     }
-
-    var Resources = {
-        txBike: new ex.Texture("game/assets/img/bike.png"),
-        txTNTSpriteSheet: new ex.Texture("game/assets/img/tnt.png"),
-        txBombSpriteSheet: new ex.Texture("game/assets/img/bomb.png"),
-        txBackground: new ex.Texture("game/assets/img/top-bg.png"),
-        txGurter: new ex.Texture("game/assets/img/gurter.png"),
-        txHeartSpriteSheet: new ex.Texture("game/assets/img/heart.png"),
-        txCollateBackground: new ex.Texture("game/assets/img/collate-bg.png"),
-        txDocPieChart: new ex.Texture("game/assets/img/pieChartSubmit.png"),
-        txDocBarGraph: new ex.Texture("game/assets/img/barGraphSubmit.png"),
-        txDocLineGraph: new ex.Texture("game/assets/img/lineGraphSubmit.png"),
-        txDocVennDiagram: new ex.Texture("game/assets/img/vennDiagramSubmit.png"),
-        txDocMoney: new ex.Texture("game/assets/img/moneySubmit.png"),
-        txCoffeeMaker: new ex.Texture("game/assets/img/coffee-maker.png"),
-        txCoffeeGrounds: new ex.Texture("game/assets/img/coffee-grounds.png"),
-        txCoffeeFilter: new ex.Texture("game/assets/img/coffee-filters.png"),
-        txCoffeeCup: new ex.Texture("game/assets/img/coffee-cup.png"),
-        txCoffeeBackground: new ex.Texture("game/assets/img/coffee-game-bg.png"),
-        txCopier: new ex.Texture("game/assets/img/printer.png"),
-        txCopierBackground: new ex.Texture("game/assets/img/copy-game-bg.png"),
-        txOverlay: new ex.Texture("game/assets/img/office-overlay.png"),
-        txCursor: new ex.Texture("game/assets/img/thehand.png"),
-        txTimerBg: new ex.Texture("game/assets/img/timerbg.png"),
-        topBgMusic: new ex.Sound("games/assets/snd/extremeaction.mp3", "games/assets/snd/extremeaction.wav"),
-        bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
-        sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
-    };
 
     class TopPlayer extends ex.Actor {
         constructor(engine) {

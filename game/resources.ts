@@ -28,6 +28,8 @@ export default {
   txCursor: new Texture("game/assets/img/thehand.png"),
   txTimerBg: new Texture("game/assets/img/timerbg.png"),
 
+  txGameOverScreen: new Texture("game/assets/img/game-end-bg.png"),
+
   topBgMusic: new Sound(
     "games/assets/snd/extremeaction.mp3",
     "games/assets/snd/extremeaction.wav"

@@ -22,6 +22,7 @@ export default {
     txOverlay: new Texture("game/assets/img/office-overlay.png"),
     txCursor: new Texture("game/assets/img/thehand.png"),
     txTimerBg: new Texture("game/assets/img/timerbg.png"),
+    txGameOverScreen: new Texture("game/assets/img/game-end-bg.png"),
     topBgMusic: new Sound("games/assets/snd/extremeaction.mp3", "games/assets/snd/extremeaction.wav"),
     bottomBgMusic: new Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
     sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
