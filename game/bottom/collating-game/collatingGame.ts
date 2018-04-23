@@ -87,7 +87,9 @@ export class CollatingGame extends MiniGame {
           if (this._currentWins >= this._winsRequired) {
             //move on to the next mini game
             this._currentWins = 0;
-            this.onSucceed();
+            clickedDoc.actions.callMethod(() => {
+              this.onSucceed();
+            });
           } else {
             clickedDoc.actions.callMethod(() => {
               this.resetDocuments();
