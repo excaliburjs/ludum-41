@@ -31,8 +31,8 @@ export default {
   txGameOverScreen: new Texture("game/assets/img/game-end-bg.png"),
 
   topBgMusic: new Sound(
-    "games/assets/snd/extremeaction.mp3",
-    "games/assets/snd/extremeaction.wav"
+    "game/assets/snd/extremeaction.mp3",
+    "game/assets/snd/extremeaction.wav"
   ),
   bottomBgMusic: new Sound(
     "game/assets/snd/office-ambience.mp3",

@@ -127,7 +127,7 @@ var game = (function (exports,ex) {
         txCursor: new ex.Texture("game/assets/img/thehand.png"),
         txTimerBg: new ex.Texture("game/assets/img/timerbg.png"),
         txGameOverScreen: new ex.Texture("game/assets/img/game-end-bg.png"),
-        topBgMusic: new ex.Sound("games/assets/snd/extremeaction.mp3", "games/assets/snd/extremeaction.wav"),
+        topBgMusic: new ex.Sound("game/assets/snd/extremeaction.mp3", "game/assets/snd/extremeaction.wav"),
         bottomBgMusic: new ex.Sound("game/assets/snd/office-ambience.mp3", "game/assets/snd/office-ambience.wav"),
         sampleSnd: new ex.Sound("game/assets/snd/sample-sound.wav")
     };
@@ -183,6 +183,27 @@ var game = (function (exports,ex) {
         }
         reset(game) {
             newgame(game);
+        }
+    }
+
+    class SoundManager {
+        static startActionMusic() {
+            if (!Resources.topBgMusic.isPlaying()) {
+                Resources.topBgMusic.play();
+            }
+            Resources.topBgMusic.setVolume(0.5);
+        }
+        static startOfficeAmbience() {
+            if (!Resources.bottomBgMusic.isPlaying()) {
+                Resources.bottomBgMusic.play();
+            }
+            Resources.bottomBgMusic.setVolume(0.75);
+        }
+        static pauseActionMusic() {
+            Resources.topBgMusic.setVolume(0);
+        }
+        static pauseOfficeAmbience() {
+            Resources.bottomBgMusic.setVolume(0);
         }
     }
 
@@ -252,9 +273,13 @@ var game = (function (exports,ex) {
             ex.Logger.getInstance().debug("event:", event);
             if (event.worldPos.y < this.engine.halfDrawHeight) {
                 this.jump();
+                SoundManager.pauseOfficeAmbience();
+                SoundManager.startActionMusic();
                 //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight-200), 1000, ex.EasingFunctions.EaseInOutCubic);
             }
             else {
+                SoundManager.pauseActionMusic();
+                SoundManager.startOfficeAmbience();
                 //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight), 1000, ex.EasingFunctions.EaseInOutCubic);
             }
         }
@@ -1257,21 +1282,6 @@ var game = (function (exports,ex) {
         onDeactivate() {
             this._top.teardown(this);
             this._bottom.teardown(this);
-        }
-    }
-
-    class SoundManager {
-        static startActionMusic() {
-            Resources.topBgMusic.play();
-        }
-        static startOfficeAmbience() {
-            Resources.bottomBgMusic.play();
-        }
-        static pauseActionMusic() {
-            Resources.topBgMusic.pause();
-        }
-        static pauseOfficeAmbience() {
-            Resources.bottomBgMusic.pause();
         }
     }
 

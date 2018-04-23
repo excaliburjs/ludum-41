@@ -4,6 +4,7 @@ import Resources from "../resources";
 import { GameOverReason } from "../stats";
 import { gameover } from "../session";
 import { BaseCamera } from "excalibur";
+import soundManager from "../soundManager";
 
 export class TopPlayer extends ex.Actor {
   public canJump: boolean = false;
@@ -87,8 +88,12 @@ export class TopPlayer extends ex.Actor {
     ex.Logger.getInstance().debug("event:", event);
     if (event.worldPos.y < this.engine.halfDrawHeight) {
       this.jump();
+      soundManager.pauseOfficeAmbience();
+      soundManager.startActionMusic();
       //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight-200), 1000, ex.EasingFunctions.EaseInOutCubic);
     } else {
+      soundManager.pauseActionMusic();
+      soundManager.startOfficeAmbience();
       //camera.move(new ex.Vector(this.engine.halfDrawWidth, this.engine.halfDrawHeight), 1000, ex.EasingFunctions.EaseInOutCubic);
     }
   }

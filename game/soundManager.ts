@@ -2,18 +2,24 @@ import resources from "./resources";
 
 export default class SoundManager {
   static startActionMusic() {
-    resources.topBgMusic.play();
+    if (!resources.topBgMusic.isPlaying()) {
+      resources.topBgMusic.play();
+    }
+    resources.topBgMusic.setVolume(0.5);
   }
 
   static startOfficeAmbience() {
-    resources.bottomBgMusic.play();
+    if (!resources.bottomBgMusic.isPlaying()) {
+      resources.bottomBgMusic.play();
+    }
+    resources.bottomBgMusic.setVolume(0.75);
   }
 
   static pauseActionMusic() {
-    resources.topBgMusic.pause();
+    resources.topBgMusic.setVolume(0);
   }
 
   static pauseOfficeAmbience() {
-    resources.bottomBgMusic.pause();
+    resources.bottomBgMusic.setVolume(0);
   }
 }
