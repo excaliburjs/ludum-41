@@ -3,10 +3,10 @@ import { newgame, getStats } from "./session";
 import { GameOverReason } from "./stats";
 import Resources from "./resources";
 const gameOverMessages = {
-    [GameOverReason.daydream]: "You gave up on your dreams.",
+    [GameOverReason.daydream]: "You gave up on your dreams",
     [GameOverReason.minigame]: "Your boss caught you daydreaming.",
-    [GameOverReason.workdayComplete]: "Congratulations! You found your dream.",
-    [GameOverReason.debug]: "You program dreams."
+    [GameOverReason.workdayComplete]: "Congratulations! You're free to dream now",
+    [GameOverReason.debug]: "DEBUG: You program dreams"
 };
 export class ScnEnd extends ex.Scene {
     onInitialize(engine) {
