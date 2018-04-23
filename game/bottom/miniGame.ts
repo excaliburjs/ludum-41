@@ -43,15 +43,19 @@ export abstract class MiniGame {
   }
 
   public onSucceed(): void {
+    let stats = getStats();
+    stats.miniGamesCompleted++;
+    if (stats.miniGamesCompleted >= Config.numMiniGamesToComplete) {
+      console.log("you win!"); //TODO remove
+      gameover(this.scene.engine, GameOverReason.workdayComplete);
+      return;
+    }
+
     this.active = false;
     this.bottomSubscene.transistion.transitionIn().then(() => {
       this.cleanUp();
       let stats = getStats();
-      stats.miniGamesCompleted++;
-      if (stats.miniGamesCompleted >= Config.numMiniGamesToComplete) {
-        console.log("you win!"); //TODO remove
-        gameover(this.scene.engine, GameOverReason.workdayComplete);
-      } else {
+      if (stats.miniGamesCompleted < Config.numMiniGamesToComplete) {
         // otherwise the workday continues
         this.bottomSubscene.startRandomMiniGame();
       }
