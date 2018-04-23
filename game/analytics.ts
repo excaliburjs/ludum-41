@@ -5,6 +5,9 @@ interface IPayload {
   commit: string;
   seed: number; // seeded value
   started: number; // time
+  duration: number;
+  reason: any;
+  miniGamesCompleted: number;
 }
 
 export class Analytics {

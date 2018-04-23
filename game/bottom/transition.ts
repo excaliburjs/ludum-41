@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import { MiniGame } from "./miniGame";
+import resources from "../resources";
 
 export class Transition extends ex.Actor {
   constructor(scene: ex.Scene) {
@@ -11,6 +12,8 @@ export class Transition extends ex.Actor {
       anchor: new ex.Vector(0.5, 0),
       color: ex.Color.Red
     });
+
+    this.addDrawing(resources.txMiniGameTransitionScreen);
   }
 
   onInitialize() {
