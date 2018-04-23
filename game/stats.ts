@@ -1,6 +1,7 @@
 export enum GameOverReason {
   daydream,
   minigame,
+  workdayComplete,
   debug
 }
 

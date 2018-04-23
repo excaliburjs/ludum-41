@@ -18,6 +18,8 @@ export default {
   GameWidth: 800, // pixels
   GameHeight: 800, // pixels
 
+  numMiniGamesToComplete: 1, //4,
+
   // Top Floor config
   Floor: {
     Speed: -200,
