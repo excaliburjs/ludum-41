@@ -122,4 +122,9 @@ export default class SoundManager {
     resources.pageFlip.setVolume(0.5);
     resources.pageFlip.play();
   }
+
+  static playJumpSound() {
+    //resources.shortBeep.setVolume(0.5);
+    resources.jump.play();
+  }
 }

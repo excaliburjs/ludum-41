@@ -57,6 +57,8 @@ export default {
   pageFlip: new Sound(
     "game/assets/snd/pageFlip.mp3",
     "game/assets/snd/pageFlip.wav"
-  )
+  ),
+
+  jump: new Sound("game/assets/snd/jump.mp3", "game/assets/snd/jump.wav")
   //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
 };
