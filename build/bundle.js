@@ -1353,6 +1353,7 @@ var game = (function (exports,ex) {
                 anchor: new ex.Vector(0.5, 0),
                 color: ex.Color.Red
             });
+            this.addDrawing(Resources.txMiniGameTransitionScreen);
         }
         onInitialize() {
             this.z = 98;
