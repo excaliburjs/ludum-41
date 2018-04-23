@@ -40,7 +40,12 @@ export default {
   MiniGames: {
     Collating: {
       NumberOfDocuments: 5,
-      NumberOfWinsToProceed: 3
+      NumberOfWinsToProceed: 3,
+      OriginalDocY: 600,
+      OutboxPos: {
+        x: 650,
+        y: 500
+      }
     },
     Coffee: {
       BrewTime: 5000 // ms
