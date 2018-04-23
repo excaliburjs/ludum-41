@@ -2,7 +2,7 @@ import * as ex from "excalibur";
 import Resources from "../../resources";
 import { Obstacle, Props } from "./obstacle";
 
-export class Crate extends Obstacle {
+export class Bomb extends Obstacle {
   constructor(props: ex.IActorArgs & Props) {
     super({ ...props, width: 32, height: 32 });
   }
