@@ -1,31 +1,16 @@
-import { Actor, Color, Label } from "excalibur";
+import { Actor, Color, Label, SpriteSheet } from "excalibur";
 import Resources from "../../resources";
 
 export class OfficeDoc extends Actor {
   private _pageNumber: number;
   private _officeDocSet: OfficeDocSet;
 
-  constructor(pageNumber: number) {
+  constructor(pageNumber: number, art: SpriteSheet[]) {
     super();
     this._pageNumber = pageNumber;
     this.color = Color.Green;
-    switch (this._pageNumber) {
-      case 0:
-        this.addDrawing(Resources.txDocPieChart);
-        break;
-      case 1:
-        this.addDrawing(Resources.txDocBarGraph);
-        break;
-      case 2:
-        this.addDrawing(Resources.txDocLineGraph);
-        break;
-      case 3:
-        this.addDrawing(Resources.txDocVennDiagram);
-        break;
-      case 4:
-        this.addDrawing(Resources.txDocMoney);
-        break;
-    }
+    this.addDrawing("default", art[this._pageNumber].getSprite(0));
+    this.addDrawing("numbered", art[this._pageNumber].getSprite(1));
   }
 
   public get pageNumber(): number {
@@ -39,10 +24,10 @@ export class OfficeDocSet {
   private _numDocuments: number;
   private _isScrambled: boolean;
 
-  constructor(numDocuments: number) {
+  constructor(numDocuments: number, art: SpriteSheet[]) {
     this._numDocuments = numDocuments;
     for (var i = 0; i < this._numDocuments; i++) {
-      this._documents.push(new OfficeDoc(i));
+      this._documents.push(new OfficeDoc(i, art));
     }
   }
 
