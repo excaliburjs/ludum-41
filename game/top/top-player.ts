@@ -26,9 +26,18 @@ export class TopPlayer extends ex.Actor {
     this.on("precollision", this.handleCollision.bind(this));
   }
 
-  onInitialize() {
+  onInitialize(engine: ex.Engine) {
     this.z = 5;
-    this.addDrawing(Resources.txBike);
+    let ss = new ex.SpriteSheet({
+      image: Resources.txBike,
+      rows: 1,
+      columns: 2,
+      spHeight: 50,
+      spWidth: 60
+    });
+
+    let anim = ss.getAnimationForAll(engine, 100);
+    this.addDrawing("default", anim);
 
     // dust
     const dustEmitter = new ex.ParticleEmitter(
