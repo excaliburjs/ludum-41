@@ -6,15 +6,17 @@ import Config from "./config";
 import { newgame, gameover } from "./session";
 import { GameOverReason } from "./stats";
 import resources from "./resources";
+import SoundManager from "./soundManager";
 
 export const game = new Engine({
+  canvasElementId: "game",
   width: Config.GameWidth,
   height: Config.GameHeight
 });
 
+SoundManager.init();
+
 // Physics
-// ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.RigidBody
-// ex.Physics.allowRigidBodyRotation = false;
 Physics.checkForFastBodies = true;
 
 // create an asset loader
