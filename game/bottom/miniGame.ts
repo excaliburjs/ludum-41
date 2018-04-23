@@ -6,6 +6,7 @@ export abstract class MiniGame {
   protected scene: Scene;
   private _timeLimit: number;
   public active: boolean = false;
+  public abstract secondsToComplete: number;
 
   constructor(scene: Scene, bottomSubscene: BottomSubscene) {
     this.scene = scene;
