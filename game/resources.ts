@@ -7,11 +7,11 @@ export default {
   txBackground: new Texture("game/assets/img/top-bg.png"),
 
   txCollateBackground: new Texture("game/assets/img/collate-bg.png"),
-  txDocLineGraph: new Texture("game/assets/img/lineGraphSubmit.png"),
-  txDocMoney: new Texture("game/assets/img/moneySubmit.png"),
   txDocPieChart: new Texture("game/assets/img/pieChartSubmit.png"),
   txDocBarGraph: new Texture("game/assets/img/barGraphSubmit.png"),
+  txDocLineGraph: new Texture("game/assets/img/lineGraphSubmit.png"),
   txDocVennDiagram: new Texture("game/assets/img/vennDiagramSubmit.png"),
+  txDocMoney: new Texture("game/assets/img/moneySubmit.png"),
 
   txCoffeeMaker: new Texture("game/assets/img/coffee-maker.png"),
   txCoffeeGrounds: new Texture("game/assets/img/coffee-grounds.png"),
