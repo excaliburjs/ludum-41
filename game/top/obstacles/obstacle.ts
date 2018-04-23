@@ -50,7 +50,10 @@ export abstract class Obstacle extends ex.Actor {
     if (event.other instanceof TopPlayer) {
       this.onHitPlayer();
       event.other.actions.blink(200, 100, 5);
-      this.kill();
+      this.collisionType = ex.CollisionType.PreventCollision;
+      this.acc = new ex.Vector(0, 900);
+      this.rx = Math.PI;
+      this.vel = new ex.Vector(100, -800);
     }
   };
 }
