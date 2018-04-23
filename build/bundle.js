@@ -135,7 +135,8 @@ var game = (function (exports,ex) {
         hitSound: new ex.Sound("game/assets/snd/hitSound.mp3", "game/assets/snd/hitSound.wav"),
         shortBeep: new ex.Sound("game/assets/snd/shortBeep.mp3", "game/assets/snd/shortBeep.wav"),
         coffeePour: new ex.Sound("game/assets/snd/coffeePour.mp3", "game/assets/snd/coffeePour.wav"),
-        pageFlip: new ex.Sound("game/assets/snd/pageFlip.mp3", "game/assets/snd/pageFlip.wav")
+        pageFlip: new ex.Sound("game/assets/snd/pageFlip.mp3", "game/assets/snd/pageFlip.wav"),
+        jump: new ex.Sound("game/assets/snd/jump.mp3", "game/assets/snd/jump.wav")
         //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
     };
 
@@ -215,6 +216,118 @@ var game = (function (exports,ex) {
         }
     }
 
+    class SoundManager {
+        static init() {
+            document.getElementById("mute-music").addEventListener("click", () => {
+                if (this.musicMuted) {
+                    this.unmuteMusic();
+                }
+                else {
+                    this.muteMusic();
+                }
+                SoundManager._updateMusicButton();
+            });
+            document.getElementById("mute-all").addEventListener("click", () => {
+                if (this.allMuted) {
+                    this.unmuteAll();
+                }
+                else {
+                    this.muteAll();
+                }
+            });
+        }
+        static _updateMusicButton() {
+            document.querySelector("#mute-music i").classList.toggle("fa-music");
+            document.querySelector("#mute-music i").classList.toggle("fa-play");
+        }
+        static _updateMuteAllButton() {
+            document.querySelector("#mute-all i").classList.toggle("fa-volume-off");
+            document.querySelector("#mute-all i").classList.toggle("fa-volume-up");
+        }
+        static muteMusic() {
+            SoundManager.musicMuted = true;
+            this.pauseActionMusic();
+            this.pauseOfficeAmbience();
+        }
+        static unmuteMusic() {
+            SoundManager.musicMuted = false;
+            this.startOfficeAmbience();
+        }
+        static muteAll() {
+            SoundManager.allMuted = true;
+            SoundManager.musicMuted = true;
+            for (let r in Resources) {
+                let snd = Resources[r];
+                if (snd instanceof ex.Sound) {
+                    snd.setVolume(0);
+                }
+            }
+            // SoundManager.muteBackgroundMusic();
+            SoundManager._updateMuteAllButton();
+        }
+        static unmuteAll() {
+            SoundManager.allMuted = false;
+            SoundManager.musicMuted = false;
+            for (let r in Resources) {
+                let snd = Resources[r];
+                if (snd instanceof ex.Sound) {
+                    snd.setVolume(1);
+                }
+            }
+            this.startOfficeAmbience();
+            SoundManager._updateMuteAllButton();
+        }
+        static startActionMusic() {
+            if (this.allMuted || this.musicMuted)
+                return;
+            Resources.topBgMusic.setVolume(0.3);
+            Resources.topBgMusic.setLoop(true);
+            if (!Resources.topBgMusic.isPlaying()) {
+                Resources.topBgMusic.play();
+            }
+        }
+        static startOfficeAmbience() {
+            if (this.allMuted || this.musicMuted)
+                return;
+            Resources.bottomBgMusic.setVolume(0.85);
+            Resources.bottomBgMusic.setLoop(true);
+            if (!Resources.bottomBgMusic.isPlaying()) {
+                Resources.bottomBgMusic.play();
+            }
+        }
+        static pauseActionMusic() {
+            Resources.topBgMusic.setVolume(0);
+        }
+        static pauseOfficeAmbience() {
+            Resources.bottomBgMusic.setVolume(0);
+        }
+        static stopBackgroundAudio() {
+            Resources.bottomBgMusic.stop();
+            Resources.topBgMusic.stop();
+        }
+        static playHitSound() {
+            Resources.hitSound.setVolume(0.7);
+            Resources.hitSound.play();
+        }
+        static playShortBeep() {
+            Resources.shortBeep.setVolume(0.5);
+            Resources.shortBeep.play();
+        }
+        static playCoffeePouringSound() {
+            Resources.coffeePour.play();
+        }
+        static playPageFlipSound() {
+            Resources.pageFlip.setVolume(0.5);
+            Resources.pageFlip.play();
+        }
+        static playJumpSound() {
+            //resources.shortBeep.setVolume(0.5);
+            Resources.jump.play();
+        }
+    }
+    SoundManager.allMuted = false;
+    SoundManager.musicMuted = false;
+
     class TopPlayer extends ex.Actor {
         constructor(engine) {
             super({
@@ -279,6 +392,7 @@ var game = (function (exports,ex) {
             if (this.canJump) {
                 this.vel = new ex.Vector(this.vel.x, -400);
                 this.acc = new ex.Vector(0, 800);
+                SoundManager.playJumpSound();
                 this.canJump = false;
             }
         }
@@ -574,114 +688,6 @@ var game = (function (exports,ex) {
     }
     Background.Slices = 16;
     Background.SliceWidth = 50;
-
-    class SoundManager {
-        static init() {
-            document.getElementById("mute-music").addEventListener("click", () => {
-                if (this.musicMuted) {
-                    this.unmuteMusic();
-                }
-                else {
-                    this.muteMusic();
-                }
-                SoundManager._updateMusicButton();
-            });
-            document.getElementById("mute-all").addEventListener("click", () => {
-                if (this.allMuted) {
-                    this.unmuteAll();
-                }
-                else {
-                    this.muteAll();
-                }
-            });
-        }
-        static _updateMusicButton() {
-            document.querySelector("#mute-music i").classList.toggle("fa-music");
-            document.querySelector("#mute-music i").classList.toggle("fa-play");
-        }
-        static _updateMuteAllButton() {
-            document.querySelector("#mute-all i").classList.toggle("fa-volume-off");
-            document.querySelector("#mute-all i").classList.toggle("fa-volume-up");
-        }
-        static muteMusic() {
-            SoundManager.musicMuted = true;
-            this.pauseActionMusic();
-            this.pauseOfficeAmbience();
-        }
-        static unmuteMusic() {
-            SoundManager.musicMuted = false;
-            this.startOfficeAmbience();
-        }
-        static muteAll() {
-            SoundManager.allMuted = true;
-            SoundManager.musicMuted = true;
-            for (let r in Resources) {
-                let snd = Resources[r];
-                if (snd instanceof ex.Sound) {
-                    snd.setVolume(0);
-                }
-            }
-            // SoundManager.muteBackgroundMusic();
-            SoundManager._updateMuteAllButton();
-        }
-        static unmuteAll() {
-            SoundManager.allMuted = false;
-            SoundManager.musicMuted = false;
-            for (let r in Resources) {
-                let snd = Resources[r];
-                if (snd instanceof ex.Sound) {
-                    snd.setVolume(1);
-                }
-            }
-            this.startOfficeAmbience();
-            SoundManager._updateMuteAllButton();
-        }
-        static startActionMusic() {
-            if (this.allMuted || this.musicMuted)
-                return;
-            Resources.topBgMusic.setVolume(0.3);
-            Resources.topBgMusic.setLoop(true);
-            if (!Resources.topBgMusic.isPlaying()) {
-                Resources.topBgMusic.play();
-            }
-        }
-        static startOfficeAmbience() {
-            if (this.allMuted || this.musicMuted)
-                return;
-            Resources.bottomBgMusic.setVolume(0.85);
-            Resources.bottomBgMusic.setLoop(true);
-            if (!Resources.bottomBgMusic.isPlaying()) {
-                Resources.bottomBgMusic.play();
-            }
-        }
-        static pauseActionMusic() {
-            Resources.topBgMusic.setVolume(0);
-        }
-        static pauseOfficeAmbience() {
-            Resources.bottomBgMusic.setVolume(0);
-        }
-        static stopBackgroundAudio() {
-            Resources.bottomBgMusic.stop();
-            Resources.topBgMusic.stop();
-        }
-        static playHitSound() {
-            Resources.hitSound.setVolume(0.7);
-            Resources.hitSound.play();
-        }
-        static playShortBeep() {
-            Resources.shortBeep.setVolume(0.5);
-            Resources.shortBeep.play();
-        }
-        static playCoffeePouringSound() {
-            Resources.coffeePour.play();
-        }
-        static playPageFlipSound() {
-            Resources.pageFlip.setVolume(0.5);
-            Resources.pageFlip.play();
-        }
-    }
-    SoundManager.allMuted = false;
-    SoundManager.musicMuted = false;
 
     class TopSubscene {
         constructor(_engine, scene) {

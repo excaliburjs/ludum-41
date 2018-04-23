@@ -3,6 +3,7 @@ import Config from "../config";
 import Resources from "../resources";
 import { GameOverReason } from "../stats";
 import { gameover } from "../session";
+import soundManager from "../soundManager";
 export class TopPlayer extends ex.Actor {
     constructor(engine) {
         super({
@@ -67,6 +68,7 @@ export class TopPlayer extends ex.Actor {
         if (this.canJump) {
             this.vel = new ex.Vector(this.vel.x, -400);
             this.acc = new ex.Vector(0, 800);
+            soundManager.playJumpSound();
             this.canJump = false;
         }
     }

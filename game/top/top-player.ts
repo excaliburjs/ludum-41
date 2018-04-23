@@ -85,6 +85,7 @@ export class TopPlayer extends ex.Actor {
     if (this.canJump) {
       this.vel = new ex.Vector(this.vel.x, -400);
       this.acc = new ex.Vector(0, 800);
+      soundManager.playJumpSound();
       this.canJump = false;
     }
   }
