@@ -67,6 +67,7 @@ export default {
   },
 
   PrinterMiniGame: {
+    HardMode: false,
     PrinterStartX: 300,
     PrinterStartY: 570,
     PrinterSpacing: 35,

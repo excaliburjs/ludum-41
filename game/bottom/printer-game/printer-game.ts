@@ -10,7 +10,7 @@ export class PrinterGame extends MiniGame {
   protected scene: ex.Scene;
   private _copier: ex.Actor;
   private _background: ex.Actor;
-  public secondsToComplete: number = 60;
+  public secondsToComplete: number = 20;
   public miniGameType: MiniGameType = MiniGameType.Printer;
 
   private _lights: Light[] = [];
