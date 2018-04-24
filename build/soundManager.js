@@ -90,27 +90,44 @@ export default class SoundManager {
         resources.topBgMusic.stop();
     }
     static playHitSound() {
+        if (this.allMuted)
+            return;
         resources.hitSound.setVolume(0.7);
         resources.hitSound.play();
     }
     static playShortBeep() {
+        if (this.allMuted)
+            return;
         resources.shortBeep.setVolume(0.5);
         resources.shortBeep.play();
     }
     static playCoffeePouringSound() {
+        if (this.allMuted)
+            return;
         resources.coffeePour.play();
     }
     static playPageFlipSound() {
+        if (this.allMuted)
+            return;
         resources.pageFlip.setVolume(0.5);
         resources.pageFlip.play();
     }
     static playJumpSound() {
+        if (this.allMuted)
+            return;
         //resources.shortBeep.setVolume(0.5);
         resources.jump.play();
     }
     static playGenericSelectSound() {
+        if (this.allMuted)
+            return;
         resources.select.setVolume(0.5);
         resources.select.play();
+    }
+    static playWarningBeep() {
+        if (this.allMuted)
+            return;
+        resources.warningBeep.play();
     }
 }
 SoundManager.allMuted = false;

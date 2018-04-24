@@ -10,6 +10,8 @@ import { gameover, getStats } from "../session";
 import { GameOverReason } from "../stats";
 import { CountDown } from "./countdown";
 import { Transition } from "./transition";
+import resources from "../resources";
+import SoundManager from "../soundManager";
 
 export class BottomSubscene {
   public miniGameCount: number = 0;
@@ -35,6 +37,17 @@ export class BottomSubscene {
       () => {
         this._secondsRemaining--;
         this._countdown.timeRemaining = this._secondsRemaining;
+        let percentLeft =
+          this._countdown.timeRemaining / this._countdown.maxTime;
+        if (percentLeft < 0.25) {
+          SoundManager.playWarningBeep();
+          this._countdown.scale = this._countdown.scale.add(
+            new ex.Vector(
+              0.2 / this._secondsRemaining,
+              0.2 / this._secondsRemaining
+            )
+          );
+        }
         if (this._secondsRemaining <= 0) {
           if (!this._gameOver) {
             this._gameOver = true;
@@ -102,6 +115,7 @@ export class BottomSubscene {
     this._miniGameTimer.reset(1000, this._secondsRemaining);
     this._countdown.maxTime = this._secondsRemaining;
     this._countdown.timeRemaining = this._secondsRemaining;
+    this._countdown.scale = ex.Vector.One.clone();
     this.transistion
       .transitionOut()
       .then(() => this.transistion.actions.clearActions());

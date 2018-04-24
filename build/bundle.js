@@ -141,6 +141,7 @@ var game = (function (exports,ex) {
         shortBeep: new ex.Sound("game/assets/snd/shortBeep.mp3", "game/assets/snd/shortBeep.wav"),
         coffeePour: new ex.Sound("game/assets/snd/coffeePour.mp3", "game/assets/snd/coffeePour.wav"),
         pageFlip: new ex.Sound("game/assets/snd/pageFlip.mp3", "game/assets/snd/pageFlip.wav"),
+        warningBeep: new ex.Sound("game/assets/snd/warning.mp3", "game/assets/snd/warning.wav"),
         jump: new ex.Sound("game/assets/snd/jump.mp3", "game/assets/snd/jump.wav"),
         select: new ex.Sound("game/assets/snd/select.mp3", "game/assets/snd/select.wav")
         //sampleSnd: new Sound("game/assets/snd/sample-sound.wav")
@@ -337,27 +338,44 @@ var game = (function (exports,ex) {
             Resources.topBgMusic.stop();
         }
         static playHitSound() {
+            if (this.allMuted)
+                return;
             Resources.hitSound.setVolume(0.7);
             Resources.hitSound.play();
         }
         static playShortBeep() {
+            if (this.allMuted)
+                return;
             Resources.shortBeep.setVolume(0.5);
             Resources.shortBeep.play();
         }
         static playCoffeePouringSound() {
+            if (this.allMuted)
+                return;
             Resources.coffeePour.play();
         }
         static playPageFlipSound() {
+            if (this.allMuted)
+                return;
             Resources.pageFlip.setVolume(0.5);
             Resources.pageFlip.play();
         }
         static playJumpSound() {
+            if (this.allMuted)
+                return;
             //resources.shortBeep.setVolume(0.5);
             Resources.jump.play();
         }
         static playGenericSelectSound() {
+            if (this.allMuted)
+                return;
             Resources.select.setVolume(0.5);
             Resources.select.play();
+        }
+        static playWarningBeep() {
+            if (this.allMuted)
+                return;
+            Resources.warningBeep.play();
         }
     }
     SoundManager.allMuted = false;
@@ -1427,6 +1445,11 @@ var game = (function (exports,ex) {
             this._miniGameTimer = new ex.Timer(() => {
                 this._secondsRemaining--;
                 this._countdown.timeRemaining = this._secondsRemaining;
+                let percentLeft = this._countdown.timeRemaining / this._countdown.maxTime;
+                if (percentLeft < 0.25) {
+                    SoundManager.playWarningBeep();
+                    this._countdown.scale = this._countdown.scale.add(new ex.Vector(0.2 / this._secondsRemaining, 0.2 / this._secondsRemaining));
+                }
                 if (this._secondsRemaining <= 0) {
                     if (!this._gameOver) {
                         this._gameOver = true;
@@ -1477,6 +1500,7 @@ var game = (function (exports,ex) {
             this._miniGameTimer.reset(1000, this._secondsRemaining);
             this._countdown.maxTime = this._secondsRemaining;
             this._countdown.timeRemaining = this._secondsRemaining;
+            this._countdown.scale = ex.Vector.One.clone();
             this.transistion
                 .transitionOut()
                 .then(() => this.transistion.actions.clearActions());
