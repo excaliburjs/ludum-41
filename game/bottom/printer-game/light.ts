@@ -37,7 +37,7 @@ export class Light extends ex.Actor {
     }
     if (this.printer.active) {
       if (this.printer.isAllLit() || this.printer.isAllDark()) {
-        console.log("win");
+        // console.log("win");
         this.printer.onSucceed();
       }
     }

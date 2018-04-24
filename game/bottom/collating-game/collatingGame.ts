@@ -85,7 +85,7 @@ export class CollatingGame extends MiniGame {
           );
         if (this._docSet.isComplete()) {
           //you won
-          console.log("you won the collating game");
+          // console.log("you won the collating game");
           this._currentWins++;
           if (this._currentWins >= this._winsRequired) {
             //move on to the next mini game
