@@ -37,7 +37,7 @@ export class PrinterGame extends MiniGame {
                     Config.PrinterMiniGame.PrinterStartY,
                 width: 20,
                 height: 20,
-                color: ex.Color.Violet.clone()
+                color: ex.Color.Black.clone()
             }, this);
             this._lights[i].boardX = x;
             this._lights[i].boardY = y;

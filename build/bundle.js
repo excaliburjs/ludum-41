@@ -1188,10 +1188,10 @@ var game = (function (exports,ex) {
         }
         onPostUpdate() {
             if (this.lit) {
-                this.color = ex.Color.Yellow.clone();
+                this.color = ex.Color.White.clone();
             }
             else {
-                this.color = ex.Color.Violet.clone();
+                this.color = ex.Color.Black.clone();
             }
             if (this.printer.active) {
                 if (this.printer.isAllLit() || this.printer.isAllDark()) {
@@ -1236,7 +1236,7 @@ var game = (function (exports,ex) {
                         Config.PrinterMiniGame.PrinterStartY,
                     width: 20,
                     height: 20,
-                    color: ex.Color.Violet.clone()
+                    color: ex.Color.Black.clone()
                 }, this);
                 this._lights[i].boardX = x;
                 this._lights[i].boardY = y;

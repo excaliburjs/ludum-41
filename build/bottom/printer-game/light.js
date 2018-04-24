@@ -27,10 +27,10 @@ export class Light extends ex.Actor {
     }
     onPostUpdate() {
         if (this.lit) {
-            this.color = ex.Color.Yellow.clone();
+            this.color = ex.Color.White.clone();
         }
         else {
-            this.color = ex.Color.Violet.clone();
+            this.color = ex.Color.Black.clone();
         }
         if (this.printer.active) {
             if (this.printer.isAllLit() || this.printer.isAllDark()) {
