@@ -18,7 +18,7 @@ export class BottomSubscene {
         scene.add(this.transistion);
         this._countdown = new CountDown(scene.engine);
         scene.add(this._countdown);
-        console.log("bottom");
+        // console.log("bottom");
         this._miniGameTimer = new Timer(() => {
             this._secondsRemaining--;
             this._countdown.timeRemaining = this._secondsRemaining;
@@ -44,7 +44,7 @@ export class BottomSubscene {
         this.transistion.start();
         var keys = Object.keys(MiniGameType).filter(key => typeof MiniGameType[key] === "number");
         this.miniGames = keys.map(key => MiniGameType[key]);
-        console.log(this.miniGames);
+        // console.log(this.miniGames);
         this.cursor.setDrawing("hand_" + Config.Rand.integer(0, 9));
         this.startRandomMiniGame();
     }
@@ -82,7 +82,7 @@ export class BottomSubscene {
         // }
         this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
         this.startMiniGame(this.miniGames[this.miniGameCount]);
-        console.log("current game:", this.miniGameCount, this.currentMiniGame);
+        // console.log("current game:", this.miniGameCount, this.currentMiniGame);
     }
 }
 //# sourceMappingURL=bottom.js.map

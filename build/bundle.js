@@ -967,7 +967,7 @@ var game = (function (exports,ex) {
                         .easeTo(Config.MiniGames.Collating.OutboxPos.x, Config.MiniGames.Collating.OutboxPos.y, 500, ex.EasingFunctions.EaseInOutQuad);
                     if (this._docSet.isComplete()) {
                         //you won
-                        console.log("you won the collating game");
+                        // console.log("you won the collating game");
                         this._currentWins++;
                         if (this._currentWins >= this._winsRequired) {
                             //move on to the next mini game
@@ -1195,7 +1195,7 @@ var game = (function (exports,ex) {
             }
             if (this.printer.active) {
                 if (this.printer.isAllLit() || this.printer.isAllDark()) {
-                    console.log("win");
+                    // console.log("win");
                     this.printer.onSucceed();
                 }
             }
@@ -1423,7 +1423,7 @@ var game = (function (exports,ex) {
             scene.add(this.transistion);
             this._countdown = new CountDown(scene.engine);
             scene.add(this._countdown);
-            console.log("bottom");
+            // console.log("bottom");
             this._miniGameTimer = new ex.Timer(() => {
                 this._secondsRemaining--;
                 this._countdown.timeRemaining = this._secondsRemaining;
@@ -1449,7 +1449,7 @@ var game = (function (exports,ex) {
             this.transistion.start();
             var keys = Object.keys(MiniGameType).filter(key => typeof MiniGameType[key] === "number");
             this.miniGames = keys.map(key => MiniGameType[key]);
-            console.log(this.miniGames);
+            // console.log(this.miniGames);
             this.cursor.setDrawing("hand_" + Config.Rand.integer(0, 9));
             this.startRandomMiniGame();
         }
@@ -1487,7 +1487,7 @@ var game = (function (exports,ex) {
             // }
             this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
             this.startMiniGame(this.miniGames[this.miniGameCount]);
-            console.log("current game:", this.miniGameCount, this.currentMiniGame);
+            // console.log("current game:", this.miniGameCount, this.currentMiniGame);
         }
     }
 
@@ -1522,7 +1522,7 @@ var game = (function (exports,ex) {
             this._bottom.setup(this);
             SoundManager.startOfficeAmbience();
             let randomHeadIndex = Config.Rand.integer(0, 9);
-            console.log("setting overlay to head: " + randomHeadIndex);
+            // console.log("setting overlay to head: " + randomHeadIndex);
             this._overlay.setDrawing("head_" + randomHeadIndex);
         }
         onDeactivate() {

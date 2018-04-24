@@ -30,7 +30,7 @@ export class BottomSubscene {
     scene.add(this.transistion);
     this._countdown = new CountDown(scene.engine);
     scene.add(this._countdown);
-    console.log("bottom");
+    // console.log("bottom");
     this._miniGameTimer = new Timer(
       () => {
         this._secondsRemaining--;
@@ -71,7 +71,7 @@ export class BottomSubscene {
       key => typeof MiniGameType[key as any] === "number"
     );
     this.miniGames = <any>keys.map(key => MiniGameType[key as any]);
-    console.log(this.miniGames);
+    // console.log(this.miniGames);
     this.cursor.setDrawing("hand_" + Config.Rand.integer(0, 9));
     this.startRandomMiniGame();
   }
@@ -114,6 +114,6 @@ export class BottomSubscene {
     this.miniGameCount = (this.miniGameCount + 1) % this.miniGames.length;
 
     this.startMiniGame(this.miniGames[this.miniGameCount]);
-    console.log("current game:", this.miniGameCount, this.currentMiniGame);
+    // console.log("current game:", this.miniGameCount, this.currentMiniGame);
   }
 }
