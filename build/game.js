@@ -1,10 +1,9 @@
-import { Engine, Loader, Logger, Input, Physics } from "excalibur";
+import { Engine, Loader, Physics } from "excalibur";
 import { ScnEnd } from "./scnEnd";
 import { ScnMain } from "./scnMain";
 import Resources from "./resources";
 import Config from "./config";
-import { newgame, gameover } from "./session";
-import { GameOverReason } from "./stats";
+import { newgame } from "./session";
 import SoundManager from "./soundManager";
 export const game = new Engine({
     canvasElementId: "game",
@@ -34,27 +33,26 @@ game.start(loader).then(() => {
     //   });
 });
 // TODO remove /////////////////////////////////////////////////////
-var gamePaused = false;
-game.input.keyboard.on("down", (keyDown) => {
-    switch (keyDown.key) {
-        case Input.Keys.P:
-            if (gamePaused) {
-                game.start();
-                Logger.getInstance().info("game resumed");
-            }
-            else {
-                game.stop();
-                Logger.getInstance().info("game paused");
-            }
-            gamePaused = !gamePaused;
-            break;
-        case Input.Keys.Semicolon:
-            game.isDebug = !game.isDebug;
-            break;
-        case Input.Keys.Esc:
-            gameover(game, GameOverReason.debug);
-            break;
-    }
-});
+// var gamePaused = false;
+// game.input.keyboard.on("down", (keyDown?: Input.KeyEvent) => {
+//   switch (keyDown.key) {
+//     case Input.Keys.P:
+//       if (gamePaused) {
+//         game.start();
+//         Logger.getInstance().info("game resumed");
+//       } else {
+//         game.stop();
+//         Logger.getInstance().info("game paused");
+//       }
+//       gamePaused = !gamePaused;
+//       break;
+//     case Input.Keys.Semicolon:
+//       game.isDebug = !game.isDebug;
+//       break;
+//     case Input.Keys.Esc:
+//       gameover(game, GameOverReason.debug);
+//       break;
+//   }
+// });
 ////////////////////////////////////////////////////////////////////
 //# sourceMappingURL=game.js.map

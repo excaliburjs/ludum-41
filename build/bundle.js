@@ -1560,28 +1560,27 @@ var game = (function (exports,ex) {
         //   });
     });
     // TODO remove /////////////////////////////////////////////////////
-    var gamePaused = false;
-    game.input.keyboard.on("down", (keyDown) => {
-        switch (keyDown.key) {
-            case ex.Input.Keys.P:
-                if (gamePaused) {
-                    game.start();
-                    ex.Logger.getInstance().info("game resumed");
-                }
-                else {
-                    game.stop();
-                    ex.Logger.getInstance().info("game paused");
-                }
-                gamePaused = !gamePaused;
-                break;
-            case ex.Input.Keys.Semicolon:
-                game.isDebug = !game.isDebug;
-                break;
-            case ex.Input.Keys.Esc:
-                gameover(game, GameOverReason.debug);
-                break;
-        }
-    });
+    // var gamePaused = false;
+    // game.input.keyboard.on("down", (keyDown?: Input.KeyEvent) => {
+    //   switch (keyDown.key) {
+    //     case Input.Keys.P:
+    //       if (gamePaused) {
+    //         game.start();
+    //         Logger.getInstance().info("game resumed");
+    //       } else {
+    //         game.stop();
+    //         Logger.getInstance().info("game paused");
+    //       }
+    //       gamePaused = !gamePaused;
+    //       break;
+    //     case Input.Keys.Semicolon:
+    //       game.isDebug = !game.isDebug;
+    //       break;
+    //     case Input.Keys.Esc:
+    //       gameover(game, GameOverReason.debug);
+    //       break;
+    //   }
+    // });
     ////////////////////////////////////////////////////////////////////
 
     exports.game = game;
