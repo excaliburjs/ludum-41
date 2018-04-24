@@ -11,6 +11,7 @@ import { GameOverReason } from "../stats";
 import { CountDown } from "./countdown";
 import { Transition } from "./transition";
 import resources from "../resources";
+import SoundManager from "../soundManager";
 
 export class BottomSubscene {
   public miniGameCount: number = 0;
@@ -39,7 +40,7 @@ export class BottomSubscene {
         let percentLeft =
           this._countdown.timeRemaining / this._countdown.maxTime;
         if (percentLeft < 0.25) {
-          resources.warningBeep.play();
+          SoundManager.playWarningBeep();
           this._countdown.scale = this._countdown.scale.add(
             new ex.Vector(
               0.2 / this._secondsRemaining,
